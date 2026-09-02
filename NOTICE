@@ -1,0 +1,75 @@
+MORIZON Reloaded
+Copyright and Attribution Notice
+
+1. Original MORIZON
+
+MORIZON Reloaded is based on the MORIZON forest zoning plugin distributed by
+the Forestry Agency of Japan through the Geospatial Information Center.
+
+The original source package contains the following notice:
+
+  ForestZoningPlugin
+  Copyright (C) 2021 MIERUNE Inc.
+  Contact stated in the original source: info@mierune.co.jp
+
+The original MORIZON was developed through a project commissioned by the
+Forestry Agency of Japan. The Japan Forest Technology Association organized
+the zoning concept and workflow, and MIERUNE Inc. implemented the QGIS plugin.
+
+2. MORIZON Reloaded modifications
+
+Modifications for compatibility with current QGIS releases, Windows stability,
+user-interface improvements, documentation, and the MORIZON Reloaded identity
+were undertaken as a personal technical initiative by:
+
+  Copyright (C) 2026 Yoichi Wada
+
+MORIZON Reloaded is independently maintained. It is not an official modification
+or release of, nor guaranteed or supported by, the Japan Forest Technology
+Association or the Forestry Agency of Japan. It may be introduced as a use case
+for nationwide DEM data. Any future official adoption or transfer will require
+separate consultation among the relevant parties.
+
+3. License
+
+This distribution is licensed under the GNU General Public License version 3.
+The license selection follows the GPL v3 conditions for use, modification, and
+redistribution stated for the MORIZON tool as a whole on the official Forestry
+Agency distribution page at:
+
+  https://www.geospatial.jp/ckan/dataset/rinya-morizon-dateset
+
+See LICENSE for the complete license text.
+
+4. Files retained from the supplied original MORIZON archive
+
+The following files in this distribution were byte-identical to files in the
+supplied original archive before source headers were added where applicable:
+
+  constants.py
+  imgs/aggregate.png
+  imgs/mActionArrowLeft.svg
+  imgs/mActionFirst.svg
+  imgs/mActionRefresh.svg
+  imgs/mActionUndo.svg
+  processes/printlayout/template/aggregate_template.qpt
+  processes/printlayout/template/zoning_template.qpt
+  processes/raster_styler/aggregate.py
+  processes/raster_styler/savearea.py
+  processes/raster_styler/slope.py
+  processes/raster_styler/zoning.py
+  processes/raster_writer/utils.py
+
+Package initializer files also retain original structure, with licensing and
+attribution headers added for this distribution.
+
+The mAction SVG files appear to be QGIS-style action icons and are preserved
+from the official MORIZON package. Their upstream provenance is not stated in
+that package. They are therefore identified here rather than represented as
+new MORIZON Reloaded artwork.
+
+5. MORIZON Reloaded artwork
+
+The Reloaded plugin icon and visual branding are modifications introduced for
+MORIZON Reloaded. They do not imply endorsement by the Forestry Agency of
+Japan, the Japan Forest Technology Association, or MIERUNE Inc.

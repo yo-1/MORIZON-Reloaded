@@ -1,0 +1,99 @@
+<Layout worldFileMap="" printResolution="300" units="mm" name="ゾーニング図">
+ <Snapper tolerance="5" snapToItems="1" snapToGrid="0" snapToGuides="1"/>
+ <Grid offsetUnits="mm" resolution="10" offsetX="0" offsetY="0" resUnits="mm"/>
+ <PageCollection>
+  <symbol type="fill" force_rhr="0" name="" alpha="1" clip_to_extent="1">
+   <layer locked="0" class="SimpleFill" pass="0" enabled="1">
+    <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+    <prop v="255,255,255,255" k="color"/>
+    <prop v="miter" k="joinstyle"/>
+    <prop v="0,0" k="offset"/>
+    <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+    <prop v="MM" k="offset_unit"/>
+    <prop v="35,35,35,255" k="outline_color"/>
+    <prop v="no" k="outline_style"/>
+    <prop v="0.26" k="outline_width"/>
+    <prop v="MM" k="outline_width_unit"/>
+    <prop v="solid" k="style"/>
+    <data_defined_properties>
+     <Option type="Map">
+      <Option type="QString" value="" name="name"/>
+      <Option name="properties"/>
+      <Option type="QString" value="collection" name="type"/>
+     </Option>
+    </data_defined_properties>
+   </layer>
+  </symbol>
+  <LayoutItem templateUuid="{7622674d-b958-4964-ab49-1697f44eb548}" id="" blendMode="0" itemRotation="0" opacity="1" zValue="0" visibility="1" positionLock="false" uuid="{7622674d-b958-4964-ab49-1697f44eb548}" type="65638" groupUuid="" frameJoinStyle="miter" outlineWidthM="0.3,mm" excludeFromExports="0" position="0,0,mm" frame="false" size="420,297,mm" referencePoint="0" background="true" positionOnPage="0,0,mm">
+   <FrameColor green="0" red="0" alpha="255" blue="0"/>
+   <BackgroundColor green="255" red="255" alpha="255" blue="255"/>
+   <LayoutObject>
+    <dataDefinedProperties>
+     <Option type="Map">
+      <Option type="QString" value="" name="name"/>
+      <Option name="properties"/>
+      <Option type="QString" value="collection" name="type"/>
+     </Option>
+    </dataDefinedProperties>
+    <customproperties/>
+   </LayoutObject>
+   <symbol type="fill" force_rhr="0" name="" alpha="1" clip_to_extent="1">
+    <layer locked="0" class="SimpleFill" pass="0" enabled="1">
+     <prop v="3x:0,0,0,0,0,0" k="border_width_map_unit_scale"/>
+     <prop v="255,255,255,255" k="color"/>
+     <prop v="miter" k="joinstyle"/>
+     <prop v="0,0" k="offset"/>
+     <prop v="3x:0,0,0,0,0,0" k="offset_map_unit_scale"/>
+     <prop v="MM" k="offset_unit"/>
+     <prop v="35,35,35,255" k="outline_color"/>
+     <prop v="no" k="outline_style"/>
+     <prop v="0.26" k="outline_width"/>
+     <prop v="MM" k="outline_width_unit"/>
+     <prop v="solid" k="style"/>
+     <data_defined_properties>
+      <Option type="Map">
+       <Option type="QString" value="" name="name"/>
+       <Option name="properties"/>
+       <Option type="QString" value="collection" name="type"/>
+      </Option>
+     </data_defined_properties>
+    </layer>
+   </symbol>
+  </LayoutItem>
+  <GuideCollection visible="1"/>
+ </PageCollection>
+ <LayoutItem templateUuid="{a2f39b42-9148-486c-8bd2-9db5ea0a2818}" marginY="0" id="" labelText="ゾーニング図" marginX="0" blendMode="0" itemRotation="0" opacity="1" zValue="5" visibility="1" valign="32" positionLock="false" uuid="{a2f39b42-9148-486c-8bd2-9db5ea0a2818}" type="65641" groupUuid="" htmlState="0" frameJoinStyle="miter" outlineWidthM="0.3,mm" excludeFromExports="0" position="333.85,5.7369,mm" frame="false" size="60,12.2262,mm" referencePoint="0" background="false" halign="8" positionOnPage="333.85,5.7369,mm">
+  <FrameColor green="0" red="0" alpha="255" blue="0"/>
+  <BackgroundColor green="255" red="255" alpha="255" blue="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+  <LabelFont style="Normal" description="MS UI Gothic,20,-1,5,50,0,0,0,0,0,標準"/>
+  <FontColor green="0" red="0" alpha="255" blue="0"/>
+ </LayoutItem>
+ <LayoutItem templateUuid="{4fea6211-b4b2-4a0e-b9ff-637fd9345063}" id="方位記号" northMode="0" blendMode="0" pictureRotation="0" itemRotation="0" opacity="1" northOffset="0" zValue="3" visibility="1" pictureHeight="19.5108" positionLock="false" svgBorderWidth="0.2" uuid="{4fea6211-b4b2-4a0e-b9ff-637fd9345063}" type="65640" mapUuid="" groupUuid="" anchorPoint="0" svgBorderColor="0,0,0,255" frameJoinStyle="miter" svgFillColor="255,255,255,255" outlineWidthM="0.3,mm" excludeFromExports="0" position="377.626,267.575,mm" mode="0" frame="false" pictureWidth="15.4566" size="22.7482,19.5108,mm" referencePoint="0" background="false" positionOnPage="377.626,267.575,mm" file=":/images/north_arrows/layout_default_north_arrow.svg" resizeMode="0">
+  <FrameColor green="0" red="0" alpha="255" blue="0"/>
+  <BackgroundColor green="255" red="255" alpha="255" blue="255"/>
+  <LayoutObject>
+   <dataDefinedProperties>
+    <Option type="Map">
+     <Option type="QString" value="" name="name"/>
+     <Option name="properties"/>
+     <Option type="QString" value="collection" name="type"/>
+    </Option>
+   </dataDefinedProperties>
+   <customproperties/>
+  </LayoutObject>
+ </LayoutItem>
+ <customproperties>
+  <property value="png" key="atlasRasterFormat"/>
+ </customproperties>
+ <Atlas hideCoverage="0" coverageLayer="" filenamePattern="'output_'||@atlas_featurenumber" pageNameExpression="" sortFeatures="0" enabled="0" filterFeatures="0"/>
+</Layout>
