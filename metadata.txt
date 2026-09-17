@@ -13,7 +13,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     Acknowledgements: The original MORIZON was developed through a project commissioned by the Forestry Agency of Japan, with the zoning workflow organized by the Japan Forest Technology Association and the QGIS plugin implemented by MIERUNE.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0-rc2
+version=2.3.0-rc3-dev1
 icon=imgs/icon.png
 author=Original MORIZON project / Reloaded by Yoichi Wada
 email=yoh@mail.pippin-itabashi.net
@@ -24,7 +24,18 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0-rc2
+changelog=Version 2.3.0-rc3-dev1 (test build, not yet released)
+    - Fixed a silent processes/__init__.py import failure that could surface
+      later as an unrelated AttributeError
+    - Unified the Windows file-lock fallback for site index and road
+      distance with the other elements (versioned _v2/_v3 output files)
+    - Added preflight checks for GRASS Processing Provider availability,
+      DEM/road CRS mismatch, and DEM/NPP/SRAD/VTEX resolution or CRS
+      differences
+    - No analysis formulas, thresholds, CRS treatment, or output names
+      were changed
+
+    Version 2.3.0-rc2
     - Fixed print-layout creation on QGIS 3.44 by using the required scale-bar enum
     - Corrected line breaks in the missing-CRS confirmation dialog
     - Clarified the aggregation output-file label

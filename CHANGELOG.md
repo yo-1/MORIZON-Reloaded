@@ -2,6 +2,36 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev1 — 2026-09-17 (test build, not yet released)
+
+Stabilization fixes made during the Claude Code handoff, built for Windows
+on-device testing (see docs/VALIDATION.md ST01-ST08 and docs/TEST_RECORD.md).
+Whether this becomes the official rc3, or is folded into it after further
+changes, will be decided once test results are in. No analysis formulas,
+thresholds, NoData rules, CRS treatment, or output names were changed.
+
+- Fixed a silent import failure in `processes/__init__.py`: submodule
+  import errors occurring after a successful QGIS API import were only
+  printed and swallowed, later surfacing as an unrelated `AttributeError`
+  when `processes.raster_writer` etc. were referenced. Now logged via
+  `QgsMessageLog` and re-raised, so a real dependency problem fails
+  clearly at plugin load time instead.
+- Unified the Windows file-lock fallback across all writers. `siteidx.py`
+  (site index) and `distance.py` (road distance) previously aborted the
+  whole run when an existing output file was locked (e.g. still open in
+  QGIS), while `savearea`/`shc`/`risk`/`profit`/`zoning` already fell back
+  to versioned `_v2`, `_v3`, ... files. Both now use the same fallback via
+  the new `resolve_writable_output_path()` helper.
+- Added a preflight check for the GRASS Processing Provider before running
+  the conservation-basin element, with concrete recovery guidance, instead
+  of failing only after other elements had already been computed.
+- Added a preflight CRS-mismatch warning for the road-distance element
+  (DEM vs. road network), shown before computation starts; the existing
+  in-process CRS check remains as a safety net.
+- Added a preflight resolution/CRS diagnostic for the site-index element
+  (DEM vs. NPP/SRAD/VTEX); the automatic grid alignment during processing
+  is unchanged, this only surfaces the difference beforehand.
+
 ## 2.3.0-rc2 — 2026-09-03
 
 - Fixed print-layout creation on QGIS 3.44 by passing
