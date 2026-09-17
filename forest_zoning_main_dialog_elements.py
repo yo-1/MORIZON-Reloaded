@@ -35,7 +35,7 @@ from .constants import (
     OUTPUT_SLOPE,
     OUTPUT_SAVEAREA,
 )
-from .utils import is_tmpdir_valid
+from .utils import is_tmpdir_valid, get_tiff_info
 from pathlib import Path
 
 
@@ -821,6 +821,105 @@ class ForestZoningMainDialogElements:
 
         return False, None
 
+    def _is_grass_watershed_available(self):
+        """保全対象流域の計算に必要なGRASS r.watershedが利用可能か確認する。
+
+        実際の計算（processes/raster_writer/savearea.pyの_run_watershed）と
+        同じアルゴリズムIDの組について、Processingレジストリへの登録有無
+        だけを見る。計算ロジック自体には一切関与しない事前確認。
+        これまではsavearea計算の実行時（他の要素計算が全て終わった後の
+        場合もある）にしかGRASS未導入が判明しなかった。
+        """
+        registry = QgsApplication.processingRegistry()
+        return any(
+            registry.algorithmById(alg_id) is not None
+            for alg_id in ('grass:r.watershed', 'grass7:r.watershed')
+        )
+
+    def _confirm_distance_crs_consistency(self, dem_path, network_path):
+        """地利計算前に、DEMと既設路網のCRSが一致しているか確認する。
+
+        distance.py自体の計算・CRS一致要求は変更しない。処理途中まで
+        判明しなかった不一致を実行前に知らせ、続行するかはユーザーに
+        委ねる（自動での再投影は行わない）。CRSを確認できない場合は
+        警告せず先へ進める（安全側の既存チェックはdistance.py側に残る）。
+        """
+        dem_layer = QgsRasterLayer(str(dem_path), "dem_crs_preflight")
+        network_layer = QgsVectorLayer(str(network_path), "network_crs_preflight", "ogr")
+        if not dem_layer.isValid() or not network_layer.isValid():
+            return True
+        dem_crs = dem_layer.crs()
+        network_crs = network_layer.crs()
+        if not dem_crs.isValid() or not network_crs.isValid():
+            return True
+        if dem_crs == network_crs:
+            return True
+
+        return QMessageBox.Yes == QMessageBox.warning(
+            self.main,
+            "地利計算のCRS確認",
+            "DEMと既設路網データの座標参照系が一致していません。\n\n"
+            f"DEM: {dem_crs.authid() or dem_crs.description()}\n"
+            f"既設路網: {network_crs.authid() or network_crs.description()}\n\n"
+            "MORIZONの地利計算は同一の平面直角座標系を前提としており、"
+            "このまま実行すると地利計算はエラーで停止します。\n"
+            "QGISの「プロセッシング」→「ラスタ/ベクタの再投影」で、"
+            "どちらかを他方のCRSへ揃えてから再実行することを推奨します。\n\n"
+            "このまま処理を続行しますか？",
+            QMessageBox.Yes,
+            QMessageBox.No,
+        )
+
+    def _confirm_siteidx_grid_alignment(self, dem_path, npp_path, srad_path, vtex_path):
+        """地位指数計算前に、DEMとNPP/SRAD/VTEXの解像度・CRSを診断する。
+
+        NPP/SRAD/VTEXは処理内でDEMの基準グリッドへ自動整合される
+        （siteidx.pyの_align_parameter_to_dem、GDAL Warp・最近傍法）ため、
+        解像度やCRSの差そのものは処理を止めない。ただし差が大きいほど
+        リサンプリングの補間誤差が大きくなるため、実行前に差分を提示し
+        続行を確認する。診断のみで、整合処理自体は変更しない。
+        """
+        try:
+            dem_info = get_tiff_info(dem_path)
+        except Exception:
+            return True
+
+        mismatches = []
+        for label, path in (("NPP", npp_path), ("SRAD", srad_path), ("VTEX", vtex_path)):
+            try:
+                info = get_tiff_info(path)
+            except Exception:
+                continue
+            diffs = []
+            dem_crs = dem_info.get("crs")
+            src_crs = info.get("crs")
+            if dem_crs and src_crs and dem_crs.isValid() and src_crs.isValid() and dem_crs != src_crs:
+                diffs.append(
+                    f"CRS: DEM={dem_crs.authid()} / {label}={src_crs.authid()}"
+                )
+            dem_res = dem_info.get("resolution")
+            src_res = info.get("resolution")
+            if dem_res and src_res and abs(dem_res - src_res) > 1e-6:
+                diffs.append(f"解像度: DEM={dem_res}m / {label}={src_res}m")
+            if diffs:
+                mismatches.append(f"{label} - " + " / ".join(diffs))
+
+        if not mismatches:
+            return True
+
+        return QMessageBox.Yes == QMessageBox.warning(
+            self.main,
+            "地位指数計算の入力データ確認",
+            "解析DEMと以下の入力データで、座標系または解像度が異なります。\n\n"
+            + "\n".join(mismatches)
+            + "\n\n処理中に解析DEMの基準グリッドへ自動整合されますが、"
+            "差が大きいほど地位指数の補間誤差が大きくなる可能性があります。\n"
+            "可能であれば操作マニュアルの前処理手順で解像度・CRSを揃えることを推奨します。\n\n"
+            "このまま処理を続行しますか？",
+            QMessageBox.Yes,
+            QMessageBox.No,
+        )
+
     def run_elements(self):
         # STEP7F: CRS確認ダイアログを確実に前面表示するため、
         # 入力検証・CRS preflight が終わるまではメイン画面を非表示にしない。
@@ -893,6 +992,42 @@ class ForestZoningMainDialogElements:
                 self.main.show()
                 return
             input_files_dict["building_crs_override_authid"] = override_authid
+
+            # STEP: 保全対象流域にはGRASS r.watershedが必須。
+            # これまでは他要素の計算が全て終わった後にGRASS未導入が判明する
+            # ことがあったため、処理開始前に確認する。計算ロジックには関与しない。
+            if not self._is_grass_watershed_available():
+                QMessageBox.warning(
+                    self.main,
+                    "GRASS Processing Provider",
+                    "保全対象を含む流域の計算には、GRASS Processing Providerの"
+                    "r.watershedが必要です。\n\n"
+                    "QGISの「プラグイン」→「プラグインの管理とインストール」→"
+                    "インストール済みタブで「GRASS」にチェックが入っているか確認し、"
+                    "有効化後にQGISを再起動してから再実行してください。"
+                )
+                self.main.show()
+                return
+
+        # STEP: 地利計算のCRS事前確認。これまでは処理途中まで
+        # DEM/既設路網のCRS不一致が判明しなかった。
+        if target_elements_dict["distance"]:
+            if not self._confirm_distance_crs_consistency(
+                input_files_dict["dem"], input_files_dict["network"]
+            ):
+                self.main.show()
+                return
+
+        # STEP: 地位指数計算の入力データ診断（解像度・CRSの差を事前提示）。
+        if target_elements_dict["siteidx"]:
+            if not self._confirm_siteidx_grid_alignment(
+                input_files_dict["dem"],
+                input_files_dict["npp"],
+                input_files_dict["srad"],
+                input_files_dict["vtex"],
+            ):
+                self.main.show()
+                return
 
         # ここまでで入力確認とCRS選択が完了。以降は進捗ダイアログ表示のため
         # 従来どおりメイン画面を隠す。
