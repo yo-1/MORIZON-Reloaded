@@ -16,6 +16,7 @@ from ...constants import (
     OUTPUT_SITEIDX_HINOKI,
     OUTPUT_SITEIDX_KARAMATSU
 )
+from .utils import resolve_writable_output_path
 
 gdal.UseExceptions()
 
@@ -146,18 +147,10 @@ def _calculate_siteidx_blockwise(dem_path: str,
             )
 
     driver = gdal.GetDriverByName("GTiff")
-    if os.path.exists(output_path):
-        try:
-            os.remove(output_path)
-        except PermissionError as e:
-            raise RuntimeError(
-                "既存の地位指数ラスターがWindowsでロックされています。"
-                f"\n{output_path}\n{e}"
-            ) from e
-        except OSError as e:
-            raise RuntimeError(
-                f"既存の地位指数ラスターを削除できません。\n{output_path}\n{e}"
-            ) from e
+    # STEP: 他のwriter（savearea/shc/risk/profit/zoning）と同じく、
+    # 既存出力がWindowsでロックされていても処理を中断せず、
+    # 世代付きファイル（_v2, _v3, ...）へ安全に退避する。
+    output_path = resolve_writable_output_path(output_path)
 
     out = driver.Create(
         output_path, width, height, 1, gdal.GDT_Float32,
@@ -286,14 +279,19 @@ def generate(basis_dem_filepath: str,
          settings["siteidx_karamatsu_params"]),
     )
 
+    # STEP: 世代付き退避が発生した場合に備え、実際に書き込んだパスを収集する
+    # （output_filepathをそのまま使うと退避後の実パスと食い違う）。
+    actual_output_filepaths = []
     for output_filepath, params in outputs:
-        _calculate_siteidx_blockwise(
-            basis_dem_filepath,
-            adjusted_npp_filepath,
-            adjusted_srad_filepath,
-            adjusted_vtex_filepath,
-            output_filepath,
-            params
+        actual_output_filepaths.append(
+            _calculate_siteidx_blockwise(
+                basis_dem_filepath,
+                adjusted_npp_filepath,
+                adjusted_srad_filepath,
+                adjusted_vtex_filepath,
+                output_filepath,
+                params
+            )
         )
 
-    return tuple(path for path, _ in outputs)
+    return tuple(actual_output_filepaths)

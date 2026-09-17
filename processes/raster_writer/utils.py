@@ -4,11 +4,49 @@
 # Licensed under the GNU General Public License version 3.
 # SPDX-License-Identifier: GPL-3.0-only
 
+import os
+
 import processing
 
 from ...utils import (
     get_tiff_info
 )
+
+
+def resolve_writable_output_path(output_path: str) -> str:
+    """既存出力ファイルがWindowsでロックされていても処理を止めないための共通ヘルパー。
+
+    出力先が存在しない、または削除できればそのまま同じパスを返す。
+    QGIS/GDALがGeoTIFFを開いたままなどの理由で削除できない場合は、
+    ``<name>_v2.<ext>``, ``_v3.<ext>`` ... のように空いている世代付き
+    パスへ退避する。原版仕様（計算式・NoData・グリッド）には影響しない、
+    純粋な出力先の決定のみを行う。
+
+    全writerで世代付けの規則（``_vN``サフィックス、番号の振り方）を統一
+    することが目的。スコアリング側のレイヤ自動選択は、この規則に従って
+    最新世代を検出する（``forest_zoning_main_dialog_scoring.py``）。
+    """
+    if not os.path.exists(output_path):
+        return output_path
+    try:
+        os.remove(output_path)
+        return output_path
+    except (PermissionError, OSError):
+        stem, ext = os.path.splitext(output_path)
+        generation = 2
+        while True:
+            candidate = f"{stem}_v{generation}{ext}"
+            if not os.path.exists(candidate):
+                return candidate
+            try:
+                os.remove(candidate)
+                return candidate
+            except (PermissionError, OSError):
+                generation += 1
+                if generation > 999:
+                    raise RuntimeError(
+                        f"出力先を確保できません（世代上限超過）: {output_path}"
+                    )
 
 
 def resampling(tiff_filepath: str,

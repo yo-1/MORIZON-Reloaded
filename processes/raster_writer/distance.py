@@ -13,6 +13,7 @@ from osgeo import gdal
 from qgis.core import QgsRasterLayer, QgsVectorLayer
 
 from ...constants import OUTPUT_DISTANCE
+from .utils import resolve_writable_output_path
 
 
 NODATA_DISTANCE = -9999.0
@@ -128,18 +129,10 @@ def generate(basis_dem_filepath: str,
             raise RuntimeError("既設路網ラインの10mラスタライズに失敗しました。")
 
         # 距離出力をDEMと完全同一グリッドで作成。
-        if os.path.exists(output_filepath):
-            try:
-                os.remove(output_filepath)
-            except PermissionError as e:
-                raise RuntimeError(
-                    "既存の地利ラスターがWindowsでロックされています。"
-                    f"\n{output_filepath}\n{e}"
-                ) from e
-            except OSError as e:
-                raise RuntimeError(
-                    f"既存の地利ラスターを削除できません。\n{output_filepath}\n{e}"
-                ) from e
+        # STEP: 他のwriter（savearea/shc/risk/profit/zoning）と同じく、
+        # 既存出力がWindowsでロックされていても処理を中断せず、
+        # 世代付きファイル（_v2, _v3, ...）へ安全に退避する。
+        output_filepath = resolve_writable_output_path(output_filepath)
 
         dist_ds = driver.Create(
             output_filepath, width, height, 1, gdal.GDT_Float32,
