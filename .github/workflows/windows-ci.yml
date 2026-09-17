@@ -1,0 +1,52 @@
+name: Windows plugin validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-package:
+    name: Validate and package on Windows 2025
+    runs-on: windows-2025
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+
+      - name: Record runner environment
+        shell: pwsh
+        run: |
+          "ImageOS=$env:ImageOS" | Add-Content $env:GITHUB_STEP_SUMMARY
+          "ImageVersion=$env:ImageVersion" | Add-Content $env:GITHUB_STEP_SUMMARY
+          "Python=$(python --version)" | Add-Content $env:GITHUB_STEP_SUMMARY
+
+      - name: Validate Python, Qt UI XML, and metadata
+        run: python .github/scripts/validate_plugin.py
+
+      - name: Build and verify QGIS plugin ZIP
+        run: python .github/scripts/build_plugin_zip.py
+
+      - name: Upload validated plugin ZIP
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: MORIZON-Windows-package-${{ github.run_number }}
+          path: dist/*.zip
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
