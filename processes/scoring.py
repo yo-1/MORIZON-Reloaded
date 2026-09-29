@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import os
+import traceback
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtWidgets import *
@@ -13,6 +14,7 @@ from qgis.gui import *
 
 from . import raster_writer
 from . import raster_styler
+from ..diag_log import log, timed
 from ..constants import (
     OUTPUT_PROFIT,
     OUTPUT_RISK,
@@ -57,21 +59,25 @@ class ProcessingThread(QThread):
             sum_of_processes = len(
                 list(filter(lambda val: val, self.target_scores_dict.values()))
             )
+            log("スコアリングを開始: "
+                f"targets={[k for k, v in self.target_scores_dict.items() if v]}, "
+                f"output_dir={self.output_dir}")
             self.processStarted.emit(sum_of_processes)
 
             if self.target_scores_dict["profit"]:
                 self.addProgress.emit(1)
                 self.postMessage.emit("収益性を計算中")
 
-                profit_filepath = raster_writer.profit.generate(
-                    self.input_layers_dict["siteidx"],
-                    self.input_thresholds_dict["siteidx"],
-                    self.input_layers_dict["cost"],
-                    self.input_thresholds_dict["cost"],
-                    self.input_layers_dict["distance"],
-                    self.input_thresholds_dict["distance"],
-                    self.output_dir,
-                )
+                with timed("収益性ラスターの生成"):
+                    profit_filepath = raster_writer.profit.generate(
+                        self.input_layers_dict["siteidx"],
+                        self.input_thresholds_dict["siteidx"],
+                        self.input_layers_dict["cost"],
+                        self.input_thresholds_dict["cost"],
+                        self.input_layers_dict["distance"],
+                        self.input_thresholds_dict["distance"],
+                        self.output_dir,
+                    )
                 if os.path.basename(profit_filepath) != OUTPUT_PROFIT["FILE_NAME"] + ".tif":
                     self.postMessage.emit(
                         "既存の収益性ファイルがWindowsで使用中のため、"
@@ -93,14 +99,15 @@ class ProcessingThread(QThread):
                 self.setAbortable.emit(False)
                 self.postMessage.emit("リスクを計算中")
 
-                risk_filepath = raster_writer.risk.generate(
-                    self.input_layers_dict["slope"],
-                    self.input_thresholds_dict["slope"],
-                    self.input_layers_dict["shc"],
-                    self.input_thresholds_dict["shc"],
-                    self.input_layers_dict["savearea"],
-                    self.output_dir,
-                )
+                with timed("災害リスクラスターの生成"):
+                    risk_filepath = raster_writer.risk.generate(
+                        self.input_layers_dict["slope"],
+                        self.input_thresholds_dict["slope"],
+                        self.input_layers_dict["shc"],
+                        self.input_thresholds_dict["shc"],
+                        self.input_layers_dict["savearea"],
+                        self.output_dir,
+                    )
                 if os.path.basename(risk_filepath) != OUTPUT_RISK["FILE_NAME"] + ".tif":
                     self.postMessage.emit(
                         "既存の災害リスクファイルがWindowsで使用中のため、"
@@ -115,11 +122,13 @@ class ProcessingThread(QThread):
 
         except Exception as e:
             # エラーはまとめてキャッチして呼び出し元に報告・処理を中断
+            log(f"スコアリングが失敗: {e}\n{traceback.format_exc()}", Qgis.Warning)
             self.processFailed.emit(str(e))
             self.abort_flag = True
             self.processFinished.emit(output_rlayers_dict)
             return
 
+        log("スコアリングの計算が完了")
         self.postMessage.emit("終了処理中")
 
         # 本当はここでプロジェクトにレイヤーを追加したい

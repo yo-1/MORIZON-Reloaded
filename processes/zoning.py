@@ -6,6 +6,7 @@
 
 import os
 import json
+import traceback
 
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
@@ -15,6 +16,7 @@ from qgis.gui import *
 
 from . import raster_writer
 from . import raster_styler
+from ..diag_log import log, timed
 from ..constants import OUTPUT_ZONING, OUTPUT_ZONING_THRESHOLDS_JSON
 
 
@@ -56,14 +58,17 @@ class ProcessingThread(QThread):
 
             self.addProgress.emit(1)
             self.postMessage.emit("ゾーニングを計算中")
+            log("ゾーニングを開始: "
+                f"thresholds={self.input_thresholds_dict}, output_dir={self.output_dir}")
 
-            zoning_filepath = raster_writer.zoning.generate(
-                self.input_layers_dict["profit"],
-                self.input_thresholds_dict["profit"],
-                self.input_layers_dict["risk"],
-                self.input_thresholds_dict["risk"],
-                self.output_dir,
-            )
+            with timed("ゾーニングラスターの生成（QgsRasterCalculator）"):
+                zoning_filepath = raster_writer.zoning.generate(
+                    self.input_layers_dict["profit"],
+                    self.input_thresholds_dict["profit"],
+                    self.input_layers_dict["risk"],
+                    self.input_thresholds_dict["risk"],
+                    self.output_dir,
+                )
 
             if os.path.basename(zoning_filepath) != (
                 OUTPUT_ZONING["FILE_NAME"] + "." + OUTPUT_ZONING["EXTENSION"]
@@ -75,6 +80,13 @@ class ProcessingThread(QThread):
 
             # ラスターレイヤーのインスタンスを生成しスタイル適用
             rlayer = QgsRasterLayer(zoning_filepath, OUTPUT_ZONING["DISPLAY_NAME"])
+            try:
+                # 診断用: 集計時の「入力ラスタは浮動小数点型」警告の原因確認
+                log(f"ゾーニング出力: {os.path.basename(zoning_filepath)}, "
+                    f"dataType={rlayer.dataProvider().dataType(1)}, "
+                    f"size={rlayer.width()}x{rlayer.height()}")
+            except Exception:
+                pass
             qml_filepath = raster_styler.zoning.write_qml(self.output_dir)
             rlayer.loadNamedStyle(qml_filepath)
 
@@ -82,6 +94,7 @@ class ProcessingThread(QThread):
 
         except Exception as e:
             # エラーはまとめてキャッチして呼び出し元に報告・処理を中断
+            log(f"ゾーニングが失敗: {e}\n{traceback.format_exc()}", Qgis.Warning)
             self.processFailed.emit(str(e))
             self.abort_flag = True
             self.processFinished.emit(output_rlayers_dict)
@@ -102,6 +115,7 @@ class ProcessingThread(QThread):
         ) as f:
             json.dump(self.input_thresholds_dict, f, ensure_ascii=False, indent=2)
 
+        log("ゾーニングの計算が完了")
         self.postMessage.emit("終了処理中")
 
         # 本当はここでプロジェクトにレイヤーを追加したい

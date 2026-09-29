@@ -62,8 +62,26 @@ class ProcessingThread(QThread):
             # ログ出力の失敗で本処理を止めない。
             pass
 
+    def _finish_step(self):
+        """直前に開始した工程のDONE行（所要秒数付き）を出す。"""
+        step = getattr(self, "_current_step", None)
+        if step is not None:
+            label, started = step
+            self._log(f"DONE: {label} ({time.monotonic() - started:.1f}s)")
+            self._current_step = None
+
     def _post(self, message: str):
-        """進捗表示（UI）とログの両方へ同じ文言を送る。"""
+        """進捗表示（UI）とログの両方へ同じ文言を送る。
+
+        「〜を計算中」「リサンプリング中」を工程の開始とみなし、次の工程開始または
+        「終了処理中」で直前工程のDONE行を出す。それ以外のメッセージ
+        （ファイルロック時の案内など）は工程を区切らない。
+        """
+        is_step = message.endswith(("を計算中", "リサンプリング中"))
+        if is_step or message == "終了処理中":
+            self._finish_step()
+        if is_step:
+            self._current_step = (message, time.monotonic())
         self._log(f"START: {message}")
         self.postMessage.emit(message)
 
@@ -287,12 +305,15 @@ class ProcessingThread(QThread):
                     savearea_rawdata_rlayer, savearea_scoring_rlayer]
         except Exception as e:
             # エラーはまとめてキャッチして呼び出し元に報告・処理を中断
-            self._log(f"FAILED: {e}\n{traceback.format_exc()}")
+            step = getattr(self, "_current_step", None)
+            self._log(
+                f"FAILED (step={step[0] if step else '-'}): {e}\n{traceback.format_exc()}")
             self.processFailed.emit(str(e))
             self.abort_flag = True
             self.processFinished.emit(output_rlayers_dict)
             return
 
+        self._finish_step()
         self._log("全要素の計算が完了")
         self._post('終了処理中')
 

@@ -2,7 +2,7 @@
 
 MORIZON Reloadedは、林業の収益性と山地災害リスクの両面から森林管理の方向性を検討するQGIS用森林ゾーニング支援プラグインです。
 
-**Current diagnostic build: v2.3.0-rc3-dev3 (test build for freeze/error diagnosis; not the final v2.3.0 release)**
+**Current diagnostic build: v2.3.0-rc3-dev4 (test build for freeze/error diagnosis; not the final v2.3.0 release)**
 
 林野庁の委託事業を通じて開発・公開された森林ゾーニング支援ツール「もりぞん（MORIZON）」を基礎として、現行QGISで利用できるよう互換性対応を行っています。原版の分析ロジック、計算体系および判定条件を原則として維持し、利用できなくなった処理基盤やAPIを再実装しています。
 
@@ -20,15 +20,27 @@ MORIZON Reloadedは、原版を基礎として和田陽一が個人的な技術�
 
 `metadata.txt`の最小QGIS版は3.44です。公開前の主試験環境はQGIS 3.44.xであり、他のQGIS版での動作は保証していません。
 
-## rc3-dev3の診断ログ
+## rc3-dev4の診断ログ
 
-rc3-dev3は、処理が止まったように見える場合や要素計算が失敗した場合に、停止工程を切り分けるための診断ビルドです。
+rc3-dev4は、処理が止まったように見える場合や処理が失敗した場合に、停止工程を切り分けるための診断ビルドです。
+要素計算に加えて、スコアリング、ゾーニング、集計、およびダイアログ表示時のしきい値初期値の算出も記録します。
 
 1. QGISの **表示 → パネル → ログメッセージ** を開きます。
 2. `MORIZON`タブを選択します。
-3. 要素を1項目ずつ実行し、最後に表示された工程、経過時刻、エラーまたはトレースバックを記録します。
+3. 操作を1つずつ実行し、最後に表示された行（`開始`/`START`のまま`完了`/`DONE`が出ていない工程）、経過秒、エラーまたはトレースバックを記録します。
 
-通常の業務データへ適用する前に、配布サンプルデータで動作を確認してください。問い合わせ対応で詳細な切り分け試験を行う場合は、別文書「MORIZON Reloaded dev3 動作確認の手引き」を使用します。
+通常の業務データへ適用する前に、配布サンプルデータで動作を確認してください。問い合わせ対応で詳細な切り分け試験を行う場合は、別文書「MORIZON Reloaded dev3 動作確認の手引き」を使用します（配布ZIPには含まれません）。
+
+### 動作に影響しない既知のログメッセージ
+
+サンプルデータでの実行（QGIS 3.44 / Windows）で確認された、結果に影響しないメッセージです。
+
+| ログ（タブ） | 内容 | 対応 |
+|---|---|---|
+| `Concurrent mapset locking is not supported on Windows`（プロセシング） | GRASSのWindows版で常に出る警告 | 不要 |
+| `ERROR 6: ...SetColorTable() only supported for Byte or UInt16 bands in TIFF format`（プロセシング、`CRITICAL`表示） | GRASS `r.neighbors` の出力（Float32）をProcessingが `r.out.gdal` で書き出す際、色テーブルだけが書けない。直後に `r.out.gdal complete ... created` が出てラスター本体は作成される | 不要（集材作業効率の起伏量方式で `ruggedness_min.tif` / `ruggedness_max.tif` に対して出る） |
+| `入力ラスタは浮動小数点型で、ゾーンヒストグラムのアルゴリズムに適していません`（プロセシング） | ゾーニングラスタがFloat32で書き出されるため。値は1〜4の整数で作られる | 不要。ただし集計ログに`count列が不足しています`の警告が出た場合は、該当クラスが集計範囲に存在しない可能性があります |
+| `DeprecationWarning`（Python警告） | QGIS APIの非推奨警告。現状は動作する | 将来のQGISで問題になり得るため、別途修正予定 |
 
 ## インストール
 
