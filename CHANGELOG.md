@@ -2,6 +2,26 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev5 — 2026-09-29 (test build, not yet released)
+
+Diagnostic build. On the sample data every stage finishes, but the log
+showed 18-23 s gaps between opening the scoring/zoning tabs and the start of
+processing, during which the QGIS window seemed to stop responding. The gaps
+contained no log lines, so dev5 adds instrumentation to locate them.
+No analysis formulas, thresholds, NoData rules, CRS treatment, or output
+names were changed.
+
+### Added
+
+- UIスレッドの停止検知（`UiStallWatchdog`）。2秒以上応答しなかった場合、停止秒数と、その時間帯に重なった計測区間を `MORIZON` タブへ警告として出力。
+- 各ダイアログの実行ボタン押下から処理スレッド開始までの区間を記録（要素計算・スコアリング・ゾーニング・集計）。
+- `onLayersChanged`（レイヤーツリー変更のたびに3画面のUI更新が走る）の発火回数と、遅かった場合の所要時間を記録。
+- UI更新・入力レイヤー自動設定・しきい値設定・ラスター統計取得(`bandStatistics`)を、0.3秒以上かかった場合のみ記録。
+
+### Fixed
+
+- 集計時、`native:zonalhistogram` が常に出力する `count_NODATA` 列を「想定外のcount列」と誤って警告していたのを修正（診断ログの誤検知のみで、集計結果には影響しない）。
+
 ## 2.3.0-rc3-dev4 — 2026-09-29 (test build, not yet released)
 
 Diagnostic build. dev3 showed that all six element calculations finish on the
