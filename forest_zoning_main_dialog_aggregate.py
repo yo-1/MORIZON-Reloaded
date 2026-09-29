@@ -18,6 +18,7 @@ from qgis.gui import *
 from . import processes
 from .constants import OUTPUT_ZONING, OUTPUT_AGGREGATE, INPUT_DEM
 from .utils import is_tmpdir_valid
+from .diag_log import log, log_if_slow
 from .progress_dialog import ProgressDialog
 
 
@@ -241,6 +242,7 @@ class ForestZoningMainDialogAggregate:
             )
 
     def run_aggregate(self):
+        log("集計: 実行ボタン押下")
         # GRASSエラーを回避するために環境変数に不正な文字がないか確認
         if not is_tmpdir_valid():
             QMessageBox.information(
@@ -332,6 +334,7 @@ class ForestZoningMainDialogAggregate:
             )
 
         thread.processFailed.connect(on_failed)
+        log("集計: 処理スレッドを開始します")
         thread.start()
         progress_dialog.exec_()
 

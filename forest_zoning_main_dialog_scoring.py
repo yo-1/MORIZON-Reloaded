@@ -26,6 +26,7 @@ from .processes.raster_styler import (
 from . import processes
 from .processes import raster_styler
 from . import utils
+from .diag_log import log, log_if_slow
 from .constants import (
     OUTPUT_SITEIDX_HINOKI,
     OUTPUT_SITEIDX_KARAMATSU,
@@ -328,6 +329,7 @@ class ForestZoningMainDialogScoring:
                 self.main, "エラー", "本プロクラムで生成したパラメータJSONファイルを選択してください。"
             )
 
+    @log_if_slow("スコアリング: 入力レイヤーの自動設定")
     def set_scoring_layer_combobox(self):
         """MORIZON要素レイヤをスコアリング欄へ厳密に自動設定する。
 
@@ -540,6 +542,7 @@ class ForestZoningMainDialogScoring:
 
         self.refresh_scoring_ui()
 
+    @log_if_slow("スコアリング: UI更新(refresh_scoring_ui)")
     def refresh_scoring_ui(self):
         # 入力内容のエラーチェック
         error_texts = self.get_scoring_error_texts()
@@ -867,6 +870,7 @@ class ForestZoningMainDialogScoring:
 
         return existing_filenames
 
+    @log_if_slow("スコアリング: 既存結果の解除")
     def _remove_existing_scoring_results(self):
         """
         QGIS 3.44安定版:
@@ -922,6 +926,7 @@ class ForestZoningMainDialogScoring:
         QCoreApplication.processEvents()
 
     def run_scoring(self):
+        log("スコアリング: 実行ボタン押下")
         existing_filenames = self.scoring_get_existing_filenames()
         if len(existing_filenames) > 0:
             if QMessageBox.No == QMessageBox.question(
@@ -999,6 +1004,7 @@ class ForestZoningMainDialogScoring:
                 self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
             )
         )
+        log("スコアリング: 処理スレッドを開始します")
         thread.start()
         progress_dialog.exec_()
 

@@ -36,6 +36,7 @@ from .constants import (
     OUTPUT_SAVEAREA,
 )
 from .utils import is_tmpdir_valid, get_tiff_info
+from .diag_log import log, log_if_slow
 from pathlib import Path
 
 
@@ -96,6 +97,7 @@ class ForestZoningMainDialogElements:
 
         self.refresh_elements_ui()
 
+    @log_if_slow("要素計算: UI更新(refresh_elements_ui)")
     def refresh_elements_ui(self):
         self.set_elements_filewidgets_enabled()
         self.main.elementsErrorLabel.setText("\n".join(self.get_elements_error_texts()))
@@ -921,6 +923,7 @@ class ForestZoningMainDialogElements:
         )
 
     def run_elements(self):
+        log("要素計算: 実行ボタン押下")
         # STEP7F: CRS確認ダイアログを確実に前面表示するため、
         # 入力検証・CRS preflight が終わるまではメイン画面を非表示にしない。
 
@@ -1066,6 +1069,7 @@ class ForestZoningMainDialogElements:
                 self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
             )
         )
+        log("要素計算: 処理スレッドを開始します")
         thread.start()
         progress_dialog.exec_()
 

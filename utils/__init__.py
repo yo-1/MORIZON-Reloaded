@@ -76,20 +76,23 @@ def get_raster_stats(rlayer: QgsRasterLayer) -> dict:
             metadata_stats[prefix] = float(value)
 
     # メタデータに統計値が含まれていない場合は計算する
-    stats = {
-        "MAX": metadata_stats["STATISTICS_MAXIMUM"]
-        if metadata_stats["STATISTICS_MAXIMUM"] is not None
-        else rlayer.dataProvider().bandStatistics(1).maximumValue,
-        "MIN": metadata_stats["STATISTICS_MINIMUM"]
-        if metadata_stats["STATISTICS_MINIMUM"] is not None
-        else rlayer.dataProvider().bandStatistics(1).minimumValue,
-        "MEAN": metadata_stats["STATISTICS_MEAN"]
-        if metadata_stats["STATISTICS_MEAN"] is not None
-        else rlayer.dataProvider().bandStatistics(1).mean,
-        "STD_DEV": metadata_stats["STATISTICS_STDDEV"]
-        if metadata_stats["STATISTICS_STDDEV"] is not None
-        else rlayer.dataProvider().bandStatistics(1).stdDev,
-    }
+    # 診断用: この計算(bandStatistics)は全ピクセルを走査し、UIスレッドから呼ばれる。
+    # 遅かった場合だけ記録する（UIイベントから頻繁に呼ばれるため）。処理内容は変更しない。
+    with timed(f"ラスター統計の取得 layer={rlayer.name()}", min_seconds=0.3):
+        stats = {
+            "MAX": metadata_stats["STATISTICS_MAXIMUM"]
+            if metadata_stats["STATISTICS_MAXIMUM"] is not None
+            else rlayer.dataProvider().bandStatistics(1).maximumValue,
+            "MIN": metadata_stats["STATISTICS_MINIMUM"]
+            if metadata_stats["STATISTICS_MINIMUM"] is not None
+            else rlayer.dataProvider().bandStatistics(1).minimumValue,
+            "MEAN": metadata_stats["STATISTICS_MEAN"]
+            if metadata_stats["STATISTICS_MEAN"] is not None
+            else rlayer.dataProvider().bandStatistics(1).mean,
+            "STD_DEV": metadata_stats["STATISTICS_STDDEV"]
+            if metadata_stats["STATISTICS_STDDEV"] is not None
+            else rlayer.dataProvider().bandStatistics(1).stdDev,
+        }
 
     return stats
 

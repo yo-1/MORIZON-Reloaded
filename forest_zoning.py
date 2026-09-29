@@ -16,6 +16,7 @@ from qgis.gui import *
 from .forest_zoning_main_dialog import ForestZoningMainDialog
 from .forest_zoning_settings_dialog import ForestZoningSettingsDialog
 from .branding import DISPLAY_NAME, asset_path
+from .diag_log import UiStallWatchdog, count_event, timed
 
 PLUGIN_NAME = DISPLAY_NAME
 
@@ -61,6 +62,10 @@ class ForestZoning:
         return action
 
     def initGui(self):
+        # 診断用: UIスレッドの停止(応答なし)を検知して MORIZON タブへ記録する
+        self._stall_watchdog = UiStallWatchdog()
+        self._stall_watchdog.start()
+
         # メニュー設定
         self.add_action(
             icon_path=asset_path("icon.png"),
@@ -87,6 +92,10 @@ class ForestZoning:
         )  # nopep8
 
     def unload(self):
+        watchdog = getattr(self, "_stall_watchdog", None)
+        if watchdog is not None:
+            watchdog.stop()
+
         for action in self.actions:
             self.iface.removePluginMenu(PLUGIN_NAME, action)
             self.toolbar.removeAction(action)
@@ -108,15 +117,23 @@ class ForestZoning:
         if not self.is_visible_main_dialog():
             return
 
-        self.main_dialog.elements.refresh_elements_ui()
-        self.main_dialog.scoring.refresh_scoring_ui()
-        self.main_dialog.zoning.refresh_zoning_ui()
+        # 診断用: レイヤーツリーの変更（dataChangedは高頻度で発火する）の度に
+        # 3画面のUI更新が走る。回数と、遅かった場合の所要時間を記録する。
+        count_event("onLayersChanged")
+        with timed("onLayersChanged: 要素UI更新", min_seconds=0.3):
+            self.main_dialog.elements.refresh_elements_ui()
+        with timed("onLayersChanged: スコアリングUI更新", min_seconds=0.3):
+            self.main_dialog.scoring.refresh_scoring_ui()
+        with timed("onLayersChanged: ゾーニングUI更新", min_seconds=0.3):
+            self.main_dialog.zoning.refresh_zoning_ui()
 
     def show_main_dialog(self):
         if self.main_dialog is None:
-            self.main_dialog = ForestZoningMainDialog()
+            with timed("メイン画面の生成"):
+                self.main_dialog = ForestZoningMainDialog()
             self.main_dialog.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
-        self.main_dialog.show()
+        with timed("メイン画面の表示", min_seconds=0.3):
+            self.main_dialog.show()
 
     def is_visible_main_dialog(self):
         if self.main_dialog is None:
