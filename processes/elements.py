@@ -5,6 +5,8 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import os
+import time
+import traceback
 # QGIS-API
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
@@ -46,6 +48,25 @@ class ProcessingThread(QThread):
     def set_abort_flag(self, flag=True):
         self.abort_flag = flag
 
+    def _log(self, message: str):
+        """調査用ログをQGISのログメッセージパネル（タブ名: MORIZON）へ出す。
+
+        QgsMessageLogはスレッドセーフ。処理が止まったように見えた場合に、
+        最後に出力された行から停止工程を特定するために使う。
+        """
+        try:
+            elapsed = time.monotonic() - getattr(self, "_t0", time.monotonic())
+            QgsMessageLog.logMessage(
+                f"[+{elapsed:7.1f}s] {message}", "MORIZON", Qgis.Info)
+        except Exception:
+            # ログ出力の失敗で本処理を止めない。
+            pass
+
+    def _post(self, message: str):
+        """進捗表示（UI）とログの両方へ同じ文言を送る。"""
+        self._log(f"START: {message}")
+        self.postMessage.emit(message)
+
     def run(self):
         """
         「要素計算」処理を実行する
@@ -60,9 +81,17 @@ class ProcessingThread(QThread):
         # 処理に成功したレイヤーの名前とインスタンスを保持する辞書
         output_rlayers_dict = {}
 
+        self._t0 = time.monotonic()
+        self._log(
+            "要素計算を開始: "
+            f"targets={[k for k, v in self.target_elements_dict.items() if v]}, "
+            f"dem={self.input_files_dict.get('dem')}")
+
         try:
+            self._log("DEM情報を取得中 (gdal:gdalinfo)")
             is_resampling = is_resampling_needed(
                 get_tiff_info(self.input_files_dict["dem"]))
+            self._log(f"DEM情報を取得完了: resampling={is_resampling}")
 
             sum_of_processes = len(list(filter(
                 lambda val: val, self.target_elements_dict.values()))) + int(is_resampling)
@@ -74,7 +103,7 @@ class ProcessingThread(QThread):
             if is_resampling:
                 self.addProgress.emit(1)
                 progress_counter += 1
-                self.postMessage.emit('DEMをリサンプリング中')
+                self._post('DEMをリサンプリング中')
                 dem_for_processes = raster_writer.resampling(
                     self.input_files_dict["dem"], 10)
 
@@ -83,7 +112,7 @@ class ProcessingThread(QThread):
                     return
 
             if self.target_elements_dict["siteidx"]:
-                self.postMessage.emit('地位指数を計算中')
+                self._post('地位指数を計算中')
                 self.setAbortable.emit(sum_of_processes - progress_counter > 1)
                 self.addProgress.emit(1)
                 progress_counter += 1
@@ -121,7 +150,7 @@ class ProcessingThread(QThread):
                     return
 
             if self.target_elements_dict["cost"]:
-                self.postMessage.emit(f'{OUTPUT_COST["DISPLAY_NAME"]}を計算中')
+                self._post(f'{OUTPUT_COST["DISPLAY_NAME"]}を計算中')
                 self.setAbortable.emit(sum_of_processes - progress_counter > 1)
                 self.addProgress.emit(1)
                 progress_counter += 1
@@ -148,7 +177,7 @@ class ProcessingThread(QThread):
                     return
 
             if self.target_elements_dict["distance"]:
-                self.postMessage.emit(f'{OUTPUT_DISTANCE["DISPLAY_NAME"]}を計算中')
+                self._post(f'{OUTPUT_DISTANCE["DISPLAY_NAME"]}を計算中')
                 self.setAbortable.emit(sum_of_processes - progress_counter > 1)
                 self.addProgress.emit(1)
                 progress_counter += 1
@@ -176,7 +205,7 @@ class ProcessingThread(QThread):
                     return
 
             if self.target_elements_dict["shc"]:
-                self.postMessage.emit(f'{OUTPUT_SHC["DISPLAY_NAME"]}を計算中')
+                self._post(f'{OUTPUT_SHC["DISPLAY_NAME"]}を計算中')
                 self.setAbortable.emit(sum_of_processes - progress_counter > 1)
                 self.addProgress.emit(1)
                 progress_counter += 1
@@ -201,7 +230,7 @@ class ProcessingThread(QThread):
                     return
 
             if self.target_elements_dict["slope"]:
-                self.postMessage.emit(f'{OUTPUT_SLOPE["DISPLAY_NAME"]}を計算中')
+                self._post(f'{OUTPUT_SLOPE["DISPLAY_NAME"]}を計算中')
                 self.setAbortable.emit(sum_of_processes - progress_counter > 1)
                 self.addProgress.emit(1)
                 progress_counter += 1
@@ -226,7 +255,7 @@ class ProcessingThread(QThread):
                     return
 
             if self.target_elements_dict["savearea"]:
-                self.postMessage.emit(f'{OUTPUT_SAVEAREA["DISPLAY_NAME"]}を計算中')
+                self._post(f'{OUTPUT_SAVEAREA["DISPLAY_NAME"]}を計算中')
                 self.setAbortable.emit(sum_of_processes - progress_counter > 1)
                 self.addProgress.emit(1)
                 progress_counter += 1
@@ -238,7 +267,7 @@ class ProcessingThread(QThread):
                     self.input_files_dict.get("building_crs_override_authid")
                 )
                 if os.path.basename(savearea_filepath) != OUTPUT_SAVEAREA["FILE_NAME"] + ".tif":
-                    self.postMessage.emit(
+                    self._post(
                         "既存の保全対象流域ファイルがWindowsで使用中のため、"
                         f"{os.path.basename(savearea_filepath)} として新規保存しました"
                     )
@@ -258,12 +287,14 @@ class ProcessingThread(QThread):
                     savearea_rawdata_rlayer, savearea_scoring_rlayer]
         except Exception as e:
             # エラーはまとめてキャッチして呼び出し元に報告・処理を中断
+            self._log(f"FAILED: {e}\n{traceback.format_exc()}")
             self.processFailed.emit(str(e))
             self.abort_flag = True
             self.processFinished.emit(output_rlayers_dict)
             return
 
-        self.postMessage.emit('終了処理中')
+        self._log("全要素の計算が完了")
+        self._post('終了処理中')
 
         # 本当はここでプロジェクトにレイヤーを追加したい
         # しかし別スレッドでプロジェクトに追加されたレイヤーはUIで認識できない

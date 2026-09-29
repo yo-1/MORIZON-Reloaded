@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.3.0-rc3-dev3 — 2026-09-29 (test build, not yet released)
+
+Diagnostic build for the "freezes when running the sample data" report.
+The cause has not been identified yet; this build only makes the stopping
+step visible and removes one known GRASS provider-ID dependency.
+No analysis formulas, thresholds, NoData rules, CRS treatment, or output
+names were changed.
+
+### Added
+
+- 各要素・保全流域の主要工程（GRASS呼び出し前後、polygonize、重複判定、rasterize、最終書き出し）の開始/完了を、QGISの「ログメッセージ」パネル（タブ名 `MORIZON`）へ時刻付きで出力。処理が止まって見えた場合、最後の行が停止工程の手がかりになる。
+- 要素計算が失敗した場合、例外のトレースバックを同ログへ出力。
+
+### Fixed
+
+- 集材作業効率（起伏量方式）が `grass7:r.neighbors` 固定だったため、GRASS ProviderのIDが `grass` の環境で失敗し得た。`grass:r.neighbors` → `grass7:r.neighbors` の順に試すよう変更（`savearea.py` と同方式）。
+
 ## 2.3.0-rc3-dev2 — 2026-09-17 (test build, not yet released)
 
 ### Fixed

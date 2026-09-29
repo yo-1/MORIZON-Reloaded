@@ -5,12 +5,13 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import os
+import time
 
 from qgis.PyQt.QtCore import QVariant
 from qgis.core import (
     QgsFeature, QgsFeatureRequest, QgsField, QgsFields, QgsGeometry,
     QgsCoordinateReferenceSystem, QgsProcessingException, QgsRasterLayer, QgsSpatialIndex,
-    QgsVectorLayer, QgsWkbTypes
+    QgsVectorLayer, QgsWkbTypes, QgsMessageLog, Qgis
 )
 import processing
 from osgeo import gdal
@@ -33,6 +34,16 @@ from ...constants import OUTPUT_SAVEAREA
 #   - 最終GeoTIFFは解析DEMのグリッド（CRS/Extent/GeoTransform/Width/Height）を継承。
 
 NODATA_VALUE = -9999.0
+
+
+def _log(message: str):
+    """調査用ログをQGISログメッセージパネル（タブ名: MORIZON）へ出す。"""
+    try:
+        QgsMessageLog.logMessage(
+            f"[{time.strftime('%H:%M:%S')}] STEP7 {message}", "MORIZON", Qgis.Info)
+    except Exception:
+        # ログ出力の失敗で本処理を止めない。
+        pass
 
 
 def _run_watershed(basis_dem_filepath: str):
@@ -69,8 +80,12 @@ def _run_watershed(basis_dem_filepath: str):
     errors = []
     for alg_id in ('grass:r.watershed', 'grass7:r.watershed'):
         try:
-            return processing.run(alg_id, common)['basin']
+            _log(f"{alg_id} 実行開始 (初回のGRASS起動には時間がかかることがあります)")
+            result = processing.run(alg_id, common)['basin']
+            _log(f"{alg_id} 実行完了")
+            return result
         except Exception as e:
+            _log(f"{alg_id} 失敗: {e}")
             errors.append(f'{alg_id}: {e}')
     raise QgsProcessingException(
         'r.watershed を実行できませんでした。GRASS Processing Providerを確認してください。\n'
@@ -81,6 +96,7 @@ def _run_watershed(basis_dem_filepath: str):
 def create_basin_polygon(basis_dem_filepath):
     """原版と同じく r.watershed(threshold=500) -> polygonize -> fixgeometries。"""
     basin_filepath = _run_watershed(basis_dem_filepath)
+    _log("gdal:polygonize 開始")
     vectorized_basin = processing.run('gdal:polygonize', {
         'INPUT': basin_filepath,
         'BAND': 1,
@@ -89,11 +105,14 @@ def create_basin_polygon(basis_dem_filepath):
         'EXTRA': '',
         'OUTPUT': 'TEMPORARY_OUTPUT'
     })['OUTPUT']
-    return processing.run('native:fixgeometries', {
+    _log("native:fixgeometries(流域) 開始")
+    fixed_basin = processing.run('native:fixgeometries', {
         'INPUT': vectorized_basin,
         'METHOD': 1,
         'OUTPUT': 'TEMPORARY_OUTPUT'
     })['OUTPUT']
+    _log("流域ポリゴンの作成完了")
+    return fixed_basin
 
 
 def _as_vector_layer(source):
@@ -439,11 +458,14 @@ def generate(basis_dem_filepath: str, building_filepath: str, output_dir: str, b
     except OSError:
         pass
 
+    _log("開始")
     basin_layer = create_basin_polygon(basis_dem_filepath)
+    _log("保全対象との重複判定 開始")
     selected_layer = _select_basins_with_buildings(
         basin_layer, building_filepath, debug_log, building_crs_override_authid
     )
 
+    _log("保全対象との重複判定 完了")
     basin_mask = os.path.join(work_dir, 'step7b_basin_mask.tif')
     selected_mask = os.path.join(work_dir, 'step7b_selected_mask.tif')
 
@@ -455,8 +477,10 @@ def generate(basis_dem_filepath: str, building_filepath: str, output_dir: str, b
         except OSError:
             pass
 
+    _log("gdal:rasterize 開始")
     _rasterize_to_reference(basin_layer, basis_dem_filepath, basin_mask)
     _rasterize_to_reference(selected_layer, basis_dem_filepath, selected_mask)
+    _log("gdal:rasterize 完了")
 
     output_filepath = os.path.join(
         output_dir, OUTPUT_SAVEAREA['FILE_NAME'] + '.tif'
@@ -472,6 +496,7 @@ def generate(basis_dem_filepath: str, building_filepath: str, output_dir: str, b
     _write_final(
         basis_dem_filepath, basin_mask, selected_mask, temp_final
     )
+    _log("最終ラスターの書き出し完了")
 
     def _next_versioned_path(path):
         stem, ext = os.path.splitext(path)
