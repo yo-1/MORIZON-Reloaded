@@ -10,6 +10,7 @@ import tempfile
 from osgeo import gdal
 import numpy as np
 import processing
+from qgis.core import QgsMessageLog, Qgis
 
 from ...settings_manager import SettingsManager
 from ..costcsv_parser import CostcsvParser
@@ -48,6 +49,30 @@ def _write_like(reference_path, output_path, array, nodata=-9999, dtype=gdal.GDT
     out = None
     ref = None
     return output_path
+
+
+def _run_grass_neighbors(params: dict):
+    """GRASS r.neighborsを実行する。
+
+    QGIS 3.44のGRASS ProviderはIDが 'grass' の場合と 'grass7' の場合があるため、
+    savearea.py と同様に両方を順に試す。どちらも失敗した場合のみ例外にする。
+    """
+    errors = []
+    for alg_id in ("grass:r.neighbors", "grass7:r.neighbors"):
+        try:
+            QgsMessageLog.logMessage(
+                f"{alg_id} 実行開始 (初回のGRASS起動には時間がかかることがあります)",
+                "MORIZON", Qgis.Info)
+            result = processing.run(alg_id, params)
+            QgsMessageLog.logMessage(f"{alg_id} 実行完了", "MORIZON", Qgis.Info)
+            return result
+        except Exception as e:
+            QgsMessageLog.logMessage(f"{alg_id} 失敗: {e}", "MORIZON", Qgis.Warning)
+            errors.append(f"{alg_id}: {e}")
+    raise RuntimeError(
+        "r.neighbors を実行できませんでした。GRASS Processing Providerを確認してください。\n"
+        + "\n".join(errors)
+    )
 
 
 def generate(dem_filepath: str, costcsv_filepath: str, output_dir: str) -> str:
@@ -133,9 +158,9 @@ def _generate_ruggedness(dem_filepath: str, output_filepath: str) -> str:
         "size": size, "weight": "",
     }
     p = dict(common); p.update({"method": 3, "output": min_filepath})
-    processing.run("grass7:r.neighbors", p)
+    _run_grass_neighbors(p)
     p = dict(common); p.update({"method": 4, "output": max_filepath})
-    processing.run("grass7:r.neighbors", p)
+    _run_grass_neighbors(p)
 
     if not os.path.exists(min_filepath) or not os.path.exists(max_filepath):
         raise RuntimeError("起伏量計算用の最小値/最大値ラスターを作成できません")

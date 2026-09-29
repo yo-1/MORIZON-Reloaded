@@ -72,6 +72,7 @@ class ForestZoning:
             icon_path=asset_path("icon.png"),
             text="MORIZON Reloaded 設定",
             callback=self.show_settings_dialog,
+            add_to_toolbar=False,
             parent=self.win,
         )
 
@@ -88,8 +89,10 @@ class ForestZoning:
     def unload(self):
         for action in self.actions:
             self.iface.removePluginMenu(PLUGIN_NAME, action)
-            self.iface.removeToolBarIcon(action)
-        del self.toolbar
+            self.toolbar.removeAction(action)
+        self.actions.clear()
+        self.iface.mainWindow().removeToolBar(self.toolbar)
+        self.toolbar.deleteLater()
 
         QgsProject.instance().layerTreeRoot().addedChildren.disconnect(
             self.onLayersChanged
@@ -97,7 +100,7 @@ class ForestZoning:
         QgsProject.instance().layerTreeRoot().removedChildren.disconnect(
             self.onLayersChanged
         )
-        self.iface.layerTreeView().layerTreeModel().dataChanged.connect(
+        self.iface.layerTreeView().layerTreeModel().dataChanged.disconnect(
             self.onLayersChanged
         )  # nopep8
 
