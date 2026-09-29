@@ -10,7 +10,9 @@ from qgis.PyQt.QtWidgets import *
 from qgis.core import *
 from qgis.gui import *
 import processing
+import traceback
 
+from ..diag_log import log, timed
 from ..utils import is_resampling_needed, get_tiff_info
 from . import raster_writer
 from . import raster_styler
@@ -49,6 +51,8 @@ class ProcessingThread(QThread):
 
             self.addProgress.emit(1)
             self.postMessage.emit('集計用ポリゴンを準備中')
+            log(f"集計を開始: mode={self.mode}, zoning={self.zoning_layer_path}, "
+                f"output={self.output_path}")
 
             # 任意のポリゴンで集計する場合
             if self.mode == "polygon":
@@ -70,9 +74,10 @@ class ProcessingThread(QThread):
             self.postMessage.emit('ゾーン統計・ヒストグラムを集計中')
 
             # QGIS 3.44 native providerで集計処理を実行する
-            aggregate_filepath = raster_writer.aggregate.generate(
-                self.zoning_layer_path, polygon_vlayer, self.output_path
-            )
+            with timed("ゾーン統計・ヒストグラム集計"):
+                aggregate_filepath = raster_writer.aggregate.generate(
+                    self.zoning_layer_path, polygon_vlayer, self.output_path
+                )
 
             self.addProgress.emit(1)
             self.postMessage.emit('集計結果のスタイルを作成中')
@@ -84,10 +89,12 @@ class ProcessingThread(QThread):
             vlayer_dict[OUTPUT_AGGREGATE["DISPLAY_NAME"]] = vlayer
         except Exception as e:
             # エラーはまとめてキャッチして呼び出し元に報告・処理を中断
+            log(f"集計が失敗: {e}\n{traceback.format_exc()}", Qgis.Warning)
             self.processFailed.emit(str(e))
             self.abort_flag = True
             return
 
+        log("集計の計算が完了")
         self.postMessage.emit("終了処理中")
         self.processFinished.emit(vlayer_dict)
 

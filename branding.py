@@ -15,7 +15,7 @@ from qgis.PyQt.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
 
 DISPLAY_NAME = "MORIZON Reloaded"
 TAGLINE = "FOREST ZONING."
-BUILD_LABEL = "UNOFFICIAL REVIVAL BUILD  /  QGIS 3.44  /  v2.3.0-rc3-dev3"
+BUILD_LABEL = "UNOFFICIAL REVIVAL BUILD  /  QGIS 3.44  /  v2.3.0-rc3-dev4"
 
 
 def asset_path(filename):

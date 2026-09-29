@@ -13,7 +13,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     Acknowledgements: The original MORIZON was developed through a project commissioned by the Forestry Agency of Japan, with the zoning workflow organized by the Japan Forest Technology Association and the QGIS plugin implemented by MIERUNE.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0-rc3-dev3
+version=2.3.0-rc3-dev4
 icon=imgs/icon.png
 author=Original MORIZON project / Reloaded by Yoichi Wada
 email=yoh@mail.pippin-itabashi.net
@@ -24,7 +24,12 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0-rc3-dev3 (test build, not yet released)
+changelog=Version 2.3.0-rc3-dev4 (test build, not yet released)
+    - Diagnostic logging only (QGIS Log Messages panel, tab "MORIZON"): per-element DONE lines with elapsed seconds, and timing/failure logs for scoring, zoning, aggregation and the threshold-initialisation step that runs when dialogs open
+    - Aggregation now logs the columns produced by the zonal histogram and warns if count_1..count_4 are missing
+    - No analysis formulas, thresholds, NoData rules, CRS treatment, or output names were changed
+
+    Version 2.3.0-rc3-dev3 (test build, not yet released)
     - Added diagnostic timing logs (QGIS Log Messages panel, tab "MORIZON") for each element and for the conservation-basin steps
     - GRASS provider-ID fallback for the ruggedness cost algorithm: try grass:r.neighbors first, then grass7:r.neighbors
     - No analysis formulas, thresholds, CRS treatment, or output names were changed

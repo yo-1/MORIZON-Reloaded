@@ -11,39 +11,60 @@ from qgis.core import *
 from qgis.gui import *
 import processing
 
+from ...diag_log import log, timed
+
 
 def generate(
     zoning_layer: QgsRasterLayer, polygon_layer: QgsVectorLayer, output_path: str
 ):
     # zonalstatistics
-    stat_layer = processing.run(
-        "native:zonalstatisticsfb",
-        {
-            "COLUMN_PREFIX": "_",
-            "INPUT": polygon_layer,
-            "INPUT_RASTER": zoning_layer,
-            "OUTPUT": "TEMPORARY_OUTPUT",
-            "RASTER_BAND": 1,
-            "STATISTICS": [0, 2, 5, 6, 9],
-        },
-    )[
-        "OUTPUT"
-    ]  # ピクセル数・平均・最大・最小・最頻
+    with timed("native:zonalstatisticsfb"):
+        stat_layer = processing.run(
+            "native:zonalstatisticsfb",
+            {
+                "COLUMN_PREFIX": "_",
+                "INPUT": polygon_layer,
+                "INPUT_RASTER": zoning_layer,
+                "OUTPUT": "TEMPORARY_OUTPUT",
+                "RASTER_BAND": 1,
+                "STATISTICS": [0, 2, 5, 6, 9],
+            },
+        )[
+            "OUTPUT"
+        ]  # ピクセル数・平均・最大・最小・最頻
 
     # zonalhistogram(1,2,3,4それぞれの出現頻度)
-    processing.run(
-        "native:zonalhistogram",
-        {
-            "INPUT_RASTER": zoning_layer,
-            "INPUT_VECTOR": stat_layer,
-            "OUTPUT": output_path,
-            "RASTER_BAND": 1,
-            "COLUMN_PREFIX": "count_",
-        },
-    )
+    with timed("native:zonalhistogram"):
+        processing.run(
+            "native:zonalhistogram",
+            {
+                "INPUT_RASTER": zoning_layer,
+                "INPUT_VECTOR": stat_layer,
+                "OUTPUT": output_path,
+                "RASTER_BAND": 1,
+                "COLUMN_PREFIX": "count_",
+            },
+        )
 
     # 1,2,3,4それぞれが占める割合
     vlayer = QgsVectorLayer(output_path, "org")
+    # 診断用: ヒストグラムの列構成を確認する（挙動は変更しない）。
+    # 入力ラスタがFloat型の場合の警告が実害を生むのは、次のような場合に限られる。
+    #   - あるクラスが全ポリゴンに存在しない → count_N 列自体が作られず ratio_N がNULLになる
+    #   - 値が整数でない → 想定外の列（例: count_2.5）が作られる
+    field_names = [fld.name() for fld in vlayer.fields()]
+    count_fields = sorted(n for n in field_names if n.startswith("count_"))
+    expected_fields = [f"count_{i}" for i in (1, 2, 3, 4)]
+    log(f"ゾーンヒストグラムの出力: features={vlayer.featureCount()}, "
+        f"count列={count_fields}")
+    missing_fields = [n for n in expected_fields if n not in field_names]
+    if missing_fields:
+        log(f"count列が不足しています: {missing_fields}。該当クラスが集計範囲に"
+            "存在しない場合、対応する ratio_* は NULL になります", Qgis.Warning)
+    unexpected_fields = [n for n in count_fields if n not in expected_fields]
+    if unexpected_fields:
+        log(f"想定外のcount列があります: {unexpected_fields}。ゾーニングラスタに"
+            "1〜4以外の値が含まれている可能性があります", Qgis.Warning)
     vlayer.dataProvider().addAttributes(
         [
             QgsField(name="ratio_1", type=QVariant.Double, len=6, prec=3),
@@ -66,16 +87,17 @@ def generate(
     context = QgsExpressionContext()
     context.appendScopes(QgsExpressionContextUtils.globalProjectLayerScopes(vlayer))
 
-    with edit(vlayer):
-        for f in vlayer.getFeatures():
-            context.setFeature(f)
-            f["ratio_1"] = exp_ratio_1.evaluate(context)
-            f["ratio_2"] = exp_ratio_2.evaluate(context)
-            f["ratio_3"] = exp_ratio_3.evaluate(context)
-            f["ratio_4"] = exp_ratio_4.evaluate(context)
-            f["count_1_4"] = exp_cnt_1_4.evaluate(context)
-            f["ratio_1_4"] = exp_ratio_1_4.evaluate(context)
+    with timed(f"ratio列の計算（{vlayer.featureCount()}ポリゴン）"):
+        with edit(vlayer):
+            for f in vlayer.getFeatures():
+                context.setFeature(f)
+                f["ratio_1"] = exp_ratio_1.evaluate(context)
+                f["ratio_2"] = exp_ratio_2.evaluate(context)
+                f["ratio_3"] = exp_ratio_3.evaluate(context)
+                f["ratio_4"] = exp_ratio_4.evaluate(context)
+                f["count_1_4"] = exp_cnt_1_4.evaluate(context)
+                f["ratio_1_4"] = exp_ratio_1_4.evaluate(context)
 
-            vlayer.updateFeature(f)
+                vlayer.updateFeature(f)
 
     return output_path

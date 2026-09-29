@@ -18,6 +18,7 @@ from qgis.gui import *
 import processing
 
 from ..processes import raster_styler
+from ..diag_log import timed
 from ..constants import PIXELS_THRESHOLD_RESAMPLING
 
 
@@ -117,9 +118,12 @@ def get_initial_thresholds(rlayer: QgsRasterLayer, classes_count=3) -> list:
     if not rlayer_from_path.isValid():
         return [0.0 for _ in range(classes_count - 1)]
 
-    renderer = raster_styler.get_quantile_renderer(
-        rlayer_from_path, [[0, 0, 0] for _ in range(classes_count)]
-    )
+    # 診断用: UIスレッド上で全ピクセルの統計を取るため、大きなラスターでは
+    # ここでQGISが応答しなくなる可能性がある。開始/完了の時刻を残して確認する。
+    with timed(f"しきい値初期値の算出（Quantile分類） layer={rlayer.name()}"):
+        renderer = raster_styler.get_quantile_renderer(
+            rlayer_from_path, [[0, 0, 0] for _ in range(classes_count)]
+        )
 
     try:
         shader = renderer.shader()
