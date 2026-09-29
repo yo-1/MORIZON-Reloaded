@@ -2,7 +2,7 @@
 
 MORIZON Reloadedは、林業の収益性と山地災害リスクの両面から森林管理の方向性を検討するQGIS用森林ゾーニング支援プラグインです。
 
-**Current release: v2.3.0-rc2 (release candidate for testing; not the final v2.3.0 release)**
+**Current diagnostic build: v2.3.0-rc3-dev3 (test build for freeze/error diagnosis; not the final v2.3.0 release)**
 
 林野庁の委託事業を通じて開発・公開された森林ゾーニング支援ツール「もりぞん（MORIZON）」を基礎として、現行QGISで利用できるよう互換性対応を行っています。原版の分析ロジック、計算体系および判定条件を原則として維持し、利用できなくなった処理基盤やAPIを再実装しています。
 
@@ -16,9 +16,19 @@ MORIZON Reloadedは、原版を基礎として和田陽一が個人的な技術�
 - Windows
 - QGIS同梱Python 3.12系
 - QGIS Processing、GDAL、NumPy、matplotlib
-- 「保全対象を含む流域」の作成では、QGISで利用可能なGRASS Providerが必要です。
+- 「集材作業効率」の標準地形処理および「保全対象を含む流域」の作成では、QGISで利用可能なGRASS Providerが必要です。
 
-`metadata.txt`ではQGIS 3.34以降を指定していますが、公開前の主試験環境はQGIS 3.44.xです。他のQGIS版での動作は保証していません。
+`metadata.txt`の最小QGIS版は3.44です。公開前の主試験環境はQGIS 3.44.xであり、他のQGIS版での動作は保証していません。
+
+## rc3-dev3の診断ログ
+
+rc3-dev3は、処理が止まったように見える場合や要素計算が失敗した場合に、停止工程を切り分けるための診断ビルドです。
+
+1. QGISの **表示 → パネル → ログメッセージ** を開きます。
+2. `MORIZON`タブを選択します。
+3. 要素を1項目ずつ実行し、最後に表示された工程、経過時刻、エラーまたはトレースバックを記録します。
+
+通常の業務データへ適用する前に、配布サンプルデータで動作を確認してください。問い合わせ対応で詳細な切り分け試験を行う場合は、別文書「MORIZON Reloaded dev3 動作確認の手引き」を使用します。
 
 ## インストール
 
