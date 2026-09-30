@@ -100,10 +100,10 @@ class ForestZoningMainDialogElements:
     @log_if_slow("要素計算: UI更新(refresh_elements_ui)")
     def refresh_elements_ui(self):
         self.set_elements_filewidgets_enabled()
-        self.main.elementsErrorLabel.setText("\n".join(self.get_elements_error_texts()))
-        self.main.elementsRunPushButton.setEnabled(
-            len(self.get_elements_error_texts()) == 0
-        )
+        # 検証は1回だけ行い、結果を表示とボタン状態の両方に使う（重複呼び出しの排除）
+        error_texts = self.get_elements_error_texts()
+        self.main.elementsErrorLabel.setText("\n".join(error_texts))
+        self.main.elementsRunPushButton.setEnabled(len(error_texts) == 0)
 
     def get_elements_mandatory_files_dict(self) -> dict:
         """
@@ -198,7 +198,7 @@ class ForestZoningMainDialogElements:
             """
             出力データのバリデーション
             """
-            groups = QgsProject().instance().layerTreeRoot().findGroups()
+            groups = QgsProject.instance().layerTreeRoot().findGroups()
             group_names = list(map(lambda g: g.name(), groups))
             if output_name in group_names:
                 error_texts.append(f"プロジェクトにすでに「{output_name}」が存在します")
@@ -1086,7 +1086,7 @@ class ForestZoningMainDialogElements:
         要素計算の処理結果を受け取って各要素ごとの2レイヤーを1つのグループとしてプロジェクトに追加
         """
         for display_name, rlayers in reversed(list(output_rlayers_dict.items())):
-            root = QgsProject().instance().layerTreeRoot()
+            root = QgsProject.instance().layerTreeRoot()
             group_node = root.insertGroup(0, display_name)
             group_node.setExpanded(False)
 

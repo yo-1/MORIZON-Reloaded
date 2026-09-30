@@ -387,5 +387,5 @@ class ForestZoningMainDialogAggregate:
         for rlayer in rlayers_dict.values():
             # プロジェクトのレイヤー一覧の一番上にレイヤーを追加
             QgsProject.instance().addMapLayer(rlayer, False)
-            root = QgsProject().instance().layerTreeRoot()
+            root = QgsProject.instance().layerTreeRoot()
             root.insertLayer(0, rlayer)

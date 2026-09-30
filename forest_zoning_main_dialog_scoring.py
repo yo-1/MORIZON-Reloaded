@@ -1018,7 +1018,7 @@ class ForestZoningMainDialogScoring:
         """
         処理結果を受け取ってレイヤー群を1つのグループとしてプロジェクトに追加
         """
-        root = QgsProject().instance().layerTreeRoot()
+        root = QgsProject.instance().layerTreeRoot()
         group_node = root.insertGroup(0, "スコアリング")
         group_node.setExpanded(False)
 
