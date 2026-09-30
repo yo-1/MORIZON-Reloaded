@@ -2,6 +2,44 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev6 — 2026-09-30 (test build, not yet released)
+
+On-device test (Windows / QGIS 3.44, sample data) recorded the dev5 UI-stall
+watchdog firing: `UIスレッドが約26.6秒応答していませんでした`, overlapping five
+consecutive `要素計算: UI更新(refresh_elements_ui)` calls (3.1-3.3s each).
+Root cause found via a Python-console measurement: `QgsProject().instance()`
+(with parentheses) constructs a new QgsProject object on every call, and
+`refresh_elements_ui` invoked this path roughly 16 times per UI refresh
+through its validation calls (~2s per refresh). Measured: 16 calls via
+`QgsProject().instance()` = 2.095s vs. 16 calls via `QgsProject.instance()`
+= 0.0147s (~140x). This build has not yet been re-tested on-device; the
+patch itself was verified only with `py_compile` and `static_check.py`.
+No analysis formulas, thresholds, NoData rules, CRS treatment, or output
+names were changed.
+
+### Fixed
+
+- Replaced `QgsProject().instance()` with `QgsProject.instance()` in four
+  places (`forest_zoning_main_dialog_elements.py` x2,
+  `forest_zoning_main_dialog_scoring.py` x1,
+  `forest_zoning_main_dialog_aggregate.py` x1).
+- `refresh_elements_ui` now calls `get_elements_error_texts()` once and
+  reuses the result for both the error label and the run-button state,
+  instead of calling it twice.
+
+### Known follow-ups (not in this build)
+
+- `refresh_elements_ui` still fires 4-9 times per single user action
+  (no event debouncing yet).
+- Threshold-initialisation appears to run ~60 duplicate calls for the same
+  layer (disaster-risk / conservation-basin) when the element step
+  finishes; harmless on the small sample raster but a likely stall cause
+  on large rasters.
+- The `count_NODATA` diagnostic-log false warning may still occur if the
+  aggregation output truncates column names to 10 characters.
+- `refresh_elements_ui` duration grows within a single burst (2.1s to
+  3.2s); cause not yet identified.
+
 ## 2.3.0-rc3-dev5 — 2026-09-29 (test build, not yet released)
 
 Diagnostic build. On the sample data every stage finishes, but the log
