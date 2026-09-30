@@ -2,6 +2,28 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev7 — 2026-09-30 (test build, not yet released)
+
+On-device test (Windows / QGIS 3.44, sample data `Zoningkit_SAMPLE`) of
+dev6 confirmed the O-15 UI-thread stall is resolved: zero
+`UIスレッドが約N秒応答していませんでした` warnings occurred during the
+element/scoring/zoning/aggregation workflow (previously 26.6s in dev5).
+See `docs/TEST_RECORD.md` and `docs/OPEN_ISSUES.md` (O-15) for the full
+log analysis. A separate, unconfirmed 7.0s/77.6s stall was still recorded
+right after plugin load, before the MORIZON dialog was ever opened; no
+MORIZON `timed()` span overlapped it, so it is likely unrelated to the
+`QgsProject.instance()` fix. Cause not yet identified.
+
+### Fixed
+
+- Aggregation no longer falsely warns about an "unexpected count column"
+  (`count_NODA`) when the output is a Shapefile. The DBF field-name limit
+  (10 characters) truncates `count_NODATA` to `count_NODA`; the diagnostic
+  check now accepts both spellings as the normal NoData-count column.
+  Diagnostic log only — no analysis formulas, thresholds, NoData rules,
+  CRS treatment, or output names were changed; `ratio_1`..`ratio_4` only
+  ever read `count_1`..`count_4` and were unaffected either way.
+
 ## 2.3.0-rc3-dev6 — 2026-09-30 (test build, not yet released)
 
 On-device test (Windows / QGIS 3.44, sample data) recorded the dev5 UI-stall

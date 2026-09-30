@@ -63,9 +63,14 @@ def generate(
             "存在しない場合、対応する ratio_* は NULL になります", Qgis.Warning)
     # count_NODATA は native:zonalhistogram が NoData セル数として常に出力する正規の列。
     # 異常ではないため、想定外の列の判定から除外する（dev4 では誤検知していた）。
+    # Shapefile出力（.shp）ではDBFのフィールド名が10文字に制限されるため、
+    # count_NODATA（12文字）は count_NODA に切り詰められる。この切り詰め形も
+    # 正規の列として扱う（dev6実機テストで誤検知を確認、count_NODATAのみの
+    # 判定だと出力形式がShapefileの場合に常に警告が出ていた）。
+    known_nodata_fields = ("count_NODATA", "count_NODA")
     unexpected_fields = [
         n for n in count_fields
-        if n not in expected_fields and n != "count_NODATA"
+        if n not in expected_fields and n not in known_nodata_fields
     ]
     if unexpected_fields:
         log(f"想定外のcount列があります: {unexpected_fields}。ゾーニングラスタに"
