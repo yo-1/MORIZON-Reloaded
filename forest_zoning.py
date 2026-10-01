@@ -23,16 +23,20 @@ PLUGIN_NAME = DISPLAY_NAME
 
 class ForestZoning:
     def __init__(self, iface):
-        self.iface = iface
-        self.win = self.iface.mainWindow()
-        self.plugin_dir = os.path.dirname(__file__)
-        self.actions = []
-        self.menu = PLUGIN_NAME
-        self.toolbar = self.iface.addToolBar(PLUGIN_NAME)
-        self.toolbar.setObjectName(PLUGIN_NAME)
+        # 診断用: プラグイン本体の構築（QGIS起動時）が重なる形で
+        # 起動直後にUI停止が記録される事例があり（O-15、原因未特定）、
+        # MORIZON自身の処理かどうかを切り分けるために計測する。
+        with timed("プラグイン初期化: __init__"):
+            self.iface = iface
+            self.win = self.iface.mainWindow()
+            self.plugin_dir = os.path.dirname(__file__)
+            self.actions = []
+            self.menu = PLUGIN_NAME
+            self.toolbar = self.iface.addToolBar(PLUGIN_NAME)
+            self.toolbar.setObjectName(PLUGIN_NAME)
 
-        self.main_dialog = None
-        self.settings_dialog = None
+            self.main_dialog = None
+            self.settings_dialog = None
 
     def add_action(
         self,
@@ -62,34 +66,40 @@ class ForestZoning:
         return action
 
     def initGui(self):
-        # 診断用: UIスレッドの停止(応答なし)を検知して MORIZON タブへ記録する
-        self._stall_watchdog = UiStallWatchdog()
-        self._stall_watchdog.start()
+        # 診断用: initGui自体の所要時間を計測する（O-15、起動直後のUI停止の
+        # 切り分け用）。ウォッチドッグのQTimerはQtのイベントループに制御が
+        # 戻るまで発火できないため、ここが遅い場合は次のtick時に重なった
+        # 区間として記録される。速くても、起動直後の停止がMORIZON外の処理
+        # によるものと判断する手がかりになる。
+        with timed("プラグイン初期化: initGui"):
+            # UIスレッドの停止(応答なし)を検知して MORIZON タブへ記録する
+            self._stall_watchdog = UiStallWatchdog()
+            self._stall_watchdog.start()
 
-        # メニュー設定
-        self.add_action(
-            icon_path=asset_path("icon.png"),
-            text="MORIZON Reloaded を起動",
-            callback=self.show_main_dialog,
-            parent=self.win,
-        )
-        self.add_action(
-            icon_path=asset_path("icon.png"),
-            text="MORIZON Reloaded 設定",
-            callback=self.show_settings_dialog,
-            add_to_toolbar=False,
-            parent=self.win,
-        )
+            # メニュー設定
+            self.add_action(
+                icon_path=asset_path("icon.png"),
+                text="MORIZON Reloaded を起動",
+                callback=self.show_main_dialog,
+                parent=self.win,
+            )
+            self.add_action(
+                icon_path=asset_path("icon.png"),
+                text="MORIZON Reloaded 設定",
+                callback=self.show_settings_dialog,
+                add_to_toolbar=False,
+                parent=self.win,
+            )
 
-        QgsProject.instance().layerTreeRoot().addedChildren.connect(
-            self.onLayersChanged
-        )
-        QgsProject.instance().layerTreeRoot().removedChildren.connect(
-            self.onLayersChanged
-        )
-        self.iface.layerTreeView().layerTreeModel().dataChanged.connect(
-            self.onLayersChanged
-        )  # nopep8
+            QgsProject.instance().layerTreeRoot().addedChildren.connect(
+                self.onLayersChanged
+            )
+            QgsProject.instance().layerTreeRoot().removedChildren.connect(
+                self.onLayersChanged
+            )
+            self.iface.layerTreeView().layerTreeModel().dataChanged.connect(
+                self.onLayersChanged
+            )  # nopep8
 
     def unload(self):
         watchdog = getattr(self, "_stall_watchdog", None)

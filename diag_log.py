@@ -149,6 +149,17 @@ class UiStallWatchdog:
             for label, start, end in _recent_spans
             if end >= last and start <= now
         ]
-        detail = ", ".join(overlapping[-5:]) if overlapping else "未計測の処理"
+        if overlapping:
+            detail = ", ".join(overlapping[-5:])
+        elif _recent_spans:
+            # 重なった区間が無くても、直近に完了した区間名を参考情報として
+            # 併記する。因果関係の証拠ではないが、「MORIZON側の既知の処理は
+            # 何も動いていなかった（＝MORIZON外の要因の可能性が高い）」こと
+            # を示す手がかりになる。
+            label, start, end = _recent_spans[-1]
+            detail = (f"未計測の処理（直近の完了区間: {label}、"
+                      f"停止開始の{last - end:.1f}秒前に完了）")
+        else:
+            detail = "未計測の処理（計測区間の記録なし）"
         log(f"UIスレッドが約{stalled:.1f}秒応答していませんでした。"
             f"重なった計測区間: {detail}", Qgis.Warning)
