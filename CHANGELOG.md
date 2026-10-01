@@ -2,6 +2,42 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev8 — 2026-10-01 (test build, not yet released)
+
+Requested by claude.ai (relayed via the user) following the dev6 on-device
+results. Both changes below are **not yet verified on-device** — `py_compile`
+and `static_check.py` only. See `docs/OPEN_ISSUES.md` (O-15 dev8 section)
+for the full analysis, including an explicitly flagged behavior-change risk
+that needs on-device confirmation.
+
+### Fixed
+
+- `init_scoring_rlayer_stats()` (the scoring-tab threshold Quantile
+  initializer) no longer re-runs `bandStatistics()` (a full-raster scan) for
+  a layer it has already initialized. On dev6, the element-calculation
+  finish step called it ~50-60 times for the same layer (0.0s each on the
+  sample raster; a plausible hang cause on a large one). Callers that must
+  always re-initialize (initial dialog construction, and
+  `set_scoring_layer_combobox`'s bulk reflect after auto-detecting layers)
+  now pass `force=True`. Skips are counted via `count_event()`.
+  **Needs on-device check**: this also means a layer re-selection that
+  re-fires `layerChanged` for the same already-selected layer (the
+  duplicate-call symptom above) will no longer silently reset a
+  hand-edited threshold back to the Quantile default for that redundant
+  fire — intended, but unverified in practice.
+
+### Added (diagnostic only, no behavior change)
+
+- `ForestZoning.__init__` and `initGui()` are now wrapped in `timed()`
+  spans, to help determine whether a startup-time UI-thread stall (two
+  on-device sessions recorded 7.0s/77.6s and 11.9s/56.7s pairs right after
+  plugin load, before the MORIZON dialog was ever opened, unrelated to the
+  `QgsProject.instance()` fix) happens inside MORIZON's own startup code.
+- `UiStallWatchdog` now reports the most recently completed `timed()` span
+  (and how long before the stall it finished) when no span overlaps the
+  stall window, instead of a bare "未計測の処理". Not proof of causation,
+  but evidence either way when MORIZON's own spans are fast.
+
 ## 2.3.0-rc3-dev7 — 2026-09-30 (test build, not yet released)
 
 On-device test (Windows / QGIS 3.44, sample data `Zoningkit_SAMPLE`) of

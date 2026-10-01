@@ -13,7 +13,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     Acknowledgements: The original MORIZON was developed through a project commissioned by the Forestry Agency of Japan, with the zoning workflow organized by the Japan Forest Technology Association and the QGIS plugin implemented by MIERUNE.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0-rc3-dev7
+version=2.3.0-rc3-dev8
 icon=imgs/icon.png
 author=Original MORIZON project / Reloaded by Yoichi Wada
 email=yoh@mail.pippin-itabashi.net
@@ -24,7 +24,19 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0-rc3-dev7 (test build, not yet released)
+changelog=Version 2.3.0-rc3-dev8 (test build, not yet released)
+    - Fixed: init_scoring_rlayer_stats() (threshold Quantile init) no longer
+      re-runs bandStatistics() for a layer it already initialized; the
+      element-calculation finish step was calling it ~50-60 times for the
+      same layer (0.0s each on the sample data, a plausible hang cause on
+      large rasters). Not yet verified on-device.
+    - Diagnostic only: added timed() spans around plugin __init__/initGui,
+      and a fallback hint (last completed span + how long before the stall)
+      when the UI-stall watchdog finds no overlapping span, to help find
+      whether a startup-time stall (O-15, unconfirmed, separate from the
+      QgsProject.instance() fix) is inside MORIZON or not. No behavior change.
+
+    Version 2.3.0-rc3-dev7 (test build, not yet released)
     - Fixed: aggregation falsely warned about an "unexpected count column"
       (count_NODA) when the output was a Shapefile, because the DBF 10-char
       field-name limit truncates count_NODATA to count_NODA. Diagnostic log
