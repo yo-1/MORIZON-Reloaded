@@ -26,7 +26,7 @@ from .processes.raster_styler import (
 from . import processes
 from .processes import raster_styler
 from . import utils
-from .diag_log import log, log_if_slow
+from .diag_log import count_event, log, log_if_slow
 from .constants import (
     OUTPUT_SITEIDX_HINOKI,
     OUTPUT_SITEIDX_KARAMATSU,
@@ -64,6 +64,10 @@ class ScoringObject:
         self.threshold2_spinbox = threshold2_spinbox
         self.layer_name = laye_name
         self.threshold_history_list = []
+        # init_scoring_rlayer_stats()が直近で初期化したレイヤーのID。
+        # 同一レイヤーへの重複初期化（layerChangedの連鎖発火対策）を
+        # 判定するために使う。レイヤー未選択時はNone。
+        self.last_init_layer_id = None
 
     def append_threshold_history(self, threshold: list):
         self.threshold_history_list.append(threshold)
@@ -164,10 +168,10 @@ class ForestZoningMainDialogScoring:
                 self.scoring_objs_dict.values(),
             )
         )
-        # 初期値セット
+        # 初期値セット（構築時は常に実行する）
         list(
             map(
-                self.init_scoring_rlayer_stats,
+                lambda obj: self.init_scoring_rlayer_stats(obj, force=True),
                 self.scoring_objs_dict.values(),
             )
         )
@@ -484,7 +488,9 @@ class ForestZoningMainDialogScoring:
         # params.json を読み込んでいる場合は、その比較条件を保持する。
         if not getattr(self, "_scoring_params_loaded", False):
             for key in ("siteidx", "cost", "distance", "shc", "slope"):
-                self.init_scoring_rlayer_stats(self.scoring_objs_dict[key])
+                self.init_scoring_rlayer_stats(
+                    self.scoring_objs_dict[key], force=True
+                )
         else:
             for obj in self.scoring_objs_dict.values():
                 obj.reset_threshold_history(
@@ -679,8 +685,26 @@ class ForestZoningMainDialogScoring:
         self.main.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.main.show()
 
-    def init_scoring_rlayer_stats(self, scoring_obj: ScoringObject):
-        """レイヤがリセットされた時の挙動"""
+    def init_scoring_rlayer_stats(self, scoring_obj: ScoringObject, force: bool = False):
+        """レイヤがリセットされた時の挙動。
+
+        要素計算の終了処理でレイヤーが一括追加される際、同一レイヤーに対して
+        layerChangedが連鎖的に何十回も発火することが実機ログで確認されている
+        （発火源はコード未確認）。同じレイヤーへの再初期化はスキップし、
+        get_initial_thresholds_of()内のbandStatistics()（全画素走査）の
+        重複呼び出しを避ける。force=Trueの呼び出し（初期構築時・レイヤー
+        自動設定の一括反映時）は常に実行する。
+        """
+        current_layer = scoring_obj.combobox.currentLayer()
+        current_layer_id = current_layer.id() if current_layer is not None else None
+
+        if (
+            not force
+            and current_layer_id is not None
+            and current_layer_id == scoring_obj.last_init_layer_id
+        ):
+            count_event(f"しきい値初期化のスキップ(同一レイヤー): {scoring_obj.layer_name}")
+            return
 
         thresholds = get_initial_thresholds_of(scoring_obj)
 
@@ -688,6 +712,7 @@ class ForestZoningMainDialogScoring:
         scoring_obj.threshold2_spinbox.setValue(thresholds[1])
         # scoring_objの履歴リストをリセットする
         scoring_obj.reset_threshold_history(thresholds)
+        scoring_obj.last_init_layer_id = current_layer_id
 
     def back_to_initial_state(self, scoring_obj: ScoringObject):
         """「初期化に戻す」ボタンがクリックした時の挙動"""
