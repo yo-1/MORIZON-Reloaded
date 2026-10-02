@@ -26,6 +26,7 @@ from .processes.raster_styler import (
 from . import processes
 from .processes import raster_styler
 from . import utils
+from .diag_log import count_event, log, log_if_slow, processing_active
 from .constants import (
     OUTPUT_SITEIDX_HINOKI,
     OUTPUT_SITEIDX_KARAMATSU,
@@ -63,6 +64,10 @@ class ScoringObject:
         self.threshold2_spinbox = threshold2_spinbox
         self.layer_name = laye_name
         self.threshold_history_list = []
+        # init_scoring_rlayer_stats()が直近で初期化したレイヤーのID。
+        # 同一レイヤーへの重複初期化（layerChangedの連鎖発火対策）を
+        # 判定するために使う。レイヤー未選択時はNone。
+        self.last_init_layer_id = None
 
     def append_threshold_history(self, threshold: list):
         self.threshold_history_list.append(threshold)
@@ -163,10 +168,10 @@ class ForestZoningMainDialogScoring:
                 self.scoring_objs_dict.values(),
             )
         )
-        # 初期値セット
+        # 初期値セット（構築時は常に実行する）
         list(
             map(
-                self.init_scoring_rlayer_stats,
+                lambda obj: self.init_scoring_rlayer_stats(obj, force=True),
                 self.scoring_objs_dict.values(),
             )
         )
@@ -328,6 +333,7 @@ class ForestZoningMainDialogScoring:
                 self.main, "エラー", "本プロクラムで生成したパラメータJSONファイルを選択してください。"
             )
 
+    @log_if_slow("スコアリング: 入力レイヤーの自動設定")
     def set_scoring_layer_combobox(self):
         """MORIZON要素レイヤをスコアリング欄へ厳密に自動設定する。
 
@@ -482,7 +488,9 @@ class ForestZoningMainDialogScoring:
         # params.json を読み込んでいる場合は、その比較条件を保持する。
         if not getattr(self, "_scoring_params_loaded", False):
             for key in ("siteidx", "cost", "distance", "shc", "slope"):
-                self.init_scoring_rlayer_stats(self.scoring_objs_dict[key])
+                self.init_scoring_rlayer_stats(
+                    self.scoring_objs_dict[key], force=True
+                )
         else:
             for obj in self.scoring_objs_dict.values():
                 obj.reset_threshold_history(
@@ -540,6 +548,7 @@ class ForestZoningMainDialogScoring:
 
         self.refresh_scoring_ui()
 
+    @log_if_slow("スコアリング: UI更新(refresh_scoring_ui)")
     def refresh_scoring_ui(self):
         # 入力内容のエラーチェック
         error_texts = self.get_scoring_error_texts()
@@ -676,8 +685,26 @@ class ForestZoningMainDialogScoring:
         self.main.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.main.show()
 
-    def init_scoring_rlayer_stats(self, scoring_obj: ScoringObject):
-        """レイヤがリセットされた時の挙動"""
+    def init_scoring_rlayer_stats(self, scoring_obj: ScoringObject, force: bool = False):
+        """レイヤがリセットされた時の挙動。
+
+        要素計算の終了処理でレイヤーが一括追加される際、同一レイヤーに対して
+        layerChangedが連鎖的に何十回も発火することが実機ログで確認されている
+        （発火源はコード未確認）。同じレイヤーへの再初期化はスキップし、
+        get_initial_thresholds_of()内のbandStatistics()（全画素走査）の
+        重複呼び出しを避ける。force=Trueの呼び出し（初期構築時・レイヤー
+        自動設定の一括反映時）は常に実行する。
+        """
+        current_layer = scoring_obj.combobox.currentLayer()
+        current_layer_id = current_layer.id() if current_layer is not None else None
+
+        if (
+            not force
+            and current_layer_id is not None
+            and current_layer_id == scoring_obj.last_init_layer_id
+        ):
+            count_event(f"しきい値初期化のスキップ(同一レイヤー): {scoring_obj.layer_name}")
+            return
 
         thresholds = get_initial_thresholds_of(scoring_obj)
 
@@ -685,6 +712,7 @@ class ForestZoningMainDialogScoring:
         scoring_obj.threshold2_spinbox.setValue(thresholds[1])
         # scoring_objの履歴リストをリセットする
         scoring_obj.reset_threshold_history(thresholds)
+        scoring_obj.last_init_layer_id = current_layer_id
 
     def back_to_initial_state(self, scoring_obj: ScoringObject):
         """「初期化に戻す」ボタンがクリックした時の挙動"""
@@ -867,6 +895,7 @@ class ForestZoningMainDialogScoring:
 
         return existing_filenames
 
+    @log_if_slow("スコアリング: 既存結果の解除")
     def _remove_existing_scoring_results(self):
         """
         QGIS 3.44安定版:
@@ -922,6 +951,7 @@ class ForestZoningMainDialogScoring:
         QCoreApplication.processEvents()
 
     def run_scoring(self):
+        log("スコアリング: 実行ボタン押下")
         existing_filenames = self.scoring_get_existing_filenames()
         if len(existing_filenames) > 0:
             if QMessageBox.No == QMessageBox.question(
@@ -999,8 +1029,10 @@ class ForestZoningMainDialogScoring:
                 self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
             )
         )
-        thread.start()
-        progress_dialog.exec_()
+        log("スコアリング: 処理スレッドを開始します")
+        with processing_active():
+            thread.start()
+            progress_dialog.exec_()
 
         if thread.abort_flag:
             QMessageBox.information(self.main, "中断", "処理を中断しました。")
@@ -1012,7 +1044,7 @@ class ForestZoningMainDialogScoring:
         """
         処理結果を受け取ってレイヤー群を1つのグループとしてプロジェクトに追加
         """
-        root = QgsProject().instance().layerTreeRoot()
+        root = QgsProject.instance().layerTreeRoot()
         group_node = root.insertGroup(0, "スコアリング")
         group_node.setExpanded(False)
 

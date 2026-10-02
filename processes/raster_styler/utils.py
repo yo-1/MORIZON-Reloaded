@@ -14,6 +14,7 @@ from qgis.PyQt.QtWidgets import *
 from qgis.core import *
 from qgis.gui import *
 
+from ...diag_log import timed
 from ...settings_manager import SettingsManager
 
 
@@ -32,12 +33,15 @@ def get_quantile_renderer(rlayer: QgsRasterLayer, colors=[[255, 255, 255], [255,
         raise RuntimeError(f"ラスターを開けません: {rlayer.source()}")
 
     provider = rlayer.dataProvider()
-    stats = provider.bandStatistics(
-        1,
-        QgsRasterBandStats.Min | QgsRasterBandStats.Max,
-        rlayer.extent(),
-        0
-    )
+    # sampleSize=0 は全ピクセルを走査する。大きなラスターでは時間がかかるため計測する。
+    with timed(f"ラスター統計(Min/Max)の取得 layer={rlayer.name()}, "
+               f"size={rlayer.width()}x{rlayer.height()}"):
+        stats = provider.bandStatistics(
+            1,
+            QgsRasterBandStats.Min | QgsRasterBandStats.Max,
+            rlayer.extent(),
+            0
+        )
     min_value = stats.minimumValue
     max_value = stats.maximumValue
 

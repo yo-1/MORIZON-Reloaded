@@ -19,6 +19,7 @@ from .processes.raster_styler import (
 )
 from . import processes
 from . import utils
+from .diag_log import log, log_if_slow, processing_active
 from .progress_dialog import ProgressDialog
 from .constants import (
     OUTPUT_PROFIT,
@@ -79,6 +80,7 @@ class ForestZoningMainDialogZoning:
         self.refresh_zoning_ui()
         self.set_zoning_thresholds()
 
+    @log_if_slow("ゾーニング: UI更新(refresh_zoning_ui)")
     def refresh_zoning_ui(self):
         """
         UIの変更の都度発火してUIの状態を更新する関数
@@ -121,6 +123,7 @@ class ForestZoningMainDialogZoning:
 
         return error_texts
 
+    @log_if_slow("ゾーニング: 入力レイヤーの自動設定")
     def set_zoning_layer_combobox(self):
         """収益性・災害リスクをQGIS 3.44で確実に自動設定する。
 
@@ -301,6 +304,7 @@ class ForestZoningMainDialogZoning:
 
         self.refresh_zoning_ui()
 
+    @log_if_slow("ゾーニング: しきい値の設定")
     def set_zoning_thresholds(self):
         """
         収益性・災害リスクのしきい値を、入力ラスターの値域から計算してセットする
@@ -359,6 +363,7 @@ class ForestZoningMainDialogZoning:
         return existing_filenames
 
     def run_zoning(self):
+        log("ゾーニング: 実行ボタン押下")
         # 既存のzoning.tifがある場合も実行を妨げない。
         # 出力側でWindowsロック/既存ファイルを検出し、zoning_v2.tif,
         # zoning_v3.tif ... のように安全に世代保存する。
@@ -389,8 +394,10 @@ class ForestZoningMainDialogZoning:
                 self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
             )
         )
-        thread.start()
-        progress_dialog.exec_()
+        log("ゾーニング: 処理スレッドを開始します")
+        with processing_active():
+            thread.start()
+            progress_dialog.exec_()
 
         if thread.abort_flag:
             QMessageBox.information(self.main, "中断", "処理を中断しました。")
