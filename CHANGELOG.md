@@ -2,6 +2,61 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev9 — 2026-10-02 (test build, not yet released)
+
+Requested by claude.ai (relayed via the user) after a ~39-hour run of
+another QGIS plugin (CS立体図) produced 12 `UIスレッドが約N秒応答していませんでした`
+warnings in the `MORIZON` log tab — 6 of them 3677-39478s each, totaling
+~132275s (~94% of the run) — while MORIZON itself was never operated.
+The watchdog was detecting correctly; the problem was that these
+MORIZON-unrelated stalls appeared as `Warning` in the MORIZON tab,
+making them look like a MORIZON bug. See `docs/OPEN_ISSUES.md` (O-17)
+for the full report and analysis.
+
+### Changed
+
+- `UiStallWatchdog.check()` now logs a stall as `Qgis.Info` instead of
+  `Qgis.Warning` when **both** of the following hold: (1) the stall
+  doesn't overlap any MORIZON `timed()` span, and (2) the MORIZON main
+  dialog is closed and no MORIZON processing thread (element calc /
+  scoring / zoning / aggregation) is running. The Info line reads
+  "QGISのUIスレッドが約N秒応答していませんでした（MORIZONの処理とは重なっ
+  ていません。QGIS本体・他プラグイン等の可能性があります）", followed by a
+  cumulative count + total-seconds line.
+- A stall that overlaps a MORIZON span, or occurs while the dialog is
+  open or a MORIZON thread is running (even without an overlapping
+  span), stays `Qgis.Warning` exactly as before — user-facing MORIZON
+  stalls are not silenced.
+- "Dialog open" is read live from `ForestZoning.is_visible_main_dialog()`
+  via a callback `diag_log.py` holds (`register_dialog_visibility_check()`,
+  registered once in `initGui()`), avoiding a duplicated/stale flag.
+  "Processing active" is a counter (`processing_active()` context
+  manager) wrapped around the existing `thread.start(); progress_dialog.exec_()`
+  pattern in all four `run_*()` methods (elements/scoring/zoning/aggregate).
+
+### Not changed
+
+- Analysis formulas, thresholds, NoData rules, CRS treatment, output
+  names.
+- The watchdog's detection method itself (250ms `QTimer`, 2.0s
+  threshold) — only how a detected stall is classified and logged.
+- dev8's changes (`8a0b074`, `03c0991`, `e082d5e`), kept in a separate
+  commit per the request.
+- The dev8-C startup timing spans (`プラグイン初期化: __init__` /
+  `initGui`) are kept; a startup-time stall before the dialog opens
+  will now log as Info (unless it overlaps one of those spans), which
+  is intentional — the O-15 pre-launch-stall investigation is unrelated
+  to this change and still uses those spans when present.
+
+### Verification
+
+- `py_compile` and `scripts/static_check.py` pass.
+- A pure-Python stub test (fake `qgis.core`/`qgis.PyQt.QtCore` modules,
+  not real QGIS) exercises `UiStallWatchdog.check()`'s four branch
+  combinations (overlap / no-overlap+idle / no-overlap+dialog-open /
+  no-overlap+processing) and the cumulative Info counter. **Not yet
+  tested on-device.**
+
 ## 2.3.0-rc3-dev8 — 2026-10-01 (test build, not yet released)
 
 Requested by claude.ai (relayed via the user) following the dev6 on-device

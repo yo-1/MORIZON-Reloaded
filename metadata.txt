@@ -13,7 +13,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     Acknowledgements: The original MORIZON was developed through a project commissioned by the Forestry Agency of Japan, with the zoning workflow organized by the Japan Forest Technology Association and the QGIS plugin implemented by MIERUNE.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0-rc3-dev8
+version=2.3.0-rc3-dev9
 icon=imgs/icon.png
 author=Original MORIZON project / Reloaded by Yoichi Wada
 email=yoh@mail.pippin-itabashi.net
@@ -24,7 +24,24 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0-rc3-dev8 (test build, not yet released)
+changelog=Version 2.3.0-rc3-dev9 (test build, not yet released)
+    - Changed: UI-stall warnings that don't overlap any MORIZON timed() span
+      and occur while the MORIZON dialog is closed and no MORIZON thread is
+      running are now logged as Info instead of Warning, with a wording
+      that says it's unrelated to MORIZON. A cumulative count+total-seconds
+      line is logged alongside each one. Stalls that overlap a MORIZON span,
+      or happen while the dialog is open or a MORIZON thread is running,
+      remain Warning as before. Addresses a report of a 39-hour run of
+      another plugin producing dozens of MORIZON Warning lines (up to
+      ~39000s each) for stalls MORIZON had no part in.
+    - No analysis formulas, thresholds, NoData rules, CRS treatment, output
+      names, or the watchdog's detection method (250ms QTimer, 2.0s
+      threshold) were changed.
+    - Verified with a pure-Python stub test (not real QGIS) covering the
+      four branch combinations and the cumulative counter; not yet
+      exercised on-device.
+
+    Version 2.3.0-rc3-dev8 (test build, not yet released)
     - Fixed: init_scoring_rlayer_stats() (threshold Quantile init) no longer
       re-runs bandStatistics() for a layer it already initialized; the
       element-calculation finish step was calling it ~50-60 times for the
