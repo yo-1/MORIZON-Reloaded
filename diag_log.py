@@ -28,9 +28,55 @@ LOG_TAG = "MORIZON"
 _recent_spans = deque(maxlen=300)
 _event_counts = {}
 
+# dev9: UI停止がMORIZONの操作に関係するかどうかの判定に使う状態。
+# diag_logはUIクラス（ダイアログ）に依存させたくないため、具体的な可視判定は
+# register_dialog_visibility_check() で外部（forest_zoning.py）から1回だけ
+# 登録してもらう。未登録の間は「ダイアログは開いていない」として扱う。
+_dialog_visible_check = None
+# 実行ボタン押下〜処理完了の区間中かどうか（ネストに備えてカウンタにする）。
+_processing_active_count = 0
+
 
 def _is_ui_thread() -> bool:
     return threading.current_thread() is threading.main_thread()
+
+
+def register_dialog_visibility_check(check):
+    """MORIZONのメインダイアログが表示中かどうかを調べる呼び出し可能オブジェクトを登録する。
+
+    UiStallWatchdogが、MORIZONの計測区間と重ならない停止をInfoにするか
+    Warningのままにするかの判定に使う（dev9）。
+    """
+    global _dialog_visible_check
+    _dialog_visible_check = check
+
+
+def _is_dialog_visible() -> bool:
+    if _dialog_visible_check is None:
+        return False
+    try:
+        return bool(_dialog_visible_check())
+    except Exception:
+        return False
+
+
+@contextmanager
+def processing_active():
+    """MORIZONの処理スレッド実行中（実行ボタン押下〜完了）であることを示す区間。
+
+    この区間中にUI停止を検知した場合、計測区間と重ならなくても利用者への
+    影響があるためWarningのまま扱う（dev9）。
+    """
+    global _processing_active_count
+    _processing_active_count += 1
+    try:
+        yield
+    finally:
+        _processing_active_count -= 1
+
+
+def _is_morizon_operation_active() -> bool:
+    return _is_dialog_visible() or _processing_active_count > 0
 
 
 def log(message: str, level=Qgis.Info):
@@ -111,6 +157,10 @@ class UiStallWatchdog:
     def __init__(self):
         self._timer = None
         self._last_tick = None
+        # dev9: MORIZONの計測区間と重ならず、ダイアログも閉じている・処理中
+        # でもない（＝MORIZONが関与していないと判断した）停止の累計。
+        self._info_stall_count = 0
+        self._info_stall_total_seconds = 0.0
 
     def start(self):
         if self._timer is not None:
@@ -150,16 +200,37 @@ class UiStallWatchdog:
             if end >= last and start <= now
         ]
         if overlapping:
-            detail = ", ".join(overlapping[-5:])
-        elif _recent_spans:
-            # 重なった区間が無くても、直近に完了した区間名を参考情報として
-            # 併記する。因果関係の証拠ではないが、「MORIZON側の既知の処理は
-            # 何も動いていなかった（＝MORIZON外の要因の可能性が高い）」こと
-            # を示す手がかりになる。
-            label, start, end = _recent_spans[-1]
-            detail = (f"未計測の処理（直近の完了区間: {label}、"
-                      f"停止開始の{last - end:.1f}秒前に完了）")
-        else:
-            detail = "未計測の処理（計測区間の記録なし）"
-        log(f"UIスレッドが約{stalled:.1f}秒応答していませんでした。"
-            f"重なった計測区間: {detail}", Qgis.Warning)
+            log(f"UIスレッドが約{stalled:.1f}秒応答していませんでした。"
+                f"重なった計測区間: {', '.join(overlapping[-5:])}", Qgis.Warning)
+            return
+
+        if _is_morizon_operation_active():
+            # 計測区間とは重ならないが、ダイアログが開いている、または
+            # 実行ボタン押下〜完了の処理中（dev9）。利用者への影響が
+            # あり得るため、従来どおりWarningのまま扱う。
+            if _recent_spans:
+                # 直近に完了した区間名を参考情報として併記する。因果関係の
+                # 証拠ではないが、「MORIZON側の既知の処理は何も動いていな
+                # かった」ことを示す手がかりになる。
+                label, start, end = _recent_spans[-1]
+                detail = (f"未計測の処理（直近の完了区間: {label}、"
+                          f"停止開始の{last - end:.1f}秒前に完了）")
+            else:
+                detail = "未計測の処理（計測区間の記録なし）"
+            log(f"UIスレッドが約{stalled:.1f}秒応答していませんでした。"
+                f"重なった計測区間: {detail}", Qgis.Warning)
+            return
+
+        # dev9: 計測区間と重ならず、ダイアログも閉じている・処理中でもない
+        # 停止。MORIZONの不具合ではなく、QGIS本体や他プラグインによる停止
+        # である可能性が高いため、Warningではなく参考情報(Info)として出す
+        # （他プラグインを長時間実行している間、MORIZONタブにWarningが
+        # 大量に出て不具合に見えていた問題への対処）。
+        self._info_stall_count += 1
+        self._info_stall_total_seconds += stalled
+        log(f"QGISのUIスレッドが約{stalled:.1f}秒応答していませんでした"
+            f"（MORIZONの処理とは重なっていません。QGIS本体・他プラグイン等の"
+            f"可能性があります）", Qgis.Info)
+        log(f"参考: 起動後、MORIZON外要因と判定したUI停止は累計"
+            f"{self._info_stall_count}件、合計{self._info_stall_total_seconds:.1f}秒です。",
+            Qgis.Info)

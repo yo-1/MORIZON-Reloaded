@@ -36,7 +36,7 @@ from .constants import (
     OUTPUT_SAVEAREA,
 )
 from .utils import is_tmpdir_valid, get_tiff_info
-from .diag_log import log, log_if_slow
+from .diag_log import log, log_if_slow, processing_active
 from pathlib import Path
 
 
@@ -1070,8 +1070,9 @@ class ForestZoningMainDialogElements:
             )
         )
         log("要素計算: 処理スレッドを開始します")
-        thread.start()
-        progress_dialog.exec_()
+        with processing_active():
+            thread.start()
+            progress_dialog.exec_()
 
         if thread.abort_flag:
             QMessageBox.information(self.main, "中断", "処理を中断しました。")

@@ -16,7 +16,12 @@ from qgis.gui import *
 from .forest_zoning_main_dialog import ForestZoningMainDialog
 from .forest_zoning_settings_dialog import ForestZoningSettingsDialog
 from .branding import DISPLAY_NAME, asset_path
-from .diag_log import UiStallWatchdog, count_event, timed
+from .diag_log import (
+    UiStallWatchdog,
+    count_event,
+    register_dialog_visibility_check,
+    timed,
+)
 
 PLUGIN_NAME = DISPLAY_NAME
 
@@ -75,6 +80,9 @@ class ForestZoning:
             # UIスレッドの停止(応答なし)を検知して MORIZON タブへ記録する
             self._stall_watchdog = UiStallWatchdog()
             self._stall_watchdog.start()
+            # dev9: MORIZONのメインダイアログが開いているかどうかを
+            # ウォッチドッグから参照できるよう登録する（Info/Warning判定用）
+            register_dialog_visibility_check(self.is_visible_main_dialog)
 
             # メニュー設定
             self.add_action(

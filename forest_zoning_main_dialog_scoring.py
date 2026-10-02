@@ -26,7 +26,7 @@ from .processes.raster_styler import (
 from . import processes
 from .processes import raster_styler
 from . import utils
-from .diag_log import count_event, log, log_if_slow
+from .diag_log import count_event, log, log_if_slow, processing_active
 from .constants import (
     OUTPUT_SITEIDX_HINOKI,
     OUTPUT_SITEIDX_KARAMATSU,
@@ -1030,8 +1030,9 @@ class ForestZoningMainDialogScoring:
             )
         )
         log("スコアリング: 処理スレッドを開始します")
-        thread.start()
-        progress_dialog.exec_()
+        with processing_active():
+            thread.start()
+            progress_dialog.exec_()
 
         if thread.abort_flag:
             QMessageBox.information(self.main, "中断", "処理を中断しました。")

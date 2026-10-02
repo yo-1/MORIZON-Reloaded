@@ -18,7 +18,7 @@ from qgis.gui import *
 from . import processes
 from .constants import OUTPUT_ZONING, OUTPUT_AGGREGATE, INPUT_DEM
 from .utils import is_tmpdir_valid
-from .diag_log import log, log_if_slow
+from .diag_log import log, log_if_slow, processing_active
 from .progress_dialog import ProgressDialog
 
 
@@ -335,8 +335,9 @@ class ForestZoningMainDialogAggregate:
 
         thread.processFailed.connect(on_failed)
         log("集計: 処理スレッドを開始します")
-        thread.start()
-        progress_dialog.exec_()
+        with processing_active():
+            thread.start()
+            progress_dialog.exec_()
 
         self.main.show()
 
