@@ -13,7 +13,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     Acknowledgements: The original MORIZON was developed through a project commissioned by the Forestry Agency of Japan, with the zoning workflow organized by the Japan Forest Technology Association and the QGIS plugin implemented by MIERUNE.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0-rc3-dev11
+version=2.3.0-rc3-dev12
 icon=imgs/icon.png
 author=Original MORIZON project / Reloaded by Yoichi Wada
 email=yoh@mail.pippin-itabashi.net
@@ -24,7 +24,24 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0-rc3-dev11 (test build, not yet released)
+changelog=Version 2.3.0-rc3-dev12 (test build, not yet released)
+    - Fixed (O-21): get_initial_thresholds() (threshold Quantile init,
+      shared by the scoring tab and zoning tab) now caches its result
+      per (layer id, classes_count) in-process. On-device dev11 logs
+      showed 災害リスク/保全対象を含む流域's Quantile threshold being
+      recomputed 7x in a row every time element calculation finished
+      (confirmed twice, identically), because dev8's dedup only covers
+      scoring_objs_dict's 5 threshold-adjustable elements and savearea
+      is not one of them. The new cache is keyed by layer id, so it
+      closes the gap regardless of which UI combobox transiently
+      re-queries the same layer. Harmless on sample data (0.0-0.1s per
+      call) but could matter on large rasters. Not yet verified
+      on-device.
+    - No analysis formulas, thresholds, NoData rules, CRS treatment,
+      output names, or the dev8 same-combobox dedup were changed; this
+      is a pure performance/duplicate-work fix at a lower shared layer.
+
+    Version 2.3.0-rc3-dev11 (test build, not yet released)
     - Fixed: the dialog header's build label (branding.py BUILD_LABEL) was
       hardcoded to "v2.3.0-rc3-dev5" and never updated since dev5, despite
       metadata.txt advancing through dev6-dev10. It now reads the version

@@ -2,6 +2,33 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev12 — 2026-10-08 (test build, not yet released)
+
+Found from a full dev11 on-device log (not just the excerpts reviewed
+earlier): the original dev6 bug report that motivated dev8's dedup fix
+named `災害リスク/保全対象を含む流域` as the repeatedly-reinitialized layer,
+but dev8's dedup (`ScoringObject.last_init_layer_id`, scoped to the 5
+threshold-adjustable scoring elements) never actually covers `savearea` —
+it isn't one of those 5. The exact symptom dev8 was meant to close was
+still reproducing, confirmed identically in two independent on-device runs
+in the same session (7 repeated calls each time, right after element
+calculation finishes).
+
+### Fixed
+
+- `utils.get_initial_thresholds()` — the shared, expensive (full raster
+  scan) function both the scoring tab's and zoning tab's threshold
+  initialization call into — now caches its result per
+  `(layer id, classes_count)` for the life of the QGIS session. This
+  closes the gap regardless of which combobox or code path re-queries the
+  same layer, including the `savearea` case dev8's combobox-scoped dedup
+  could not reach. No change to the computed values themselves (a cache
+  hit returns the same thresholds a fresh computation would). Harmless on
+  the sample data (0.0–0.1s per call) but may matter on large rasters.
+  **Not yet verified on-device.**
+- No analysis formulas, thresholds, NoData rules, CRS treatment, output
+  names, or dev8's existing same-combobox dedup were changed.
+
 ## 2.3.0-rc3-dev11 — 2026-10-08 (test build, not yet released)
 
 Found during the same dev10 on-device test session that confirmed the O-18

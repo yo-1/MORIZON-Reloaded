@@ -18,8 +18,16 @@ from qgis.gui import *
 import processing
 
 from ..processes import raster_styler
-from ..diag_log import timed
+from ..diag_log import timed, count_event
 from ..constants import PIXELS_THRESHOLD_RESAMPLING
+
+# O-21対応: get_initial_thresholds()の結果（レイヤーID・分類数単位）をキャッシュする。
+# 要素計算完了直後のレイヤー一括追加時、複数のUIコンボボックスが一時的に同一レイヤーを
+# 指すことがあり、dev8のScoringObject単位の重複排除（同一コンボボックスの連続呼び出し
+# のみ対象）をすり抜けて、全画素走査を伴うこの関数が短時間に何度も呼ばれていた
+# （実機ログで7回連続を確認、docs/OPEN_ISSUES.md O-21）。レイヤーの内容が変わる場合は
+# QGIS側で新しいレイヤーID（別オブジェクト）になるため、ID単位のキャッシュは安全。
+_initial_thresholds_cache = {}
 
 
 def get_raster_stats(rlayer: QgsRasterLayer) -> dict:
@@ -115,6 +123,11 @@ def get_initial_thresholds(rlayer: QgsRasterLayer, classes_count=3) -> list:
     if rlayer is None or not rlayer.isValid():
         return [0.0 for _ in range(classes_count - 1)]
 
+    cache_key = (rlayer.id(), classes_count)
+    if cache_key in _initial_thresholds_cache:
+        count_event(f"しきい値初期値のキャッシュ再利用: {rlayer.name()}")
+        return _initial_thresholds_cache[cache_key]
+
     # 画面上のレイヤスタイルを変更しないため、元ファイルから別インスタンスを作る。
     rlayer_filepath = rlayer.dataProvider().dataSourceUri().split("|", 1)[0]
     rlayer_from_path = QgsRasterLayer(rlayer_filepath)
@@ -142,6 +155,7 @@ def get_initial_thresholds(rlayer: QgsRasterLayer, classes_count=3) -> list:
         except (IndexError, TypeError, ValueError, AttributeError):
             thresholds.append(0.0)
 
+    _initial_thresholds_cache[cache_key] = thresholds
     return thresholds
 
 
