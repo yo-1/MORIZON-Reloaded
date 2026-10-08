@@ -16,6 +16,7 @@ from ...settings_manager import SettingsManager
 from ..costcsv_parser import CostcsvParser
 from ...constants import OUTPUT_COST
 from . import shc
+from .utils import resolve_writable_output_path
 
 
 def _read_band(path):
@@ -34,6 +35,11 @@ def _write_like(reference_path, output_path, array, nodata=-9999, dtype=gdal.GDT
     ref = gdal.Open(reference_path, gdal.GA_ReadOnly)
     if ref is None:
         raise RuntimeError(f"基準ラスターを開けません: {reference_path}")
+    # 他のwriter（siteidx/distance/savearea/shc/zoning）と同じく、既存出力が
+    # Windowsでロックされていても処理を中断せず、世代付きファイル（_v2, _v3, ...）
+    # へ安全に退避する。実機で、QGISに読み込んだままの出力を再生成しようとして
+    # Permission deniedで失敗する事例を確認したため追加（O-09の延長）。
+    output_path = resolve_writable_output_path(output_path)
     drv = gdal.GetDriverByName("GTiff")
     out = drv.Create(output_path, ref.RasterXSize, ref.RasterYSize, 1, dtype,
                      options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"])
@@ -134,7 +140,7 @@ def generate(dem_filepath: str, costcsv_filepath: str, output_dir: str) -> str:
     nodata = -9999.0
     result[~valid] = nodata
     output_filepath = os.path.join(output_dir, OUTPUT_COST["FILE_NAME"] + ".tif")
-    _write_like(dem_filepath, output_filepath, result, nodata, gdal.GDT_Float32)
+    output_filepath = _write_like(dem_filepath, output_filepath, result, nodata, gdal.GDT_Float32)
 
     dem_ds = ele_ds = slp_ds = None
     return output_filepath
@@ -179,6 +185,6 @@ def _generate_ruggedness(dem_filepath: str, output_filepath: str) -> str:
     nodata = -9999.0
     rugged = np.full(dem.shape, nodata, dtype=np.float32)
     rugged[valid] = (mx[valid] - mn[valid]).astype(np.float32)
-    _write_like(dem_filepath, output_filepath, rugged, nodata, gdal.GDT_Float32)
+    output_filepath = _write_like(dem_filepath, output_filepath, rugged, nodata, gdal.GDT_Float32)
     min_ds = max_ds = dem_ds = None
     return output_filepath
