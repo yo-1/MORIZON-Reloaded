@@ -2,6 +2,41 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev10 — 2026-10-08 (test build, not yet released)
+
+Found during dev9 on-device testing: re-running element calculation while
+the previous run's 集材作業効率 (cost) output was still loaded in QGIS
+always failed. Reproduced 3 times in the same session.
+
+### Fixed
+
+- `processes/raster_writer/cost.py`'s `_write_like()` called `gdal.Create()`
+  directly on the existing output path, with no fallback for a locked file
+  — unlike `siteidx.py`, `distance.py`, `savearea.py`, `shc.py`, and
+  `zoning.py`, which already use `resolve_writable_output_path()` (O-09) to
+  fall back to a versioned `_v2`, `_v3`, ... path when the existing file
+  can't be deleted. `cost.py` now uses the same helper, matching the other
+  writers exactly. `generate()` and `_generate_ruggedness()` now propagate
+  the (possibly versioned) resolved path back to their callers instead of
+  always returning the original unversioned path.
+- This bug had a cascading effect on-device: because 集材作業効率 kept
+  failing, its stale (earlier-run) output stayed in the project and got
+  auto-selected by the scoring tab, causing `profit.py`'s grid-mismatch
+  check to fail scoring ("収益性の入力3ラスターのグリッドが一致していません").
+  No code change was needed for `profit.py` itself — its validation was
+  working correctly on bad input.
+
+No analysis formulas, thresholds, NoData rules, CRS treatment, or output
+names were changed; this only adds the same lock-fallback every other
+element writer already has.
+
+### Verified
+
+- `py_compile` and `scripts/static_check.py` pass.
+- **Not yet re-tested on-device** — the on-device session that found this
+  bug was the one being fixed; the fix itself has not been exercised on
+  real hardware yet.
+
 ## 2.3.0-rc3-dev9 — 2026-10-02 (test build, not yet released)
 
 Requested by claude.ai (relayed via the user) after a ~39-hour run of
