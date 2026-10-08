@@ -2,6 +2,28 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev14 — 2026-10-08 (test build, not yet released)
+
+O-15's remaining unresolved item: a multi-second UI stall recorded right
+after plugin load, reproduced 7+ times across independent sessions and
+QGIS profiles, while the existing `プラグイン初期化: __init__` /
+`initGui` timed spans both consistently measure 0.0s. The contradiction
+pointed at work happening outside what those spans cover.
+
+### Added (diagnostic only, no behavior change)
+
+- `forest_zoning.py`'s top-level import of `forest_zoning_main_dialog`
+  (which transitively imports every tab controller, `processes/`, and
+  `utils/__init__.py` — the latter has a module-level `import processing`,
+  which can trigger QGIS's Processing provider initialization the first
+  time anything in the session touches it) now runs inside `timed()`, so
+  its actual duration is logged directly instead of being invisible.
+  `diag_log`'s own import was moved earlier to make this possible; it
+  only depends on `qgis.core`/`qgis.PyQt.QtCore`, so this reordering is
+  safe.
+- No analysis formulas, thresholds, NoData rules, CRS treatment, or
+  output names were changed. Not yet exercised on-device.
+
 ## 2.3.0-rc3-dev13 — 2026-10-08 (test build, not yet released)
 
 Found while manually testing dev8's threshold-init dedup (delete a scoring

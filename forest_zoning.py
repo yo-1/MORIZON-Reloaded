@@ -13,15 +13,29 @@ from qgis.PyQt.QtWidgets import *
 from qgis.core import *
 from qgis.gui import *
 
-from .forest_zoning_main_dialog import ForestZoningMainDialog
-from .forest_zoning_settings_dialog import ForestZoningSettingsDialog
-from .branding import DISPLAY_NAME, asset_path
+# 診断用（O-15）: diag_log自体はqgis.core/qgis.PyQt.QtCoreのみに依存する
+# 軽量モジュールなので、重い可能性のあるimportより先に読み込んでも安全。
+# これにより、以下の`forest_zoning_main_dialog`等のimportそのものに
+# `timed()`を使える。
 from .diag_log import (
     UiStallWatchdog,
     count_event,
     register_dialog_visibility_check,
     timed,
 )
+
+# 診断用（O-15）: プラグイン読込直後（MORIZON未操作時）に原因不明の
+# UI停止が複数回・独立して実測されている（dev6以降、7.0秒〜8.0秒規模）。
+# 従来の計測は__init__()の中身だけを対象にしており、__init__()に到達する
+# 前の、このimport文自体（forest_zoning_main_dialogが芋づる式に読み込む
+# 各タブの実装・processing・GRASS関連コードを含む）は未計測だった。
+# utils/__init__.pyがモジュール直下でprocessingをimportしており、QGIS
+# セッション中で初めてprocessingに触れるタイミングと重なった場合、
+# Processingプロバイダの初期化コストをここで負っている可能性がある。
+with timed("プラグイン初期化: モジュールimport(forest_zoning_main_dialog等)"):
+    from .forest_zoning_main_dialog import ForestZoningMainDialog
+    from .forest_zoning_settings_dialog import ForestZoningSettingsDialog
+    from .branding import DISPLAY_NAME, asset_path
 
 PLUGIN_NAME = DISPLAY_NAME
 

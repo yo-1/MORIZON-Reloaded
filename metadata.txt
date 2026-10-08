@@ -13,7 +13,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     Acknowledgements: The original MORIZON was developed through a project commissioned by the Forestry Agency of Japan, with the zoning workflow organized by the Japan Forest Technology Association and the QGIS plugin implemented by MIERUNE.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0-rc3-dev13
+version=2.3.0-rc3-dev14
 icon=imgs/icon.png
 author=Original MORIZON project / Reloaded by Yoichi Wada
 email=yoh@mail.pippin-itabashi.net
@@ -24,7 +24,24 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0-rc3-dev13 (test build, not yet released)
+changelog=Version 2.3.0-rc3-dev14 (test build, not yet released)
+    - Diagnostic only (O-15): previously, __init__()'s timed() span always
+      measured 0.0s while a multi-second UI stall was independently
+      recorded right around plugin load (7+ reproductions across
+      sessions/profiles). That span never covered the module-level
+      import of forest_zoning_main_dialog (and everything it pulls in:
+      every tab controller, processes/, and utils/__init__.py's
+      module-level "import processing", which can trigger QGIS's
+      Processing provider initialization the first time any plugin
+      touches it in a session) -- that import happens before __init__()
+      even starts. Moved diag_log's own import earlier (it only depends
+      on qgis.core/qgis.PyQt.QtCore, so this is safe) and wrapped the
+      forest_zoning_main_dialog/forest_zoning_settings_dialog/branding
+      import in timed(), so this import's actual duration is now logged
+      directly instead of being invisible. No behavior change; purely
+      additional logging. Not yet exercised on-device.
+
+    Version 2.3.0-rc3-dev13 (test build, not yet released)
     - Fixed (O-22): after element calculation finishes (full or partial),
       the scoring tab's layer comboboxes are now automatically checked
       and, if any is bound to a layer whose source file doesn't match
