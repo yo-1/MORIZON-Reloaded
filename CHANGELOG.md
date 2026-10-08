@@ -2,6 +2,39 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev13 — 2026-10-08 (test build, not yet released)
+
+Found while manually testing dev8's threshold-init dedup (delete a scoring
+output's layer group, recalculate just that element, return to the scoring
+tab): the affected combobox ended up pointing at an unrelated layer
+(収益性/地位（カラマツ）instead of 収益性/集材作業効率), with its threshold
+spinboxes still showing stale values left over from before. Reproduced
+identically twice on-device. Clicking "レイヤーを自動設定" fixed it both
+times, but that button also force-resets every scoring threshold to its
+computed default, even for elements the recalculation never touched —
+automating that call on every element-calculation finish would have
+silently wiped manually-tuned thresholds the user never asked to change.
+
+### Fixed
+
+- Element calculation's finish handling (`add_elements_layer_to_project`)
+  now calls a new, narrower check
+  (`ForestZoningMainDialogScoring.fix_broken_scoring_layer_bindings`)
+  instead. It inspects each of the 6 scoring-tab comboboxes, and only
+  touches the ones whose current layer's source file no longer matches
+  what that slot expects (by the same strict filename/generation
+  matching `レイヤーを自動設定` uses, scoped to layers already loaded in
+  the project since element calculation just added them). A mismatched
+  combobox is re-bound and has its threshold recomputed; everything
+  else — including other parameters' manually-edited thresholds — is
+  left completely untouched.
+- No analysis formulas, thresholds, NoData rules, CRS treatment, or
+  output names were changed; this only corrects which layer the scoring
+  UI reads from before the user runs scoring.
+- The underlying mis-binding and the "レイヤーを自動設定" workaround were
+  confirmed on-device (2026-10-08, two independent reproductions); this
+  automatic fix itself has not yet been verified on-device.
+
 ## 2.3.0-rc3-dev12 — 2026-10-08 (test build, not yet released)
 
 Found from a full dev11 on-device log (not just the excerpts reviewed

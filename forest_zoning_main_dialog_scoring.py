@@ -548,6 +548,127 @@ class ForestZoningMainDialogScoring:
 
         self.refresh_scoring_ui()
 
+    def fix_broken_scoring_layer_bindings(self):
+        """O-22対応: 要素計算完了直後に呼び出し、壊れたレイヤー紐付けだけを直す。
+
+        要素計算でレイヤーグループを削除して部分的に再計算すると、スコアリング
+        タブのコンボボックスが（参照先レイヤー消失をきっかけに）無関係なレイヤー
+        へ一時的にフォールバックしたまま残ることが実機で確認されている
+        （docs/OPEN_ISSUES.md O-22）。
+
+        `set_scoring_layer_combobox()`（手動の「レイヤーを自動設定」ボタン）は
+        全項目を無条件に再設定し、しきい値も強制的に初期値へ戻すため、要素計算
+        完了のたびに自動で呼ぶと、手を加えていない他のパラメータのしきい値まで
+        毎回リセットされてしまう。この関数は、**現在の紐付け先が期待するファイル
+        名と一致しないコンボボックスだけ**を直し、既に正しく紐付いているものには
+        一切触れない（しきい値も変更しない）。
+
+        このタイミングでは要素計算が直前にレイヤーを追加済みのため、ディスク上の
+        ファイルを探す`best_file()`相当の処理は不要で、既にロード済みのレイヤー
+        からの検索のみで足りる。
+        """
+        project = QgsProject.instance()
+
+        specs = [
+            ("siteidx", self.main.scoringSiteidxLayerCombobox,
+             [OUTPUT_SITEIDX_SUGI["FILE_NAME"], OUTPUT_SITEIDX_HINOKI["FILE_NAME"], OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"]]),
+            ("cost", self.main.scoringCostLayerCombobox, [OUTPUT_COST["FILE_NAME"]]),
+            ("distance", self.main.scoringDistanceLayerCombobox, [OUTPUT_DISTANCE["FILE_NAME"]]),
+            ("shc", self.main.scoringShcLayerCombobox, [OUTPUT_SHC["FILE_NAME"]]),
+            ("slope", self.main.scoringSlopeLayerCombobox, [OUTPUT_SLOPE["FILE_NAME"]]),
+            ("savearea", self.main.scoringSaveareaLayerCombobox, [OUTPUT_SAVEAREA["FILE_NAME"]]),
+        ]
+
+        def raster_layers():
+            return [lyr for lyr in project.mapLayers().values()
+                    if lyr is not None and lyr.type() == QgsMapLayer.RasterLayer]
+
+        def source_path(layer):
+            if layer is None:
+                return ""
+            try:
+                value = layer.source()
+                if value:
+                    return value.split("|", 1)[0]
+            except Exception:
+                pass
+            try:
+                provider = layer.dataProvider()
+                if provider is not None:
+                    value = provider.dataSourceUri()
+                    if value:
+                        return value.split("|", 1)[0]
+            except Exception:
+                pass
+            return ""
+
+        def base_name(path):
+            return os.path.splitext(os.path.basename(path))[0].lower()
+
+        def match_generation(base, wanted):
+            wanted = wanted.lower()
+            if base == wanted:
+                return 0
+            m = re.fullmatch(re.escape(wanted) + r"_v([0-9]+)", base, re.I)
+            return int(m.group(1)) if m else None
+
+        def is_bound_correctly(combo, wanted_list):
+            path = source_path(combo.currentLayer())
+            if not path:
+                return False
+            base = base_name(path)
+            return any(match_generation(base, wanted) is not None for wanted in wanted_list)
+
+        def best_loaded(wanted):
+            candidates = []
+            for lyr in raster_layers():
+                path = source_path(lyr)
+                if not path:
+                    continue
+                gen = match_generation(base_name(path), wanted)
+                if gen is not None:
+                    candidates.append((gen, lyr))
+            if not candidates:
+                return None
+            candidates.sort(key=lambda x: x[0], reverse=True)
+            return candidates[0][1]
+
+        broken = [(key, combo, wanted_list) for key, combo, wanted_list in specs
+                  if not is_bound_correctly(combo, wanted_list)]
+        if not broken:
+            return
+
+        resolved = []
+        for key, combo, wanted_list in broken:
+            layer = None
+            for wanted in wanted_list:
+                layer = best_loaded(wanted)
+                if layer is not None:
+                    break
+            resolved.append((key, combo, layer))
+
+        blockers = [QSignalBlocker(combo) for _, combo, layer in resolved if layer is not None]
+        try:
+            for _, combo, layer in resolved:
+                if layer is not None:
+                    combo.setLayer(layer)
+        finally:
+            blockers.clear()
+
+        fixed_keys = [key for key, _, layer in resolved if layer is not None]
+        for key in fixed_keys:
+            if key == "savearea":
+                continue
+            self.init_scoring_rlayer_stats(self.scoring_objs_dict[key], force=True)
+            try:
+                self.set_scoring_raster_style(self.scoring_objs_dict[key])
+            except Exception:
+                pass
+
+        if fixed_keys:
+            count_event(f"スコアリングのレイヤー紐付けを自動修正: {','.join(fixed_keys)}")
+            self.refresh_scoring_ui()
+
     @log_if_slow("スコアリング: UI更新(refresh_scoring_ui)")
     def refresh_scoring_ui(self):
         # 入力内容のエラーチェック

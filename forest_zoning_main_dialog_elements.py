@@ -1081,8 +1081,7 @@ class ForestZoningMainDialogElements:
 
         self.main.show()
 
-    @staticmethod
-    def add_elements_layer_to_project(output_rlayers_dict):
+    def add_elements_layer_to_project(self, output_rlayers_dict):
         """
         要素計算の処理結果を受け取って各要素ごとの2レイヤーを1つのグループとしてプロジェクトに追加
         """
@@ -1097,3 +1096,13 @@ class ForestZoningMainDialogElements:
 
                 QgsProject.instance().addMapLayer(rlayer, False)
                 group_node.addLayer(rlayer)
+
+        # O-22対応: レイヤー一括追加の直後、スコアリングタブのコンボボックスが
+        # （参照先レイヤーの削除等をきっかけに）無関係なレイヤーへフォールバック
+        # したまま残ることが実機で確認されている。壊れている紐付けだけを直し、
+        # 既に正しく紐付いている他のパラメータのしきい値には触れない
+        # （「レイヤーを自動設定」ボタンのように全項目を強制リセットはしない）。
+        try:
+            self.main.scoring.fix_broken_scoring_layer_bindings()
+        except Exception:
+            log("要素計算完了後のスコアリングレイヤー自動修正に失敗しました", Qgis.Warning)
