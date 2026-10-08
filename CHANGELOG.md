@@ -25,7 +25,15 @@ calculation finishes).
   could not reach. No change to the computed values themselves (a cache
   hit returns the same thresholds a fresh computation would). Harmless on
   the sample data (0.0–0.1s per call) but may matter on large rasters.
-  **Not yet verified on-device.**
+  **Confirmed on-device (2026-10-08, TestFlight profile)**: the repeated
+  calls for 保全対象を含む流域 dropped from 7 in a row to 2 real
+  computations + 1 cache hit (a new `しきい値初期値のキャッシュ再利用` log line
+  appeared, proving the skip actually happened). It didn't reach exactly
+  1 computation because two different `classes_count` values (3 and 2)
+  were both observed for this layer in the same run — each gets its own
+  cache entry by design, and the root cause of why both values touch this
+  one layer is still unconfirmed. No UI-stall warning occurred during the
+  actual element-calculation run (O-15/O-17 regression clear).
 - No analysis formulas, thresholds, NoData rules, CRS treatment, output
   names, or dev8's existing same-combobox dedup were changed.
 

@@ -35,8 +35,17 @@ changelog=Version 2.3.0-rc3-dev12 (test build, not yet released)
       is not one of them. The new cache is keyed by layer id, so it
       closes the gap regardless of which UI combobox transiently
       re-queries the same layer. Harmless on sample data (0.0-0.1s per
-      call) but could matter on large rasters. Not yet verified
-      on-device.
+      call) but could matter on large rasters. Confirmed on-device
+      (2026-10-08, TestFlight profile): the repeated calls for this
+      layer dropped from 7 in a row to 2 real computations + 1 cache
+      hit (a "しきい値初期値のキャッシュ再利用" log line appeared, not
+      present before dev12). Did not reach exactly 1 computation
+      because two different classes_count values (3 and 2) were both
+      seen for this layer -- plausibly the scoring tab's default and
+      the zoning tab's explicit classes_count=2 both transiently
+      touching it (root cause for that still unconfirmed). No UI-stall
+      warning during the actual processing run (O-15/O-17 regression
+      clear).
     - No analysis formulas, thresholds, NoData rules, CRS treatment,
       output names, or the dev8 same-combobox dedup were changed; this
       is a pure performance/duplicate-work fix at a lower shared layer.
