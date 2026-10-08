@@ -2,6 +2,48 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev11 — 2026-10-08 (test build, not yet released)
+
+Found during the same dev10 on-device test session that confirmed the O-18
+fix. Two unrelated issues surfaced: a stale version label (urgent, user
+flagged it directly), and a new failure one step past where O-18 used to
+block (diagnostic logging added, root cause not yet confirmed).
+
+### Fixed
+
+- `branding.py`'s `BUILD_LABEL` (the version shown in the MORIZON dialog's
+  own header, distinct from the QGIS Plugin Manager's version column) was
+  hardcoded to `v2.3.0-rc3-dev5` and never updated across dev6 through
+  dev10 — five releases where the in-dialog label silently drifted from
+  the real installed version. It now reads the version from `metadata.txt`
+  at import time (same `configparser` pattern already used by
+  `scripts/static_check.py` and `scripts/build_plugin_zip.py`), so this
+  class of bug cannot recur.
+
+### Added (diagnostic only, no behavior change)
+
+- `get_quantile_renderer()` (`processes/raster_styler/utils.py`) now logs
+  the computed Min/Max and the resulting color-ramp shader item count for
+  every raster it styles, plus a warning when Min equals Max (a constant
+  raster, which Quantile classification may not be able to split into
+  multiple classes).
+
+### Confirmed on-device (dev10 build, same test session)
+
+- **O-18 fix confirmed working**: re-running element calculation no
+  longer fails with "Deleting ... failed: Permission denied" for
+  集材作業効率. The GDAL write now succeeds (falling back to a
+  versioned path when needed).
+- **New failure found one step later** (O-19, not yet understood): right
+  after the successful write, `write_scoring_qml()` failed with
+  "QML内に連続値カラーランプ（colorrampshader/item）が見つかりません。
+  QGIS 3.44のQML構造またはレイヤ描画方式が旧版と異なります。" This step
+  was never reached in any earlier test, because O-18's Permission Denied
+  failure always aborted the element calculation before getting here.
+  Whether this is specific to 集材作業効率's data (e.g., a constant-value
+  raster on the small sample DEM) or a broader QGIS 3.44 `createShader()`
+  behavior change is not yet confirmed; see docs/OPEN_ISSUES.md O-19.
+
 ## 2.3.0-rc3-dev10 — 2026-10-08 (test build, not yet released)
 
 Found during dev9 on-device testing: re-running element calculation while
