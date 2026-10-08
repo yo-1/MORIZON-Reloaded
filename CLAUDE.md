@@ -2,7 +2,7 @@
 
 ## Mission
 
-Maintain and complete MORIZON Reloaded, an unofficial GPL-3.0-only compatibility port of the original Forestry Agency MORIZON QGIS plugin. The last officially released version is `v2.3.0-rc2`; the current Windows on-device test build on this branch is `v2.3.0-rc3-dev5` (see `CHANGELOG.md` and `docs/OPEN_ISSUES.md` O-15 for the open freeze/UI-stall investigation this build exists to diagnose). Preserve the original forestry-zoning formulas, thresholds, score meanings, file names, and four-quadrant classification unless the user explicitly approves a methodological change.
+Maintain and complete MORIZON Reloaded, an unofficial GPL-3.0-only compatibility port of the original Forestry Agency MORIZON QGIS plugin. The last officially released version is `v2.3.0-rc2`; the current Windows on-device test build on this branch is `v2.3.0-rc3-dev11` (see `CHANGELOG.md` and `docs/OPEN_ISSUES.md` for open issues — O-15 the freeze/UI-stall investigation this diagnostic line exists to diagnose, O-19 a newly-found QML styling failure). When bumping the test-build version, update this line too (`branding.py`'s in-dialog label now reads `metadata.txt` automatically, but this file and `README.md` are still manual and have drifted before — see O-20). Preserve the original forestry-zoning formulas, thresholds, score meanings, file names, and four-quadrant classification unless the user explicitly approves a methodological change.
 
 ## Repository layout
 
