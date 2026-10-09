@@ -2,6 +2,47 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev16 — 2026-10-09 (test build, not yet released)
+
+Follow-up to O-23 (found during the same original-vs-ported source diff
+review as O-24, above): `processes/raster_writer/distance.py` rasterized
+the road network directly onto the DEM's own grid before computing
+proximity with `gdal.ComputeProximity`. When the road network did not
+fully cover the DEM extent, this burned zero pixels, and
+`ComputeProximity` filled the *entire* output with a "no target pixel"
+sentinel value (observed as 65535) rather than correct distances or
+NoData — confirmed by reproducing it with a synthetic DEM and a real
+GDAL/GRASS installation (same environment used for O-24). The user asked,
+before any fix, whether changing this would risk losing fidelity to the
+original MORIZON's actual behavior; that was checked first (see below),
+and only approved for implementation afterward.
+
+### Fixed
+
+- (O-23) Distance is now computed on the union of the DEM extent and the
+  road network's extent — snapped to the DEM's own pixel grid — matching
+  what the original MORIZON's `grass7:r.grow.distance` step actually did
+  (compute on a region covering both extents, then resample down to the
+  DEM grid). Because the union grid shares the DEM's resolution and pixel
+  alignment, the DEM's own window is extracted by exact integer-pixel
+  crop rather than resampling, avoiding resampling-induced imprecision
+  rather than introducing it.
+- Verified with the same real SAGA/GRASS/GDAL installation used for O-24,
+  on synthetic test cases:
+  - Road fully inside the DEM extent (the ordinary case): the new logic
+    is numerically **identical** (0 difference) to the previous
+    direct-DEM-grid logic. No behavior change for ordinary data.
+  - Road extending beyond the DEM extent: the new logic matches a real
+    GRASS `r.grow.distance` run on the same union grid to floating-point
+    precision (max diff ~6.5e-05 m), resolving the bug while staying
+    faithful to what the original actually computed.
+  See `docs/OPEN_ISSUES.md` (O-23) for the full verification data,
+  including an earlier, misleading comparison that initially suggested a
+  ~10 m discrepancy and turned out to be an apples-to-oranges mistake in
+  the verification script (inconsistent `ALL_TOUCHED` rasterization
+  option between the two sides being compared), not a real one.
+- Not yet exercised on-device.
+
 ## 2.3.0-rc3-dev15 — 2026-10-09 (test build, not yet released)
 
 While diffing the ported code against the original pre-port MORIZON v2.1

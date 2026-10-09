@@ -13,7 +13,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     Acknowledgements: The original MORIZON was developed through a project commissioned by the Forestry Agency of Japan, with the zoning workflow organized by the Japan Forest Technology Association and the QGIS plugin implemented by MIERUNE.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0-rc3-dev15
+version=2.3.0-rc3-dev16
 icon=imgs/icon.png
 author=Original MORIZON project / Reloaded by Yoichi Wada
 email=yoh@mail.pippin-itabashi.net
@@ -24,7 +24,32 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0-rc3-dev15 (test build, not yet released)
+changelog=Version 2.3.0-rc3-dev16 (test build, not yet released)
+    - Fixed (O-23): processes/raster_writer/distance.py's distance
+      calculation no longer rasterizes the road network directly onto
+      the DEM's own grid. When the road vector did not fully cover the
+      DEM extent, that direct rasterization could burn zero pixels,
+      causing gdal.ComputeProximity to fill the entire output with a
+      "no target pixel" sentinel value (observed as 65535) instead of
+      either correct distances or NoData -- confirmed by reproducing it
+      with a synthetic DEM and a real GDAL/GRASS installation. The fix
+      rasterizes onto the union of the DEM extent and the road extent
+      (snapped to the DEM's own pixel grid, matching the original
+      MORIZON's grass7:r.grow.distance approach), runs
+      gdal.ComputeProximity there, then crops the DEM's own window out
+      by exact integer pixel offset (no resampling needed, since the
+      union grid shares the DEM's resolution and pixel alignment).
+      Verified against a real SAGA/GRASS/GDAL installation on synthetic
+      test cases: (1) when the road is fully inside the DEM extent, the
+      new logic is numerically identical (0 difference) to the old
+      direct-DEM-grid logic -- no change for the common case; (2) when
+      the road extends beyond the DEM extent, the new logic matches a
+      real GRASS r.grow.distance run on the same union grid to
+      floating-point precision (max diff ~6.5e-05m), resolving the bug.
+      See docs/OPEN_ISSUES.md O-23 for the full verification data.
+      Not yet exercised on-device.
+
+    Version 2.3.0-rc3-dev15 (test build, not yet released)
     - Fixed (O-24): processes/raster_writer/shc.py's
       _plan_curvature_zevenbergen() no longer doubles the r/t
       (second-derivative) coefficients before computing plan curvature.
