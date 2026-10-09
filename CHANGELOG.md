@@ -2,7 +2,40 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev17 — 2026-10-09 (test build, not yet released)
+
+Found by the user during dev16 on-device testing (`Zoningkit_SAMPLE` data,
+Windows/QGIS 3.44), while checking the SHC and 地利 statistics the O-24
+and O-23 fixes above were expected to change.
+
+### Fixed
+
+- (O-25) The scoring tab's "統計値表示" button failed with
+  `RuntimeError: x must be a sequence` for every element, instead of
+  opening the stats/histogram dialog. `forest_zoning_scoring_stats_dialog.py`'s
+  `redraw_graph()` passed a bare scalar `float` to `Line2D.set_xdata()`
+  on the line matplotlib's `axvline()` returns; the matplotlib version
+  bundled with QGIS 3.44 requires an array-like argument there (older
+  versions tolerated a scalar). Fixed by passing the same 2-element
+  `[x, x]` form `axvline()` itself uses internally — this works
+  regardless of matplotlib version.
+- This is unrelated to O-23/O-24: `forest_zoning_scoring_stats_dialog.py`
+  was last touched at the `v2.3.0-rc2` release, before any of this
+  session's work, and is a pure display/API-compatibility fix — no
+  analysis formula, threshold, or raster output is affected.
+- Not yet exercised on-device.
+
 ## 2.3.0-rc3-dev16 — 2026-10-09 (test build, not yet released)
+
+**On-device confirmation (2026-10-09, `Zoningkit_SAMPLE` data, Windows/QGIS 3.44):**
+the user ran element calculation and checked the scoring tab's threshold-init
+log. 地形の複雑さ (O-24): Min/Max went from 0.0022468054667115/0.022249130532146
+(dev12) to 0.0012491731904447/0.013662728480995 (dev16) — a reduction to
+~55.6%/~61.4%, matching the ~0.585 median ratio found during the
+SAGA-comparison verification above. 地利 (O-23): Min/Max
+(0.0/1316.0926513672) matched dev12 exactly, as expected since this
+dataset's road network is fully inside the DEM extent. Both fixes behaved
+as predicted on real data.
 
 Follow-up to O-23 (found during the same original-vs-ported source diff
 review as O-24, above): `processes/raster_writer/distance.py` rasterized

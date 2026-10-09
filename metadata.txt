@@ -13,7 +13,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     Acknowledgements: The original MORIZON was developed through a project commissioned by the Forestry Agency of Japan, with the zoning workflow organized by the Japan Forest Technology Association and the QGIS plugin implemented by MIERUNE.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0-rc3-dev16
+version=2.3.0-rc3-dev17
 icon=imgs/icon.png
 author=Original MORIZON project / Reloaded by Yoichi Wada
 email=yoh@mail.pippin-itabashi.net
@@ -24,7 +24,19 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0-rc3-dev16 (test build, not yet released)
+changelog=Version 2.3.0-rc3-dev17 (test build, not yet released)
+    - Fixed (O-25): the scoring tab's "統計値表示" (show statistics) button
+      threw "RuntimeError: x must be a sequence" and failed to open, for
+      any element. forest_zoning_scoring_stats_dialog.py's redraw_graph()
+      passed a bare scalar float to a Line2D.set_xdata() call (on the
+      line returned by matplotlib's axvline()); the matplotlib version
+      bundled with QGIS requires an array-like there. Fixed by passing
+      the 2-element [x, x] form axvline() itself uses internally. Found
+      by the user during dev16 on-device testing; unrelated to O-23/O-24
+      (this file was last touched at the v2.3.0-rc2 release, before any
+      of this session's work). Not yet exercised on-device.
+
+    Version 2.3.0-rc3-dev16 (test build, not yet released)
     - Fixed (O-23): processes/raster_writer/distance.py's distance
       calculation no longer rasterizes the road network directly onto
       the DEM's own grid. When the road vector did not fully cover the
