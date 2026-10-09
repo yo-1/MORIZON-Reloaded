@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import tempfile
-import xml.etree.ElementTree as ET
 
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *

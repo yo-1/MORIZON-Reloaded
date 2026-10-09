@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import tempfile
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # nosec B405 - only parses QML style files this plugin itself generates on local disk, never external/network XML
 import sys
 
 from qgis.PyQt.QtCore import *
@@ -298,7 +298,7 @@ def replace_colorramp_labels(qml_filepath: str, output_filepath: str, labels=[])
     Returns:
         str: 生成されたQMLのファイルパス
     """
-    tree = ET.parse(qml_filepath)
+    tree = ET.parse(qml_filepath)  # nosec B314 - local QML file this plugin generated itself, not external data
     root = tree.getroot()
     items = _get_colorramp_items_from_qml_root(root)
     if not items:
@@ -347,7 +347,7 @@ def round_label_precision(qml_filepath: str, output_filepath: str, precision=2) 
     Returns:
         str: 出力ファイルパス
     """
-    tree = ET.parse(qml_filepath)
+    tree = ET.parse(qml_filepath)  # nosec B314 - local QML file this plugin generated itself, not external data
     root = tree.getroot()
     items = _get_colorramp_items_from_qml_root(root)
     if not items:
@@ -388,7 +388,7 @@ def add_tiny_value_to_thresholds(qml_filepath: str, output_filepath: str, tiny_v
     Returns:
         str: 出力ファイルパス
     """
-    tree = ET.parse(qml_filepath)
+    tree = ET.parse(qml_filepath)  # nosec B314 - local QML file this plugin generated itself, not external data
     root = tree.getroot()
     items = _get_colorramp_items_from_qml_root(root)
     if not items:
