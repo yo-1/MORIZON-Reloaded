@@ -11,7 +11,7 @@
 | O-07 | 対応済み（データ整備）・要判断（基準値の承認） | 中 | 再配布可能な最小回帰データ | 2026-10-09、`test_data/ZoningKit_SYNTH/`として、完全に合成（数式生成・DEM/NPP/SRAD/VTEX/建物/路網/作業システムCSVすべて）した最小データセットを追加（生成スクリプト`scripts/generate_regression_test_data.py`）。実在地点とは無関係で、GPL-3.0-onlyのもとこのリポジトリと同様に再配布可能。作業システムCSVは`processes/costcsv_parser.py`のdocstring記載のサンプル値をそのまま使用。`CostcsvParser`で実際にパース可能なことを確認済み。**副次的に発見**: `scripts/build_plugin_zip.py`の`EXCLUDED_TOP_LEVEL`に`test_data`が無く、配布ZIPへ誤って混入することが判明したため追加・修正済み（`MORIZON/test_data/...`として含まれていたものを除外、再ビルドで混入が無いことを確認）。**要判断**: このデータセットを使った実際のQGIS実機での初回実行・しきい値・出力値を「受入済み基準（accepted reference run）」として承認するかどうかは、人による実機確認が必要（`test_data/README.md`参照） |
 | O-08 | 対応済み（dev18） | 中 | `experimental=False`の妥当性。README冒頭の「test build for freeze/error diagnosis; not the final v2.3.0 release」という診断ビルド表記と矛盾していた | 2026-10-09、`experimental=True`へ変更（dev18）。正式なv2.3.0公開判断時に`False`へ戻すことを想定。コード変更なし |
 | O-09 | 一部対応 | 低 | 広い例外捕捉箇所のログ不足 | 重要失敗が追跡可能 |
-| O-10 | 未確認 | 低 | QGIS 3.16版QML属性の残存影響 | 3.44で表示確認・必要時限定修正 |
+| O-10 | 実害なし・変更不要と判断 | 低 | QGIS 3.16版QML属性の残存影響（`processes/raster_styler/*.py`内のQMLテンプレート文字列に`version="3.16.x-Hannover"`が複数箇所残存） | 2026-10-09、dev16〜dev18の実機テスト（印刷レイアウト、スコア統計ダイアログのヒストグラム配色、ゾーニング図・ゾーン統計量の凡例・配色表示等、QMLベースのスタイルを多数の場面で確認）で、表示上の問題は一度も見られなかった。`docs/HANDOFF.md`の既存方針（「描画に問題がない限り機械的に変更しない」）どおり、**変更不要と判断**する。コード変更なし |
 | O-11 | 対応済み | 中 | GRASS Processing Provider未導入時、処理開始前の事前チェックが無い | プリフライトチェックの要否をユーザーが判断 |
 | O-12 | 対応済み | 中 | 入力レイヤのCRS不一致が処理途中まで判明しない（distance.py等） | 事前警告の要否をユーザーが判断（自動再投影は不可） |
 | O-13 | 保留 | 低 | 作業システムCSVのフォーマット耐性（列数不足・区切り文字違い） | もりぞんCSV仕様との整合を保ったまま改善できるか要検討 |
