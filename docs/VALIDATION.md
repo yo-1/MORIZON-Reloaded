@@ -19,6 +19,8 @@ python scripts/build_plugin_zip.py
 
 記録項目: QGIS完全版番号、GDAL、GRASS、Python、OS build、プラグイン版、入力データ識別子、CRS、実行日時。
 
+入力データは、権利関係が確認できている`test_data/ZoningKit_SYNTH/`（完全に合成されたデータ、GPL-3.0-onlyで再配布可能、O-07）を使うか、別途入手した`Zoningkit_SAMPLE`等の配布データを使う。前者は再配布可能な最小データセットとして、CIや他環境での再現にも使える。
+
 ## 3. スモーク試験
 
 - ZIPからインストールできる

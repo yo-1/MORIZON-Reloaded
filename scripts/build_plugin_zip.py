@@ -24,6 +24,7 @@ EXCLUDED_TOP_LEVEL = {
     "references",
     "original",
     "dist",
+    "test_data",
     "CLAUDE.md",
 }
 EXCLUDED_PARTS = {"__pycache__", ".pytest_cache"}
