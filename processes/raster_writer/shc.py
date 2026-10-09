@@ -112,7 +112,10 @@ def _plan_curvature_zevenbergen(smoothed, valid, cellsize):
     元MORIZONの SAGA Slope, Aspect, Curvature METHOD=6
     = Zevenbergen & Thorne (1987) のPlan Curvatureを再現する。
 
-    旧MORIZONが利用したSAGA 2.x系の Set_Zevenbergen / Set_From_Polynom の係数処理を再現。
+    SAGA本体のソース（Morphometry.cpp の Set_Zevenbergen / Set_From_Polynom）を
+    実際のSAGA 9.3.1の実行結果と突き合わせて確認済み（O-24, 2026-10-08）。
+    C_PLAN = -(t*p^2 + r*q^2 - 2*s*p*q) / (p^2+q^2)^1.5 で、r・t（SAGA内部名D・E）に
+    2倍処理は無い。
     """
     z = smoothed
     out = np.full(z.shape, np.nan, dtype=np.float64)
@@ -145,14 +148,10 @@ def _plan_curvature_zevenbergen(smoothed, valid, cellsize):
     p = ((n - c) - (s_ - c)) / (2.0 * cellsize)
     q = ((e - c) - (w - c)) / (2.0 * cellsize)
 
-    # Legacy SAGA 2.x compatibility:
-    # 旧MORIZONが利用していたSAGAのMorphometry実装では、
-    # Set_From_Polynom() 内で二次微分係数 r, t を2倍してから
-    # plan curvature等を評価する版が用いられていた。
-    # Zevenbergen式の係数D/Eは「2次項係数 (= 2階微分の1/2)」なので、
-    # 旧SAGAの実装挙動に合わせてここで2倍する。
-    r *= 2.0
-    t *= 2.0
+    # O-24: 以前はここで r,t を2倍していたが、実SAGA(9.3.1)実行結果および
+    # SAGA本体ソース(Morphometry.cpp)との突き合わせで、2倍処理は誤りだったと判明した
+    # （2倍版はSAGA実出力と相関0.990・中央値で約1.7倍の過大評価、未修正版=SAGA実出力と
+    # 相関1.000000で一致）。r,tはSAGAのD,Eと同一の定義のまま、2倍せずに使う。
 
     p2q2 = p * p + q * q
     good = v & np.isfinite(p2q2) & (p2q2 > 0.0)

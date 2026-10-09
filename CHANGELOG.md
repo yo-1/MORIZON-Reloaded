@@ -2,6 +2,43 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev15 — 2026-10-09 (test build, not yet released)
+
+While diffing the ported code against the original pre-port MORIZON v2.1
+source file-by-file (a numeric-fidelity review requested by the user),
+`processes/raster_writer/shc.py`'s rewrite of SAGA's
+`slopeaspectcurvature` (METHOD=6, Zevenbergen & Thorne 1987) carried a
+comment claiming that doubling the `r`/`t` second-derivative coefficients
+was needed to match "legacy SAGA 2.x" behavior. No QGIS/SAGA is available
+in this environment, so this was checked by installing real SAGA 9.3.1,
+GDAL 3.8.4, and GRASS 8.3.2 via apt and running the actual algorithms
+against a synthetic DEM.
+
+### Fixed
+
+- (O-24) Removed the `r *= 2.0; t *= 2.0` doubling in
+  `_plan_curvature_zevenbergen()`. Comparing against real SAGA 9.3.1's
+  `C_PLAN` output: the doubled (shipped) formula had correlation 0.990
+  with SAGA's actual output and was systematically too large by a
+  non-constant factor (median ratio ~1.7x — not a clean linear scaling,
+  confirming a formula error rather than a version-specific constant).
+  With the doubling removed, the formula matches SAGA's real output to
+  floating-point precision (correlation 1.000000, max diff 1.07e-08).
+  SAGA's own source (`Morphometry.cpp`, `Set_Zevenbergen` /
+  `Set_From_Polynom`) was also read directly and contains no such
+  doubling. The other two re-implemented SHC steps — the circular
+  Gaussian smoothing and the circular-neighborhood standard deviation —
+  were independently verified (against a from-scratch brute-force 2D
+  convolution, and against a real GRASS `r.neighbors` run) and already
+  matched exactly; only this one line was wrong.
+- This changes SHC (地形の複雑さ) output values, which had been
+  systematically overestimated, and therefore the downstream 災害リスク
+  score and final zoning class for affected cells. See
+  `docs/OPEN_ISSUES.md` (O-24) for the full verification data and
+  methodology. Not yet exercised on the Windows/QGIS/SAGA on-device
+  environment — real on-device SHC output should be re-checked against
+  this build before release.
+
 ## 2.3.0-rc3-dev14 — 2026-10-08 (test build, not yet released)
 
 O-15's remaining unresolved item: a multi-second UI stall recorded right
