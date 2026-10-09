@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import json
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # nosec B405 - only parses QGIS's own in-process layer metadata, never external/network XML
 import tempfile
 import os
 import re
@@ -58,7 +58,12 @@ def get_raster_stats(rlayer: QgsRasterLayer) -> dict:
     }
 
     try:
-        root = ET.fromstring(
+        # htmlMetadata()はQGIS自身が現在開いているラスターレイヤーについて生成する
+        # 内部メタデータ文字列であり、外部・ネットワーク由来のXMLではないため、
+        # XXE等の脅威モデルは当てはまらない（banditのB314/B405は汎用ルールとして
+        # 誤検知する）。defusedxml追加は、このためだけに新規の外部依存を増やす
+        # ことになるため見送る。
+        root = ET.fromstring(  # nosec B314
             "<root>"
             + rlayer.dataProvider().htmlMetadata().replace("\n", "")
             + "</root>"
@@ -66,7 +71,7 @@ def get_raster_stats(rlayer: QgsRasterLayer) -> dict:
     except ET.ParseError as e:
         # xyzタイルはhtmlMetadataが適切なXMLとしてパース出来ないので例外をキャッチ
         print(f"failed to parse htmlMetada of {rlayer.name()}, skipping...")
-        root = ET.fromstring("<root></root>")
+        root = ET.fromstring("<root></root>")  # nosec B314 - hardcoded literal, not external data
 
     for item in root.iter():
         if item.text == "MBTiles":  # GDAL-DriverがMBTilesの場合
