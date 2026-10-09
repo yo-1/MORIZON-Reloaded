@@ -8,6 +8,38 @@ entry are the internal diagnostic-build history that led up to the
 none of those builds were released independently; `2.3.0` supersedes all
 of them.
 
+## 2.3.1 — 2026-10-09 (packaging fix)
+
+No processing code changed. Fixed two issues found while submitting
+`2.3.0` to the official QGIS plugin repository (plugins.qgis.org):
+
+- `metadata.txt`'s `author=` field contained a slash
+  (`Original MORIZON project / Reloaded by Yoichi Wada`), which the
+  repository's upload form rejects ("Author name cannot contain
+  slashes"). Changed to
+  `Yoichi Wada (MORIZON Reloaded, based on the original MORIZON project)`.
+  The original project's attribution remains fully documented in
+  `metadata.txt`'s `about` field, `NOTICE`, and `README.md` — this field
+  is just the repository's "publisher" string.
+- The repository's automated security scan (Bandit, one of several
+  checks it runs on upload) flagged five local XML-parsing calls as a
+  blocking "Critical" issue (`B314`/`B405`): `utils/__init__.py` parsing
+  QGIS's own in-process raster layer metadata (`htmlMetadata()`) and a
+  hardcoded literal string, and `processes/raster_styler/utils.py`
+  parsing QML style files this plugin generates itself on local disk.
+  None of these parse external or network-sourced XML, so the
+  vulnerability class Bandit warns about (XXE) doesn't apply here.
+  Annotated each with a `# nosec B314`/`# nosec B405` comment and a
+  rationale, rather than adding `defusedxml` as a new external
+  dependency just for this. Also removed an unused
+  `xml.etree.ElementTree` import in
+  `processes/raster_styler/siteidx.py` found during the same pass.
+
+Re-ran `bandit -r` against the distribution ZIP after the fix: Medium
+severity findings went from 5 to 0 (Low-severity findings, mostly
+defensive `try/except/pass` blocks, are unaffected and unrelated to
+this issue).
+
 ## 2.3.0 — 2026-10-09 (official release)
 
 もりぞん（MORIZON）互換プラグインの最初の正式リリースです。QGIS 3.44.x

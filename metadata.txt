@@ -15,7 +15,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     External dependencies: this plugin relies on QGIS's bundled GDAL and NumPy, and on matplotlib (bundled with QGIS 3.44's Python environment on Windows). Two processing steps (集材作業効率/cost's ruggedness terrain analysis and 保全対象を含む流域/savearea's watershed delineation) additionally require the GRASS Processing Provider to be enabled in QGIS; the plugin does not install or bundle GRASS itself. No binaries are bundled with this plugin.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.0
+version=2.3.1
 icon=imgs/icon.png
 author=Yoichi Wada (MORIZON Reloaded, based on the original MORIZON project)
 email=yoh@mail.pippin-itabashi.net
@@ -26,7 +26,19 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.0 (official release)
+changelog=Version 2.3.1 (packaging fix)
+    No processing code changed. Fixed two issues found while submitting to
+    the official QGIS plugin repository: the author= field contained a
+    slash, which the repository's upload form rejects; and Bandit (part of
+    the repository's automated security scan) flagged five local XML
+    parsing calls (QML style files this plugin generates itself, and
+    QGIS's own in-process layer metadata -- never external/network data)
+    as a blocking "Critical" issue. Both are annotated/suppressed with a
+    documented rationale rather than by adding a new external dependency
+    (defusedxml). No analysis formulas, thresholds, NoData rules, CRS
+    treatment, or output names were changed.
+
+    Version 2.3.0 (official release)
     First official release of this compatibility port. Preserves the
     original MORIZON analysis logic, thresholds, scoring structure, and
     four-quadrant zoning classification unchanged; re-implements and
