@@ -2,6 +2,27 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+## 2.3.0-rc3-dev18 — 2026-10-09 (test build, not yet released)
+
+Housekeeping pass over the remaining release-gate items (O-01, O-06, O-07,
+O-08, O-16) after dev17's on-device testing (print layout, repeat
+execution/file locks, Japanese/space paths) all passed. No processing
+code changed in this build.
+
+- (O-08) `metadata.txt`: `experimental=False` → `True`. This is a
+  diagnostic/test build, not the final v2.3.0 release (see the README
+  banner), so marking it stable was inconsistent with its own stated
+  status. Revisit at the actual final release.
+- (O-01) Confirmed README.md's QGIS version references already agree
+  with `metadata.txt` (`qgisMinimumVersion=3.44`) throughout -- the
+  mismatch recorded in the original handoff doc no longer exists in
+  this tree. No change needed.
+- (O-16) Reviewed this session's on-device screenshots (several full
+  QGIS window captures from the dev17 testing rounds) for the
+  rc3-dev2-era toolbar-duplication issue; no duplicate MORIZON icon
+  appeared in any of them. Recorded as a visual review (推定), not a
+  dedicated repro test (確定), in `docs/OPEN_ISSUES.md`.
+
 ## 2.3.0-rc3-dev17 — 2026-10-09 (test build, not yet released)
 
 Found by the user during dev16 on-device testing (`Zoningkit_SAMPLE` data,
