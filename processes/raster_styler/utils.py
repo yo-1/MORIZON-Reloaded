@@ -14,6 +14,7 @@ from qgis.PyQt.QtWidgets import *
 from qgis.core import *
 from qgis.gui import *
 
+from ...diag_log import log, timed
 from ...settings_manager import SettingsManager
 
 
@@ -32,12 +33,15 @@ def get_quantile_renderer(rlayer: QgsRasterLayer, colors=[[255, 255, 255], [255,
         raise RuntimeError(f"ラスターを開けません: {rlayer.source()}")
 
     provider = rlayer.dataProvider()
-    stats = provider.bandStatistics(
-        1,
-        QgsRasterBandStats.Min | QgsRasterBandStats.Max,
-        rlayer.extent(),
-        0
-    )
+    # sampleSize=0 は全ピクセルを走査する。大きなラスターでは時間がかかるため計測する。
+    with timed(f"ラスター統計(Min/Max)の取得 layer={rlayer.name()}, "
+               f"size={rlayer.width()}x{rlayer.height()}"):
+        stats = provider.bandStatistics(
+            1,
+            QgsRasterBandStats.Min | QgsRasterBandStats.Max,
+            rlayer.extent(),
+            0
+        )
     min_value = stats.minimumValue
     max_value = stats.maximumValue
 
@@ -67,6 +71,21 @@ def get_quantile_renderer(rlayer: QgsRasterLayer, colors=[[255, 255, 255], [255,
         clip=False,
         extent=rlayer.extent()
     )
+
+    # 診断用: 実機で「QML内に連続値カラーランプ（colorrampshader/item）が
+    # 見つかりません」が発生する事例を確認した（O-19、原因未確定）。
+    # Min=Maxの定数ラスタでQuantile分類が区分を作れない可能性を含め、
+    # 次回発生時に実測値で切り分けられるよう記録する。挙動は変更しない。
+    try:
+        shader_fn = renderer.shader().rasterShaderFunction() if renderer.shader() else None
+        item_count = len(shader_fn.colorRampItemList()) if shader_fn is not None else -1
+    except Exception:
+        item_count = -1
+    log(f"Quantile分類(ラスタ): layer={rlayer.name()}, Min={min_value}, Max={max_value}, "
+        f"生成された区分数={item_count}")
+    if min_value == max_value:
+        log(f"Quantile分類: layer={rlayer.name()} は全ピクセルが同一値（{min_value}）です。"
+            "分類区分が作れずQML出力に失敗する可能性があります。", Qgis.Warning)
 
     return renderer
 

@@ -18,7 +18,16 @@ from qgis.gui import *
 import processing
 
 from ..processes import raster_styler
+from ..diag_log import timed, count_event
 from ..constants import PIXELS_THRESHOLD_RESAMPLING
+
+# O-21対応: get_initial_thresholds()の結果（レイヤーID・分類数単位）をキャッシュする。
+# 要素計算完了直後のレイヤー一括追加時、複数のUIコンボボックスが一時的に同一レイヤーを
+# 指すことがあり、dev8のScoringObject単位の重複排除（同一コンボボックスの連続呼び出し
+# のみ対象）をすり抜けて、全画素走査を伴うこの関数が短時間に何度も呼ばれていた
+# （実機ログで7回連続を確認、docs/OPEN_ISSUES.md O-21）。レイヤーの内容が変わる場合は
+# QGIS側で新しいレイヤーID（別オブジェクト）になるため、ID単位のキャッシュは安全。
+_initial_thresholds_cache = {}
 
 
 def get_raster_stats(rlayer: QgsRasterLayer) -> dict:
@@ -75,20 +84,23 @@ def get_raster_stats(rlayer: QgsRasterLayer) -> dict:
             metadata_stats[prefix] = float(value)
 
     # メタデータに統計値が含まれていない場合は計算する
-    stats = {
-        "MAX": metadata_stats["STATISTICS_MAXIMUM"]
-        if metadata_stats["STATISTICS_MAXIMUM"] is not None
-        else rlayer.dataProvider().bandStatistics(1).maximumValue,
-        "MIN": metadata_stats["STATISTICS_MINIMUM"]
-        if metadata_stats["STATISTICS_MINIMUM"] is not None
-        else rlayer.dataProvider().bandStatistics(1).minimumValue,
-        "MEAN": metadata_stats["STATISTICS_MEAN"]
-        if metadata_stats["STATISTICS_MEAN"] is not None
-        else rlayer.dataProvider().bandStatistics(1).mean,
-        "STD_DEV": metadata_stats["STATISTICS_STDDEV"]
-        if metadata_stats["STATISTICS_STDDEV"] is not None
-        else rlayer.dataProvider().bandStatistics(1).stdDev,
-    }
+    # 診断用: この計算(bandStatistics)は全ピクセルを走査し、UIスレッドから呼ばれる。
+    # 遅かった場合だけ記録する（UIイベントから頻繁に呼ばれるため）。処理内容は変更しない。
+    with timed(f"ラスター統計の取得 layer={rlayer.name()}", min_seconds=0.3):
+        stats = {
+            "MAX": metadata_stats["STATISTICS_MAXIMUM"]
+            if metadata_stats["STATISTICS_MAXIMUM"] is not None
+            else rlayer.dataProvider().bandStatistics(1).maximumValue,
+            "MIN": metadata_stats["STATISTICS_MINIMUM"]
+            if metadata_stats["STATISTICS_MINIMUM"] is not None
+            else rlayer.dataProvider().bandStatistics(1).minimumValue,
+            "MEAN": metadata_stats["STATISTICS_MEAN"]
+            if metadata_stats["STATISTICS_MEAN"] is not None
+            else rlayer.dataProvider().bandStatistics(1).mean,
+            "STD_DEV": metadata_stats["STATISTICS_STDDEV"]
+            if metadata_stats["STATISTICS_STDDEV"] is not None
+            else rlayer.dataProvider().bandStatistics(1).stdDev,
+        }
 
     return stats
 
@@ -111,15 +123,23 @@ def get_initial_thresholds(rlayer: QgsRasterLayer, classes_count=3) -> list:
     if rlayer is None or not rlayer.isValid():
         return [0.0 for _ in range(classes_count - 1)]
 
+    cache_key = (rlayer.id(), classes_count)
+    if cache_key in _initial_thresholds_cache:
+        count_event(f"しきい値初期値のキャッシュ再利用: {rlayer.name()}")
+        return _initial_thresholds_cache[cache_key]
+
     # 画面上のレイヤスタイルを変更しないため、元ファイルから別インスタンスを作る。
     rlayer_filepath = rlayer.dataProvider().dataSourceUri().split("|", 1)[0]
     rlayer_from_path = QgsRasterLayer(rlayer_filepath)
     if not rlayer_from_path.isValid():
         return [0.0 for _ in range(classes_count - 1)]
 
-    renderer = raster_styler.get_quantile_renderer(
-        rlayer_from_path, [[0, 0, 0] for _ in range(classes_count)]
-    )
+    # 診断用: UIスレッド上で全ピクセルの統計を取るため、大きなラスターでは
+    # ここでQGISが応答しなくなる可能性がある。開始/完了の時刻を残して確認する。
+    with timed(f"しきい値初期値の算出（Quantile分類） layer={rlayer.name()}"):
+        renderer = raster_styler.get_quantile_renderer(
+            rlayer_from_path, [[0, 0, 0] for _ in range(classes_count)]
+        )
 
     try:
         shader = renderer.shader()
@@ -135,6 +155,7 @@ def get_initial_thresholds(rlayer: QgsRasterLayer, classes_count=3) -> list:
         except (IndexError, TypeError, ValueError, AttributeError):
             thresholds.append(0.0)
 
+    _initial_thresholds_cache[cache_key] = thresholds
     return thresholds
 
 

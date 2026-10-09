@@ -58,7 +58,6 @@ supplied original archive before source headers were added where applicable:
   processes/raster_styler/savearea.py
   processes/raster_styler/slope.py
   processes/raster_styler/zoning.py
-  processes/raster_writer/utils.py
 
 Package initializer files also retain original structure, with licensing and
 attribution headers added for this distribution.
@@ -67,6 +66,13 @@ The mAction SVG files appear to be QGIS-style action icons and are preserved
 from the official MORIZON package. Their upstream provenance is not stated in
 that package. They are therefore identified here rather than represented as
 new MORIZON Reloaded artwork.
+
+`processes/raster_writer/utils.py` is NOT listed above: beyond the added
+license header, it carries a MORIZON Reloaded addition, the
+`resolve_writable_output_path()` helper function (Windows file-lock-aware
+output path resolution; see CHANGELOG.md). It is a compatibility/stability
+addition only and does not alter any original calculation, threshold, or
+output naming logic.
 
 5. MORIZON Reloaded artwork
 

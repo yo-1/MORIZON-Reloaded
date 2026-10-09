@@ -165,9 +165,12 @@ class ForestZoningScoringStatsDialog(QDialog):
         グラフの表示を更新する
         """
         threshold1, threshold2 = self.get_thresholds_for_graph()
-        # しきい値の縦棒
-        self.graph_threshold1.set_xdata(threshold1)
-        self.graph_threshold2.set_xdata(threshold2)
+        # しきい値の縦棒。
+        # QGIS同梱Pythonのmatplotlibでは、Line2D.set_xdata()にスカラー値を渡すと
+        # "RuntimeError: x must be a sequence" になる版があるため、
+        # axvline()が内部で使う2点のx座標（[x, x]）の形で渡す。
+        self.graph_threshold1.set_xdata([threshold1, threshold1])
+        self.graph_threshold2.set_xdata([threshold2, threshold2])
 
         self.graph_canvas.draw()
 

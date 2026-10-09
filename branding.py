@@ -6,6 +6,7 @@
 
 """Visual identity helpers for MORIZON Reloaded."""
 
+import configparser
 import os
 
 from qgis.PyQt.QtCore import Qt
@@ -15,7 +16,27 @@ from qgis.PyQt.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
 
 DISPLAY_NAME = "MORIZON Reloaded"
 TAGLINE = "FOREST ZONING."
-BUILD_LABEL = "UNOFFICIAL REVIVAL BUILD  /  QGIS 3.44  /  v2.3.0-rc2"
+
+
+def _read_version_from_metadata() -> str:
+    """metadata.txtから版番号を読む。
+
+    過去に版番号をここへ直書きしていたところ、metadata.txtのバージョンは
+    更新してもここを更新し忘れ、ダイアログの表示だけ数版分古いままになる
+    事故が複数回起きた（dev6〜dev10）。metadata.txtを唯一の正とし、
+    読み取り失敗時のみ固定文字列へ後退する。
+    """
+    metadata_path = os.path.join(os.path.dirname(__file__), "metadata.txt")
+    try:
+        parser = configparser.ConfigParser(interpolation=None)
+        parser.read(metadata_path, encoding="utf-8")
+        version = parser["general"]["version"].strip()
+        return version if version else "unknown"
+    except Exception:
+        return "unknown"
+
+
+BUILD_LABEL = f"UNOFFICIAL REVIVAL BUILD  /  QGIS 3.44  /  v{_read_version_from_metadata()}"
 
 
 def asset_path(filename):

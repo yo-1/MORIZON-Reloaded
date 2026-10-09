@@ -26,6 +26,7 @@ from .processes.raster_styler import (
 from . import processes
 from .processes import raster_styler
 from . import utils
+from .diag_log import count_event, log, log_if_slow, processing_active
 from .constants import (
     OUTPUT_SITEIDX_HINOKI,
     OUTPUT_SITEIDX_KARAMATSU,
@@ -63,6 +64,10 @@ class ScoringObject:
         self.threshold2_spinbox = threshold2_spinbox
         self.layer_name = laye_name
         self.threshold_history_list = []
+        # init_scoring_rlayer_stats()が直近で初期化したレイヤーのID。
+        # 同一レイヤーへの重複初期化（layerChangedの連鎖発火対策）を
+        # 判定するために使う。レイヤー未選択時はNone。
+        self.last_init_layer_id = None
 
     def append_threshold_history(self, threshold: list):
         self.threshold_history_list.append(threshold)
@@ -163,10 +168,10 @@ class ForestZoningMainDialogScoring:
                 self.scoring_objs_dict.values(),
             )
         )
-        # 初期値セット
+        # 初期値セット（構築時は常に実行する）
         list(
             map(
-                self.init_scoring_rlayer_stats,
+                lambda obj: self.init_scoring_rlayer_stats(obj, force=True),
                 self.scoring_objs_dict.values(),
             )
         )
@@ -328,6 +333,7 @@ class ForestZoningMainDialogScoring:
                 self.main, "エラー", "本プロクラムで生成したパラメータJSONファイルを選択してください。"
             )
 
+    @log_if_slow("スコアリング: 入力レイヤーの自動設定")
     def set_scoring_layer_combobox(self):
         """MORIZON要素レイヤをスコアリング欄へ厳密に自動設定する。
 
@@ -482,7 +488,9 @@ class ForestZoningMainDialogScoring:
         # params.json を読み込んでいる場合は、その比較条件を保持する。
         if not getattr(self, "_scoring_params_loaded", False):
             for key in ("siteidx", "cost", "distance", "shc", "slope"):
-                self.init_scoring_rlayer_stats(self.scoring_objs_dict[key])
+                self.init_scoring_rlayer_stats(
+                    self.scoring_objs_dict[key], force=True
+                )
         else:
             for obj in self.scoring_objs_dict.values():
                 obj.reset_threshold_history(
@@ -540,6 +548,128 @@ class ForestZoningMainDialogScoring:
 
         self.refresh_scoring_ui()
 
+    def fix_broken_scoring_layer_bindings(self):
+        """O-22対応: 要素計算完了直後に呼び出し、壊れたレイヤー紐付けだけを直す。
+
+        要素計算でレイヤーグループを削除して部分的に再計算すると、スコアリング
+        タブのコンボボックスが（参照先レイヤー消失をきっかけに）無関係なレイヤー
+        へ一時的にフォールバックしたまま残ることが実機で確認されている
+        （docs/OPEN_ISSUES.md O-22）。
+
+        `set_scoring_layer_combobox()`（手動の「レイヤーを自動設定」ボタン）は
+        全項目を無条件に再設定し、しきい値も強制的に初期値へ戻すため、要素計算
+        完了のたびに自動で呼ぶと、手を加えていない他のパラメータのしきい値まで
+        毎回リセットされてしまう。この関数は、**現在の紐付け先が期待するファイル
+        名と一致しないコンボボックスだけ**を直し、既に正しく紐付いているものには
+        一切触れない（しきい値も変更しない）。
+
+        このタイミングでは要素計算が直前にレイヤーを追加済みのため、ディスク上の
+        ファイルを探す`best_file()`相当の処理は不要で、既にロード済みのレイヤー
+        からの検索のみで足りる。
+        """
+        project = QgsProject.instance()
+
+        specs = [
+            ("siteidx", self.main.scoringSiteidxLayerCombobox,
+             [OUTPUT_SITEIDX_SUGI["FILE_NAME"], OUTPUT_SITEIDX_HINOKI["FILE_NAME"], OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"]]),
+            ("cost", self.main.scoringCostLayerCombobox, [OUTPUT_COST["FILE_NAME"]]),
+            ("distance", self.main.scoringDistanceLayerCombobox, [OUTPUT_DISTANCE["FILE_NAME"]]),
+            ("shc", self.main.scoringShcLayerCombobox, [OUTPUT_SHC["FILE_NAME"]]),
+            ("slope", self.main.scoringSlopeLayerCombobox, [OUTPUT_SLOPE["FILE_NAME"]]),
+            ("savearea", self.main.scoringSaveareaLayerCombobox, [OUTPUT_SAVEAREA["FILE_NAME"]]),
+        ]
+
+        def raster_layers():
+            return [lyr for lyr in project.mapLayers().values()
+                    if lyr is not None and lyr.type() == QgsMapLayer.RasterLayer]
+
+        def source_path(layer):
+            if layer is None:
+                return ""
+            try:
+                value = layer.source()
+                if value:
+                    return value.split("|", 1)[0]
+            except Exception:
+                pass
+            try:
+                provider = layer.dataProvider()
+                if provider is not None:
+                    value = provider.dataSourceUri()
+                    if value:
+                        return value.split("|", 1)[0]
+            except Exception:
+                pass
+            return ""
+
+        def base_name(path):
+            return os.path.splitext(os.path.basename(path))[0].lower()
+
+        def match_generation(base, wanted):
+            wanted = wanted.lower()
+            if base == wanted:
+                return 0
+            m = re.fullmatch(re.escape(wanted) + r"_v([0-9]+)", base, re.I)
+            return int(m.group(1)) if m else None
+
+        def is_bound_correctly(combo, wanted_list):
+            path = source_path(combo.currentLayer())
+            if not path:
+                return False
+            base = base_name(path)
+            return any(match_generation(base, wanted) is not None for wanted in wanted_list)
+
+        def best_loaded(wanted):
+            candidates = []
+            for lyr in raster_layers():
+                path = source_path(lyr)
+                if not path:
+                    continue
+                gen = match_generation(base_name(path), wanted)
+                if gen is not None:
+                    candidates.append((gen, lyr))
+            if not candidates:
+                return None
+            candidates.sort(key=lambda x: x[0], reverse=True)
+            return candidates[0][1]
+
+        broken = [(key, combo, wanted_list) for key, combo, wanted_list in specs
+                  if not is_bound_correctly(combo, wanted_list)]
+        if not broken:
+            return
+
+        resolved = []
+        for key, combo, wanted_list in broken:
+            layer = None
+            for wanted in wanted_list:
+                layer = best_loaded(wanted)
+                if layer is not None:
+                    break
+            resolved.append((key, combo, layer))
+
+        blockers = [QSignalBlocker(combo) for _, combo, layer in resolved if layer is not None]
+        try:
+            for _, combo, layer in resolved:
+                if layer is not None:
+                    combo.setLayer(layer)
+        finally:
+            blockers.clear()
+
+        fixed_keys = [key for key, _, layer in resolved if layer is not None]
+        for key in fixed_keys:
+            if key == "savearea":
+                continue
+            self.init_scoring_rlayer_stats(self.scoring_objs_dict[key], force=True)
+            try:
+                self.set_scoring_raster_style(self.scoring_objs_dict[key])
+            except Exception:
+                pass
+
+        if fixed_keys:
+            count_event(f"スコアリングのレイヤー紐付けを自動修正: {','.join(fixed_keys)}")
+            self.refresh_scoring_ui()
+
+    @log_if_slow("スコアリング: UI更新(refresh_scoring_ui)")
     def refresh_scoring_ui(self):
         # 入力内容のエラーチェック
         error_texts = self.get_scoring_error_texts()
@@ -676,8 +806,26 @@ class ForestZoningMainDialogScoring:
         self.main.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.main.show()
 
-    def init_scoring_rlayer_stats(self, scoring_obj: ScoringObject):
-        """レイヤがリセットされた時の挙動"""
+    def init_scoring_rlayer_stats(self, scoring_obj: ScoringObject, force: bool = False):
+        """レイヤがリセットされた時の挙動。
+
+        要素計算の終了処理でレイヤーが一括追加される際、同一レイヤーに対して
+        layerChangedが連鎖的に何十回も発火することが実機ログで確認されている
+        （発火源はコード未確認）。同じレイヤーへの再初期化はスキップし、
+        get_initial_thresholds_of()内のbandStatistics()（全画素走査）の
+        重複呼び出しを避ける。force=Trueの呼び出し（初期構築時・レイヤー
+        自動設定の一括反映時）は常に実行する。
+        """
+        current_layer = scoring_obj.combobox.currentLayer()
+        current_layer_id = current_layer.id() if current_layer is not None else None
+
+        if (
+            not force
+            and current_layer_id is not None
+            and current_layer_id == scoring_obj.last_init_layer_id
+        ):
+            count_event(f"しきい値初期化のスキップ(同一レイヤー): {scoring_obj.layer_name}")
+            return
 
         thresholds = get_initial_thresholds_of(scoring_obj)
 
@@ -685,6 +833,7 @@ class ForestZoningMainDialogScoring:
         scoring_obj.threshold2_spinbox.setValue(thresholds[1])
         # scoring_objの履歴リストをリセットする
         scoring_obj.reset_threshold_history(thresholds)
+        scoring_obj.last_init_layer_id = current_layer_id
 
     def back_to_initial_state(self, scoring_obj: ScoringObject):
         """「初期化に戻す」ボタンがクリックした時の挙動"""
@@ -867,6 +1016,7 @@ class ForestZoningMainDialogScoring:
 
         return existing_filenames
 
+    @log_if_slow("スコアリング: 既存結果の解除")
     def _remove_existing_scoring_results(self):
         """
         QGIS 3.44安定版:
@@ -922,6 +1072,7 @@ class ForestZoningMainDialogScoring:
         QCoreApplication.processEvents()
 
     def run_scoring(self):
+        log("スコアリング: 実行ボタン押下")
         existing_filenames = self.scoring_get_existing_filenames()
         if len(existing_filenames) > 0:
             if QMessageBox.No == QMessageBox.question(
@@ -999,8 +1150,10 @@ class ForestZoningMainDialogScoring:
                 self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
             )
         )
-        thread.start()
-        progress_dialog.exec_()
+        log("スコアリング: 処理スレッドを開始します")
+        with processing_active():
+            thread.start()
+            progress_dialog.exec_()
 
         if thread.abort_flag:
             QMessageBox.information(self.main, "中断", "処理を中断しました。")
@@ -1012,7 +1165,7 @@ class ForestZoningMainDialogScoring:
         """
         処理結果を受け取ってレイヤー群を1つのグループとしてプロジェクトに追加
         """
-        root = QgsProject().instance().layerTreeRoot()
+        root = QgsProject.instance().layerTreeRoot()
         group_node = root.insertGroup(0, "スコアリング")
         group_node.setExpanded(False)
 

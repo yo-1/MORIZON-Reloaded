@@ -18,6 +18,7 @@ from qgis.gui import *
 from . import processes
 from .constants import OUTPUT_ZONING, OUTPUT_AGGREGATE, INPUT_DEM
 from .utils import is_tmpdir_valid
+from .diag_log import log, log_if_slow, processing_active
 from .progress_dialog import ProgressDialog
 
 
@@ -241,6 +242,7 @@ class ForestZoningMainDialogAggregate:
             )
 
     def run_aggregate(self):
+        log("集計: 実行ボタン押下")
         # GRASSエラーを回避するために環境変数に不正な文字がないか確認
         if not is_tmpdir_valid():
             QMessageBox.information(
@@ -332,8 +334,10 @@ class ForestZoningMainDialogAggregate:
             )
 
         thread.processFailed.connect(on_failed)
-        thread.start()
-        progress_dialog.exec_()
+        log("集計: 処理スレッドを開始します")
+        with processing_active():
+            thread.start()
+            progress_dialog.exec_()
 
         self.main.show()
 
@@ -384,5 +388,5 @@ class ForestZoningMainDialogAggregate:
         for rlayer in rlayers_dict.values():
             # プロジェクトのレイヤー一覧の一番上にレイヤーを追加
             QgsProject.instance().addMapLayer(rlayer, False)
-            root = QgsProject().instance().layerTreeRoot()
+            root = QgsProject.instance().layerTreeRoot()
             root.insertLayer(0, rlayer)
