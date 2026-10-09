@@ -2,6 +2,175 @@
 
 All notable changes to MORIZON Reloaded are documented here.
 
+The `2.3.0-rc3-dev1` through `2.3.0-rc3-dev18` entries below the `2.1`
+entry are the internal diagnostic-build history that led up to the
+`2.3.0` release (see "Development history" at the end of this file) —
+none of those builds were released independently; `2.3.0` supersedes all
+of them.
+
+## 2.3.0 — 2026-10-09 (official release)
+
+もりぞん（MORIZON）互換プラグインの最初の正式リリースです。QGIS 3.44.x
+Solothurn向けに、原版（林野庁委託事業、日本森林技術協会がゾーニングの考え方
+と作業フローを取りまとめ、MIERUNEが実装）の分析ロジック・しきい値・スコア
+体系・四象限分類をそのまま維持しつつ、現行QGISで動作するよう再実装・安定化
+したものです。`2.3.0-rc1`〜`2.3.0-rc3-dev18`の開発過程で見つかった修正点は
+すべて本リリースに含まれています（詳細な経緯は本ファイル末尾の開発履歴、
+および`docs/OPEN_ISSUES.md`参照）。
+
+This is the first official release of the MORIZON compatibility port for
+QGIS 3.44.x Solothurn. It preserves the original analysis logic,
+thresholds, scoring structure, and four-quadrant zoning classification
+unchanged, while re-implementing and stabilizing the plugin for current
+QGIS. Every fix found during the `2.3.0-rc1` through `2.3.0-rc3-dev18`
+diagnostic development series is included in this release (see
+"Development history" below and `docs/OPEN_ISSUES.md` for the detailed,
+per-issue record).
+
+### Fixed
+
+Numeric/processing-correctness fixes (affect output values):
+
+- **地利 (road-distance) produced a sentinel value across the entire
+  output** when the road network did not fully cover the DEM extent
+  (e.g. a road layer clipped to a different area than the DEM). Distance
+  is now computed on the union of the DEM and road-network extents,
+  snapped to the DEM's own pixel grid, matching the original MORIZON's
+  actual GRASS-based behavior. No change for the ordinary case where the
+  road network is already inside the DEM extent. Verified against a real
+  GRASS `r.grow.distance` run (max diff ~6.5e-05 m) and confirmed
+  on-device.
+- **地形の複雑さ (SHC / terrain-complexity) plan curvature was
+  systematically overestimated** (~1.7x) due to an erroneous doubling of
+  intermediate coefficients that did not match the real SAGA algorithm
+  it ports. Removed; the corrected formula matches real SAGA 9.3.1
+  output to floating-point precision (correlation 1.000000). This
+  changes SHC output values and, downstream, the 災害リスク score and
+  zoning class for affected cells. Confirmed on real hardware.
+- Fixed a Windows file-lock bug in 集材作業効率 (cost) element
+  calculation (`Permission denied` when a previous run's output was
+  still open in QGIS); all element writers now share one versioned
+  (`_v2`, `_v3`, ...) output-path fallback.
+- Fixed the scoring tab losing track of which layer a combobox pointed
+  to after a partial element recalculation (stale/mismatched layer
+  binding); recalculating one element no longer disturbs the others'
+  manually-tuned thresholds.
+- Fixed the scoring tab's "統計値表示" (show statistics) dialog crashing
+  with `RuntimeError: x must be a sequence` for every element, due to a
+  matplotlib API incompatibility; confirmed working on-device for all
+  five applicable elements.
+- Fixed aggregation's zonal-histogram step from being called repeatedly
+  (up to 7x) for the same layer on every element-calculation finish.
+
+UI/stability fixes (no effect on analysis output):
+
+- Fixed a ~20-second apparent UI freeze when opening the scoring/zoning
+  tabs, caused by `QgsProject().instance()` constructing a new project
+  object on every call instead of reusing the singleton.
+- Long background-plugin UI stalls unrelated to MORIZON (e.g. another
+  plugin running) no longer appear as misleading `Warning`-level entries
+  in the MORIZON log tab; they are now `Info`-level when MORIZON itself
+  is idle.
+- Fixed the in-dialog version label drifting from the actually-installed
+  version across several test builds; it now reads `metadata.txt`
+  directly and cannot drift again.
+- Fixed duplicate MORIZON toolbar icons and leftover toolbar entries
+  after disabling/re-enabling the plugin.
+- Fixed a false "unexpected count column" warning in the aggregation
+  diagnostic log caused by Shapefile's 10-character DBF field-name
+  truncation (`count_NODATA` → `count_NODA`); cosmetic only, aggregation
+  output itself was never affected.
+
+### Packaging / documentation
+
+- `metadata.txt`'s `about` field now discloses this plugin's external
+  dependencies (GDAL, NumPy, matplotlib, and the GRASS Processing
+  Provider for two of the six elements).
+- Added `test_data/ZoningKit_SYNTH/`, a small, fully synthetic,
+  redistributable (GPL-3.0-only) regression dataset, as an alternative
+  to the real-world `Zoningkit_SAMPLE` data whose redistribution rights
+  are unconfirmed.
+- `experimental` reverted to `False` for this release (it was
+  temporarily `True` during the `rc3-devN` diagnostic series).
+
+### Known issues
+
+- **スコアリングタブのQML生成が、ごくまれに失敗することがあります**
+  （"QML内に連続値カラーランプが見つかりません"）。原因未確定・再現条件不明
+  の断続的な事象です。発生した場合は該当要素の再計算をお試しください。
+  (Intermittent scoring-tab QML generation failure, root cause and
+  trigger condition not identified; workaround is to recalculate the
+  affected element. Monitoring continues — see `docs/OPEN_ISSUES.md` O-19.)
+- A full confusion-matrix comparison of final zoning output against an
+  actual run of the original (pre-port) MORIZON has not been performed
+  in this environment (no access to the original's required legacy
+  SAGA/GRASS/QGIS stack or its original input data). Individual formula
+  fixes (above) were each verified against real reference implementations
+  (SAGA, GRASS) directly; see `docs/OPEN_ISSUES.md` O-03 for what remains
+  open.
+- The GRASS-Processing-Provider-missing preflight check's actual
+  on-screen behavior has not been exercised on-device (verified by code
+  review only); see `docs/OPEN_ISSUES.md` O-04.
+
+## 2.3.0-rc2 — 2026-09-03
+
+- Fixed print-layout creation on QGIS 3.44 by passing
+  `Qgis.ScaleBarSegmentSizeMode.FitWidth` instead of the legacy integer value.
+- Corrected displayed line breaks in the missing-CRS confirmation dialog.
+- Clarified that the aggregation output destination is a result file.
+- No analysis formulas, thresholds, scoring, or zoning logic were changed.
+
+## 2.3.0-rc1 — 2026-09-02
+
+First public release candidate for clean-environment testing. This is not the
+final v2.3.0 release.
+
+### Compatibility
+
+- Updated the plugin for QGIS 3.44.x and QGIS-provided PyQt.
+- Reimplemented unavailable legacy Processing, SAGA, GRASS, temporary-raster,
+  and raster-calculator paths with current QGIS Native, GRASS, GDAL, and NumPy
+  components where required.
+- Preserved the original MORIZON analysis logic, parameters, score structure,
+  and four-quadrant zoning method.
+
+### Processing stability
+
+- Stabilized site-index generation and NoData handling.
+- Stabilized logging-system efficiency processing.
+- Reimplemented road-distance processing on the analysis DEM grid.
+- Reproduced the legacy terrain-complexity calculation for current QGIS.
+- Updated conservation-basin overlap processing and CRS handling.
+- Updated profitability, disaster-risk, zoning, and aggregation output handling.
+- Added Windows file-lock fallbacks using versioned output names.
+
+### User interface
+
+- Added automatic input and output layer binding.
+- Added recent-dataset and path-handling improvements.
+- Updated scoring, zoning, color, grouping, and aggregation behavior for QGIS
+  3.44.
+- Added the MORIZON Reloaded name, icon, and interface branding.
+
+### Distribution
+
+- Added GPL v3 license text, README, NOTICE, and this changelog.
+- Added original-project and Reloaded-modification notices to Python sources.
+- Removed internal STEP development notes from the public package.
+- Limited deletion of existing Shapefile outputs to known sidecar extensions.
+
+## 2.1 — Original MORIZON
+
+- Original Forestry Agency MORIZON package used as the compatibility-port base.
+
+## Development history: rc3-dev1 through rc3-dev18 (internal diagnostic builds)
+
+The entries below are the internal, dev-by-dev diagnostic log kept during
+the `2.3.0-rc3-devN` series (2026-09-17 to 2026-10-09) while tracking down
+the issues fixed in the `2.3.0` release above. None of these builds were
+released independently; they are kept here for traceability (which build
+introduced or confirmed which fix) rather than as separate releases.
+
 ## 2.3.0-rc3-dev18 — 2026-10-09 (test build, not yet released)
 
 Housekeeping pass over the remaining release-gate items (O-01, O-06, O-07,
@@ -550,53 +719,3 @@ thresholds, NoData rules, CRS treatment, or output names were changed.
   (DEM vs. NPP/SRAD/VTEX); the automatic grid alignment during processing
   is unchanged, this only surfaces the difference beforehand.
 
-## 2.3.0-rc2 — 2026-09-03
-
-- Fixed print-layout creation on QGIS 3.44 by passing
-  `Qgis.ScaleBarSegmentSizeMode.FitWidth` instead of the legacy integer value.
-- Corrected displayed line breaks in the missing-CRS confirmation dialog.
-- Clarified that the aggregation output destination is a result file.
-- No analysis formulas, thresholds, scoring, or zoning logic were changed.
-
-## 2.3.0-rc1 — 2026-09-02
-
-First public release candidate for clean-environment testing. This is not the
-final v2.3.0 release.
-
-### Compatibility
-
-- Updated the plugin for QGIS 3.44.x and QGIS-provided PyQt.
-- Reimplemented unavailable legacy Processing, SAGA, GRASS, temporary-raster,
-  and raster-calculator paths with current QGIS Native, GRASS, GDAL, and NumPy
-  components where required.
-- Preserved the original MORIZON analysis logic, parameters, score structure,
-  and four-quadrant zoning method.
-
-### Processing stability
-
-- Stabilized site-index generation and NoData handling.
-- Stabilized logging-system efficiency processing.
-- Reimplemented road-distance processing on the analysis DEM grid.
-- Reproduced the legacy terrain-complexity calculation for current QGIS.
-- Updated conservation-basin overlap processing and CRS handling.
-- Updated profitability, disaster-risk, zoning, and aggregation output handling.
-- Added Windows file-lock fallbacks using versioned output names.
-
-### User interface
-
-- Added automatic input and output layer binding.
-- Added recent-dataset and path-handling improvements.
-- Updated scoring, zoning, color, grouping, and aggregation behavior for QGIS
-  3.44.
-- Added the MORIZON Reloaded name, icon, and interface branding.
-
-### Distribution
-
-- Added GPL v3 license text, README, NOTICE, and this changelog.
-- Added original-project and Reloaded-modification notices to Python sources.
-- Removed internal STEP development notes from the public package.
-- Limited deletion of existing Shapefile outputs to known sidecar extensions.
-
-## 2.1 — Original MORIZON
-
-- Original Forestry Agency MORIZON package used as the compatibility-port base.
