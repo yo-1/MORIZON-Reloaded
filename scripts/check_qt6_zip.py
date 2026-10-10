@@ -20,6 +20,17 @@ def main() -> int:
     parser.add_argument("--image", default=IMAGE)
     args = parser.parse_args()
 
+    image_present = subprocess.run(
+        ["docker", "image", "inspect", args.image], capture_output=True, text=True
+    )
+    if image_present.returncode:
+        pull = subprocess.run(
+            ["docker", "pull", args.image], capture_output=True, text=True
+        )
+        if pull.returncode:
+            print(pull.stdout + pull.stderr)
+            return 1
+
     with tempfile.TemporaryDirectory(prefix="morizon-qt6-") as tmp:
         root = Path(tmp)
         with zipfile.ZipFile(args.zip_path) as archive:
