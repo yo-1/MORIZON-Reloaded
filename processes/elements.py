@@ -7,6 +7,7 @@
 import os
 import time
 import traceback
+import logging
 # QGIS-API
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtGui import *
@@ -58,9 +59,10 @@ class ProcessingThread(QThread):
             elapsed = time.monotonic() - getattr(self, "_t0", time.monotonic())
             QgsMessageLog.logMessage(
                 f"[+{elapsed:7.1f}s] {message}", "MORIZON", Qgis.Info)
-        except Exception:
+        except Exception as exc:
             # ログ出力の失敗で本処理を止めない。
-            pass
+            logging.getLogger("MORIZON").warning(
+                "elements._log: %s", exc, exc_info=True)
 
     def _finish_step(self):
         """直前に開始した工程のDONE行（所要秒数付き）を出す。"""

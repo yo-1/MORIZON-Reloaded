@@ -305,10 +305,7 @@ def generate(basis_dem_filepath: str,
 
     finally:
         dem_ds = None
-        try:
-            mask_ds = None
-        except Exception:
-            pass
+        mask_ds = None
         try:
             if os.path.exists(mask_path):
                 os.remove(mask_path)

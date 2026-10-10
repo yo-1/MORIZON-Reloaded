@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import os
+import logging
 import time
 
 from qgis.PyQt.QtCore import QVariant
@@ -41,9 +42,10 @@ def _log(message: str):
     try:
         QgsMessageLog.logMessage(
             f"[{time.strftime('%H:%M:%S')}] STEP7 {message}", "MORIZON", Qgis.Info)
-    except Exception:
+    except Exception as exc:
         # ログ出力の失敗で本処理を止めない。
-        pass
+        logging.getLogger("MORIZON").warning(
+            "savearea._log: %s", exc, exc_info=True)
 
 
 def _run_watershed(basis_dem_filepath: str):
@@ -146,9 +148,10 @@ def _append_debug(debug_log_path, lines):
         with open(debug_log_path, 'a', encoding='utf-8') as f:
             for line in lines:
                 f.write(str(line) + '\n')
-    except Exception:
+    except Exception as exc:
         # デバッグログの失敗で本処理を止めない。
-        pass
+        logging.getLogger("MORIZON").warning(
+            "savearea._append_debug: %s", exc, exc_info=True)
 
 
 def _select_basins_with_buildings(basin_layer, building_filepath, debug_log_path=None, building_crs_override_authid=None):
@@ -182,8 +185,9 @@ def _select_basins_with_buildings(basin_layer, building_filepath, debug_log_path
             override_crs = QgsCoordinateReferenceSystem()
             try:
                 override_crs.createFromWkt(str(building_crs_override_authid))
-            except Exception:
-                pass
+            except Exception as exc:
+                logging.getLogger("MORIZON").warning(
+                    "select basins with buildings: %s", exc, exc_info=True)
         if not override_crs.isValid():
             raise QgsProcessingException(
                 f'指定された保全対象データの座標参照系を読み込めませんでした: {building_crs_override_authid}'

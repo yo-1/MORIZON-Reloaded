@@ -14,6 +14,7 @@ QgsMessageLogはスレッドセーフなので、処理スレッド・UIスレ�
 import functools
 import threading
 import time
+import logging
 from collections import deque
 from contextlib import contextmanager
 
@@ -84,7 +85,13 @@ def log(message: str, level=Qgis.Info):
         QgsMessageLog.logMessage(
             f"[{time.strftime('%H:%M:%S')}] {message}", LOG_TAG, level)
     except Exception:
-        pass
+        logging.getLogger("MORIZON").warning(
+            "QGIS log unavailable: %s", message, exc_info=True)
+
+
+def log_exception(context: str, error: Exception) -> None:
+    """記録可能な例外を残し、呼び出し元の継続動作は変えない。"""
+    log(f"{context}: {type(error).__name__}: {error}")
 
 
 @contextmanager
@@ -178,8 +185,8 @@ class UiStallWatchdog:
         try:
             self._timer.stop()
             self._timer.timeout.disconnect(self._on_tick)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("stop", exc)
         self._timer = None
 
     def _on_tick(self):

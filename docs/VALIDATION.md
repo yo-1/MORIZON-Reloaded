@@ -9,6 +9,22 @@ python scripts/build_plugin_zip.py
 
 静的確認はQGIS実行試験の代替ではない。
 
+アップロードする**そのZIP**に対して、公開前に次も実行する。専用のPython環境で
+`python -m pip install flake8==7.4.1 bandit==1.9.4 detect-secrets==1.5.0`を実行し、
+その環境のPythonを使う。ZIPの版とパスを実際の候補に合わせる。
+
+```bash
+python scripts/preflight_plugin_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip
+```
+
+ZIP構造・メタデータ・Python構文、Flake8、Banditの中高リスク、detect-secretsを確認する。
+Flake8などの指摘が残れば終了コード1となる。QGIS公式サイトの検査器とは設定が異なり、
+件数が一致する保証はない。QGISの実行試験、画像比較、GitHubチェックの代替でもない。
+Qt6互換性チェックも対象外であり、QGIS公式サイトでのQt6結果を別に確認する。
+2026-10-11時点のv2.3.1公開ZIPではFlake8が923件で、この検査は不合格となる。
+ローカルでB110/B112を修正した後の同版名の試験ZIPはBandit全件0だが、
+公開済みZIPとは内容が異なる。正式な再公開には版更新とQGIS 3.44実機確認が必要。
+
 ## 2. 対象環境
 
 - Windows 10または11

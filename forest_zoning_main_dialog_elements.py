@@ -36,7 +36,7 @@ from .constants import (
     OUTPUT_SAVEAREA,
 )
 from .utils import is_tmpdir_valid, get_tiff_info
-from .diag_log import log, log_if_slow, processing_active
+from .diag_log import log, log_exception, log_if_slow, processing_active
 from pathlib import Path
 
 
@@ -629,8 +629,8 @@ class ForestZoningMainDialogElements:
                         combo.setLayer(None)
                     elif hasattr(combo, "setCurrentIndex"):
                         combo.setCurrentIndex(-1)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_release_existing_output_layers", exc)
 
         # 2. 旧版の統計キャッシュがメモリに残っていればclear。
         try:
@@ -638,8 +638,8 @@ class ForestZoningMainDialogElements:
             cache_clear = getattr(morizon_utils.get_raster_stats, "cache_clear", None)
             if callable(cache_clear):
                 cache_clear()
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("_release_existing_output_layers", exc)
 
         # 3. プロジェクト内で同じGeoTIFFを参照する全レイヤを削除。
         remove_ids = []
@@ -656,8 +656,8 @@ class ForestZoningMainDialogElements:
             try:
                 if len(group.children()) == 0:
                     root.removeChildNode(group)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_release_existing_output_layers", exc)
 
         # 5. QtのdeleteLaterとPython参照を解放。
         import gc
@@ -666,8 +666,8 @@ class ForestZoningMainDialogElements:
         QCoreApplication.processEvents()
         try:
             QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("_release_existing_output_layers", exc)
         QCoreApplication.processEvents()
         gc.collect()
 
@@ -691,8 +691,8 @@ class ForestZoningMainDialogElements:
                     QCoreApplication.processEvents()
                     try:
                         QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        log_exception("_release_existing_output_layers", exc)
                     gc.collect()
                     time.sleep(0.20)
                 except OSError as e:
@@ -811,8 +811,8 @@ class ForestZoningMainDialogElements:
             dlg.setWindowTitle("保全対象データの座標参照系を指定")
             try:
                 dlg.setCrs(QgsCoordinateReferenceSystem("EPSG:6668"))
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_resolve_building_crs_override", exc)
             if dlg.exec_() != QDialog.Accepted:
                 return False, None
             crs = dlg.crs()
@@ -890,7 +890,8 @@ class ForestZoningMainDialogElements:
         for label, path in (("NPP", npp_path), ("SRAD", srad_path), ("VTEX", vtex_path)):
             try:
                 info = get_tiff_info(path)
-            except Exception:
+            except Exception as exc:
+                log_exception("_confirm_siteidx_grid_alignment", exc)
                 continue
             diffs = []
             dem_crs = dem_info.get("crs")

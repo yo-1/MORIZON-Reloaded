@@ -19,7 +19,7 @@ from .processes.raster_styler import (
 )
 from . import processes
 from . import utils
-from .diag_log import log, log_if_slow, processing_active
+from .diag_log import log, log_exception, log_if_slow, processing_active
 from .progress_dialog import ProgressDialog
 from .constants import (
     OUTPUT_PROFIT,
@@ -149,8 +149,8 @@ class ForestZoningMainDialogZoning:
                     value = getter()
                     if value:
                         return value.split("|", 1)[0]
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_exception("source_path", exc)
             return ""
 
         def generation(path, wanted):
@@ -183,13 +183,13 @@ class ForestZoningMainDialogZoning:
 
         try:
             add_dir(self.main.zoningOutputDirFileWidget.filePath(), dirs)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_zoning_layer_combobox", exc)
 
         try:
             add_dir(self.main.scoringOutputDirFileWidget.filePath(), dirs)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_zoning_layer_combobox", exc)
 
         try:
             elements_dir = self.main.elementsOutputDirFileWidget.filePath()
@@ -197,8 +197,8 @@ class ForestZoningMainDialogZoning:
                 add_dir(elements_dir, dirs)
                 if os.path.basename(os.path.abspath(elements_dir)).lower() == "youso":
                     add_dir(os.path.join(os.path.dirname(os.path.abspath(elements_dir)), "ZONING"), dirs)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_zoning_layer_combobox", exc)
 
         for lyr in raster_layers():
             path = source_path(lyr)
@@ -285,8 +285,8 @@ class ForestZoningMainDialogZoning:
                     self.main.zoningOutputDirFileWidget.setFilePath(output_dir)
                     if hasattr(self.main.zoningOutputDirFileWidget, "setDefaultRoot"):
                         self.main.zoningOutputDirFileWidget.setDefaultRoot(output_dir)
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_exception("set_zoning_layer_combobox", exc)
                 break
 
         # ゾーニング閾値(4/6等)は入力ラスターから再設定する。
@@ -299,8 +299,8 @@ class ForestZoningMainDialogZoning:
                 self.set_zoning_raster_style("profit")
             if risk is not None:
                 self.set_zoning_raster_style("risk")
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_zoning_layer_combobox", exc)
 
         self.refresh_zoning_ui()
 
@@ -421,7 +421,8 @@ class ForestZoningMainDialogZoning:
             try:
                 if not rlayer.isValid():
                     continue
-            except Exception:
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
                 continue
             valid_layers.append(rlayer)
 
@@ -433,16 +434,16 @@ class ForestZoningMainDialogZoning:
             try:
                 if layer.name() == OUTPUT_ZONING["DISPLAY_NAME"] and layer not in valid_layers:
                     project.removeMapLayer(layer.id())
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
 
         # 旧グループ参照を整理。「?」表示の原因となる空/壊れたノードを残さない。
         for child in list(root.children()):
             try:
                 if isinstance(child, QgsLayerTreeGroup) and child.name() == OUTPUT_ZONING["DISPLAY_NAME"]:
                     root.removeChildNode(child)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
 
         group = root.insertGroup(0, OUTPUT_ZONING["DISPLAY_NAME"])
         group.setExpanded(True)
@@ -453,12 +454,12 @@ class ForestZoningMainDialogZoning:
             group.addLayer(rlayer)
             try:
                 rlayer.triggerRepaint()
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
 
         try:
             iface.layerTreeView().refreshLayerSymbology(valid_layers[0].id())
             iface.mapCanvas().refresh()
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("add_layers_to_project", exc)
 

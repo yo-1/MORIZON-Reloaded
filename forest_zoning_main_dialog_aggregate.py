@@ -18,7 +18,7 @@ from qgis.gui import *
 from . import processes
 from .constants import OUTPUT_ZONING, OUTPUT_AGGREGATE, INPUT_DEM
 from .utils import is_tmpdir_valid
-from .diag_log import log, log_if_slow, processing_active
+from .diag_log import log, log_exception, log_if_slow, processing_active
 from .progress_dialog import ProgressDialog
 
 
@@ -85,8 +85,8 @@ class ForestZoningMainDialogAggregate:
                 value = layer.source()
                 if value:
                     return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             return ""
 
         def generation(path):
@@ -137,8 +137,8 @@ class ForestZoningMainDialogAggregate:
             current_dem = self.main.elementsDemFileWidget.filePath()
             if current_dem and os.path.isfile(current_dem):
                 dem_candidates.append(current_dem)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_aggregate_layer_combobox", exc)
 
         def collect_tifs(folder):
             if not os.path.isdir(folder):
@@ -188,8 +188,8 @@ class ForestZoningMainDialogAggregate:
             self.main.aggregateOutputDirFileWidget.setFilePath(output_path)
             if hasattr(self.main.aggregateOutputDirFileWidget, "setDefaultRoot"):
                 self.main.aggregateOutputDirFileWidget.setDefaultRoot(zoning_dir)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_aggregate_layer_combobox", exc)
 
         self.refresh_aggregate_ui()
 

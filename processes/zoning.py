@@ -16,7 +16,7 @@ from qgis.gui import *
 
 from . import raster_writer
 from . import raster_styler
-from ..diag_log import log, timed
+from ..diag_log import log, log_exception, timed
 from ..constants import OUTPUT_ZONING, OUTPUT_ZONING_THRESHOLDS_JSON
 
 
@@ -85,8 +85,8 @@ class ProcessingThread(QThread):
                 log(f"ゾーニング出力: {os.path.basename(zoning_filepath)}, "
                     f"dataType={rlayer.dataProvider().dataType(1)}, "
                     f"size={rlayer.width()}x{rlayer.height()}")
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("run", exc)
             qml_filepath = raster_styler.zoning.write_qml(self.output_dir)
             rlayer.loadNamedStyle(qml_filepath)
 

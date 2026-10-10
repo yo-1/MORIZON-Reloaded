@@ -26,7 +26,9 @@ from .processes.raster_styler import (
 from . import processes
 from .processes import raster_styler
 from . import utils
-from .diag_log import count_event, log, log_if_slow, processing_active
+from .diag_log import (
+    count_event, log, log_exception, log_if_slow, processing_active,
+)
 from .constants import (
     OUTPUT_SITEIDX_HINOKI,
     OUTPUT_SITEIDX_KARAMATSU,
@@ -372,16 +374,16 @@ class ForestZoningMainDialogScoring:
                 value = layer.source()
                 if value:
                     return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             try:
                 provider = layer.dataProvider()
                 if provider is not None:
                     value = provider.dataSourceUri()
                     if value:
                         return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             return ""
 
         def base_name(path):
@@ -415,8 +417,8 @@ class ForestZoningMainDialogScoring:
                 d = os.path.abspath(d)
                 if d not in dirs:
                     dirs.append(d)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_scoring_layer_combobox", exc)
 
         def best_loaded(wanted):
             """指定した1種類だけを、source filenameで厳密に検索する。"""
@@ -505,8 +507,8 @@ class ForestZoningMainDialogScoring:
             if obj.combobox.currentLayer() is not None:
                 try:
                     self.set_scoring_raster_style(obj)
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_exception("set_scoring_layer_combobox", exc)
 
         # 保全対象は0/1のパレット表示を適用する。
         try:
@@ -519,8 +521,8 @@ class ForestZoningMainDialogScoring:
                     savearea_layer.loadNamedStyle(qml)
                     iface.layerTreeView().refreshLayerSymbology(savearea_layer.id())
                     savearea_layer.triggerRepaint()
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_scoring_layer_combobox", exc)
 
         # 要素レイヤの保存先が .../YOUSO の場合、スコアリング出力は
         # 同じデータセット直下の .../ZONING を自動設定する。
@@ -542,9 +544,9 @@ class ForestZoningMainDialogScoring:
                 self.main.scoringOutputDirFileWidget.setFilePath(zoning_dir)
                 if hasattr(self.main.scoringOutputDirFileWidget, "setDefaultRoot"):
                     self.main.scoringOutputDirFileWidget.setDefaultRoot(zoning_dir)
-        except Exception:
+        except Exception as exc:
             # 出力先自動設定に失敗しても手動指定は可能。
-            pass
+            log_exception("set_scoring_layer_combobox", exc)
 
         self.refresh_scoring_ui()
 
@@ -590,16 +592,16 @@ class ForestZoningMainDialogScoring:
                 value = layer.source()
                 if value:
                     return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             try:
                 provider = layer.dataProvider()
                 if provider is not None:
                     value = provider.dataSourceUri()
                     if value:
                         return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             return ""
 
         def base_name(path):
@@ -662,8 +664,8 @@ class ForestZoningMainDialogScoring:
             self.init_scoring_rlayer_stats(self.scoring_objs_dict[key], force=True)
             try:
                 self.set_scoring_raster_style(self.scoring_objs_dict[key])
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("fix_broken_scoring_layer_bindings", exc)
 
         if fixed_keys:
             count_event(f"スコアリングのレイヤー紐付けを自動修正: {','.join(fixed_keys)}")
@@ -973,8 +975,8 @@ class ForestZoningMainDialogScoring:
                     error_texts.append(
                         f"{name}に別要素のMORIZONラスターが選択されています（{base}.tif）"
                     )
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("get_scoring_error_texts", exc)
 
         if (
             not self.main.scoringSiteidxLayerCombobox.parent().isChecked()
@@ -1047,8 +1049,8 @@ class ForestZoningMainDialogScoring:
                     ).lower()
                     if src in output_names:
                         combo.setLayer(None)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_remove_existing_scoring_results", exc)
 
         # 「スコアリング」グループだけを対象にレイヤ削除
         for group in list(root.findGroups()):
@@ -1058,16 +1060,16 @@ class ForestZoningMainDialogScoring:
             for child in group.findLayers():
                 try:
                     ids.append(child.layerId())
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_exception("_remove_existing_scoring_results", exc)
             if ids:
                 project.removeMapLayers(ids)
             try:
                 parent = group.parent()
                 if parent is not None:
                     parent.removeChildNode(group)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_remove_existing_scoring_results", exc)
 
         QCoreApplication.processEvents()
 
