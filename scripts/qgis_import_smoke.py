@@ -31,7 +31,60 @@ def main() -> None:
             if parts[-1] == "__init__":
                 parts.pop()
             importlib.import_module(".".join(parts))
+        from qgis.PyQt.QtCore import Qt, QEvent
+        from qgis.PyQt.QtGui import QPainter
+        from qgis.PyQt.QtWidgets import QDialog, QFileDialog, QMessageBox, QSpinBox
+        from qgis.core import (QgsContrastEnhancement, QgsLayoutItem,
+                               QgsMapLayer, QgsMapLayerProxyModel,
+                               QgsRasterMinMaxOrigin, QgsUnitTypes)
+
+        enum_paths = (
+            "QSpinBox.ButtonSymbols.NoButtons",
+            "QFileDialog.Option.ShowDirsOnly",
+            "QMessageBox.Icon.Warning",
+            "QMessageBox.ButtonRole.AcceptRole",
+            "QMessageBox.ButtonRole.ActionRole",
+            "QMessageBox.StandardButton.Yes",
+            "QMessageBox.StandardButton.No",
+            "QMessageBox.StandardButton.Cancel",
+            "QDialog.DialogCode.Accepted",
+            "QEvent.Type.DeferredDelete",
+            "QPainter.CompositionMode.CompositionMode_Multiply",
+            "QgsMapLayer.LayerType.RasterLayer",
+            "QgsMapLayerProxyModel.Filter.RasterLayer",
+            "QgsMapLayerProxyModel.Filter.VectorLayer",
+            "Qgis.MessageLevel.Critical",
+            "Qgis.MessageLevel.Warning",
+            "Qgis.MessageLevel.Info",
+            "Qt.Key.Key_Escape",
+            "Qt.AspectRatioMode.KeepAspectRatio",
+            "Qt.TransformationMode.SmoothTransformation",
+            "Qt.AlignmentFlag.AlignCenter",
+            "Qt.WindowType.WindowCloseButtonHint",
+            "Qt.WindowType.WindowStaysOnTopHint",
+            "QgsContrastEnhancement.ContrastEnhancementAlgorithm.StretchToMinimumMaximum",
+            "QgsLayoutItem.ReferencePoint.Middle",
+            "Qgis.RasterBandStatistic.Max",
+            "Qgis.RasterBandStatistic.Min",
+            "QgsRasterMinMaxOrigin.Limits.MinMax",
+            "QgsUnitTypes.DistanceUnit.DistanceKilometers",
+            "QgsUnitTypes.LayoutUnit.LayoutMillimeters",
+        )
+        scope = {
+            cls.__name__: cls for cls in (
+                QSpinBox, QFileDialog, QMessageBox, QDialog, QEvent, QPainter,
+                QgsMapLayer, QgsMapLayerProxyModel, QgsContrastEnhancement,
+                QgsLayoutItem, QgsRasterMinMaxOrigin, QgsUnitTypes, Qgis,
+            )
+        }
+        scope["Qt"] = Qt
+        for dotted in enum_paths:
+            root, *attributes = dotted.split(".")
+            value = scope[root]
+            for attribute in attributes:
+                value = getattr(value, attribute)
         print(f"QGIS {Qgis.QGIS_VERSION}: imported {len(paths)} plugin modules")
+        print(f"Resolved {len(enum_paths)} Qt/QGIS enum paths")
     app.exitQgis()
 
 
