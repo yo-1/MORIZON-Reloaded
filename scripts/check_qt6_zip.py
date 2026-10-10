@@ -51,6 +51,10 @@ def main() -> int:
         for line in findings:
             print(line)
         if result.returncode or findings or HEADER not in output:
+            if os.environ.get("GITHUB_ACTIONS"):
+                detail = (findings[-1] if result.returncode else findings[0]) if findings else output or "checker produced no output"
+                detail = detail.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+                print(f"::error::Qt6 checker failed (exit {result.returncode}): {detail[:500]}")
             return 1
     return 0
 
