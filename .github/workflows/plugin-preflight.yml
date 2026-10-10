@@ -34,7 +34,7 @@ jobs:
       - run: python scripts/preflight_plugin_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip
 
   qgis-import:
-    name: QGIS 3.40 module imports
+    name: QGIS imports and Qt6
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -47,3 +47,4 @@ jobs:
           debian:trixie bash -lc
           'apt-get update && apt-get install -y python3-qgis qgis-providers python3-gdal &&
           /usr/bin/python3 scripts/qgis_import_smoke.py dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip'
+      - run: python3 scripts/check_qt6_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip

@@ -1,5 +1,14 @@
 # 試験記録
 
+## 2026-10-11 JST / 公式Qt6検査器のローカル再現
+
+- 環境: QGIS Plugins Websiteの`qt6-validator`が使用する`ghcr.io/qgis/pyqgis4-checker:main-ubuntu`（digest `sha256:c96df111845eb0c86ad56364fb792d35fa6931e01d3d629d2b1bc6388ed43ece`）。サイト側コード参照コミット`2e73cac`。
+- 確定: 添付された公開版v2.3.1 ZIPは48 Pythonファイルを走査して104件の指摘を再現。`scripts/check_qt6_zip.py`は終了コード1。
+- 確定: `codex/plugin-preflight`の再生成ZIPは48 Pythonファイルを走査して指摘0件。スクリプトは終了コード0。
+- 注意: 元の`pyqt5_to_pyqt6.py --dry_run`は指摘があっても終了コード0を返す。ラッパーはログ件数を判定し、コンテナから48ファイルが読めることを確認する。
+- 未確認: 公式サイトへ修正版をアップロードした際の表示、QGIS 3.44 Windowsの機能試験。
+
+
 ## 2026-10-10 UTC / `codex/plugin-preflight` 試験ZIP
 
 - 環境: Debian 13、QGIS 3.40.6、Python 3.13 (`/usr/bin/python3`)、GUIなし。

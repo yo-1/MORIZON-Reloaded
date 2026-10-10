@@ -15,12 +15,15 @@ python scripts/build_plugin_zip.py
 
 ```bash
 python scripts/preflight_plugin_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip
+python scripts/check_qt6_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip
 ```
 
 ZIP構造・メタデータ・Python構文、Flake8、Banditの中高リスク、detect-secretsを確認する。
 Flake8などの指摘が残れば終了コード1となる。QGIS公式サイトの検査器とは設定が異なり、
 件数が一致する保証はない。QGISの実行試験、画像比較、GitHubチェックの代替でもない。
-Qt6互換性チェックも対象外であり、QGIS公式サイトでのQt6結果を別に確認する。
+Qt6互換性チェックは公式サイトと同じ`ghcr.io/qgis/pyqgis4-checker:main-ubuntu`を
+Dockerで実行する。スクリプトはコンテナ内の走査対象48ファイルと指摘行数を確認する。
+公式サイトにアップロードした版の結果は別に確認する。
 2026-10-11時点のv2.3.1公開ZIPではFlake8が923件で、この検査は不合格となる。
 `codex/plugin-preflight`で再生成した同版名の試験ZIPはFlake8/Bandit/秘密情報が
 いずれも0件だが、公開済みZIPとは内容が異なる。Flake8は日本語文とQMLリテラルを
@@ -28,8 +31,8 @@ Qt6互換性チェックも対象外であり、QGIS公式サイトでのQt6結�
 除外する。他の規則は維持する。正式な再公開には版更新とQGIS 3.44実機確認が必要。
 
 GitHub Actionsの3ジョブはFlake8/構文、ZIP/セキュリティ、Debian 13上のQGIS 3.40
-モジュール読み込みを検証する。Qt6の104件相当の列挙値を新しい参照形式へ変更したが、
-公式サイトのQt6チェックは次のZIPをアップロードするまで確認できない。QGIS 3.40での
+モジュール読み込みと公式Qt6検査器を検証する。公開版ZIPの104件をローカルで再現し、
+修正版ZIPは0件と確認した。公式サイトの表示は次のZIPをアップロードするまで変わらない。QGIS 3.40での
 モジュール読み込みはQGIS 3.44 Windowsでの処理結果検証の代替ではない。
 
 ## 2. 対象環境
