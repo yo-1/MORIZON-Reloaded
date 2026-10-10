@@ -44,7 +44,7 @@ Get-Content .\MANIFEST_SHA256.txt
 6. **繰り返し実行 R01**: 出力レイヤーをQGISに読み込んだまま、要素計算から集計まで再実行します。ファイルロック時の世代付き出力、異常終了や既存レイヤー破損がないことを確認します。
 7. **日本語・空白パス R02**: 合成データを`C:\GIS_data\もりぞん 検証\ZoningKit_SYNTH`などへコピーし、6要素から集計まで実行します。失敗箇所と表示文言を記録します。
 
-作業後、QGISのPythonコンソールに次を貼り付け、ファイル選択で同梱の`windows_validation_snapshot.py`を指定します。続くダイアログで**`YOUSO`と`ZONING`の両方を含む親フォルダ**を選びます。スクリプトは`DATA`内の入力画像を除外します。以前の採用済み出力フォルダが無ければ、次のダイアログはキャンセルしてください。`MORIZON_validation_snapshot.json`が選んだフォルダに生成されます。
+作業後、QGISのPythonコンソールに次を貼り付け、ファイル選択で同梱の`windows_validation_snapshot.py`を指定します。続くダイアログで**`YOUSO`と`ZONING`の両方を含む親フォルダ**を選びます。スクリプトは`DATA`内の入力画像を除外します。比較できる旧出力フォルダが無ければ、次のダイアログはキャンセルしてください。`MORIZON_validation_snapshot.json`が選んだフォルダに生成されます。
 
 ```python
 from qgis.PyQt.QtWidgets import QFileDialog
@@ -57,7 +57,7 @@ runpy.run_path(p, run_name="__main__")
 
 ## 3. Zoningkit_SAMPLEの再実行と基準比較
 
-手元の`Zoningkit_SAMPLE`入力を使い、別の新規プロジェクトと空の出力フォルダで同じ全工程を実行します。画像で示された`Zoningkit_SAMPLE_dev13`の`YOUSO`と`ZONING`に旧出力があるか確認してください。旧フォルダを上書きせず、その親フォルダを比較元に選びます。過去の基準は`docs/TEST_RECORD.md`の「accepted reference run」です。以下の値と今回の結果を比較してください。画素ハッシュは**旧出力が見つかった場合にのみ**比較できます。旧出力が無い場合は「画素一致は未確認」と記録してください。
+手元の`Zoningkit_SAMPLE`入力を使い、別の新規プロジェクトと空の出力フォルダで同じ全工程を実行します。画像で確認された`Zoningkit_SAMPLE_dev12/Zoningkit_SAMPLE`の`YOUSO`と`ZONING`には旧出力があります。旧フォルダを上書きせず、その親フォルダを比較元に選びます。画素比較には、まず`dev12`の`DATA`入力を使ってください。`dev13`の入力を使う場合は、入力ファイルのハッシュを照合して同一か確かめてください。`dev12`は下記の受入済み`dev17`とは異なる版です。画素が不一致でも、それだけで今回の退行とは判定できません。過去の数値基準は`docs/TEST_RECORD.md`の「accepted reference run」です。以下の値と今回の結果を比較してください。
 
 | 対象 | 受入済みの記録値 |
 |---|---|
