@@ -4,44 +4,36 @@
 # Licensed under the GNU General Public License version 3.
 # SPDX-License-Identifier: GPL-3.0-only
 
-### 入力ファイル定義 ###
-INPUT_DEM = {
-    "DISPLAY_NAME": "DEM",
-    "EXT": "tif",
-    "PATH": ["DEM"]
-}
-INPUT_NPP = {
-    "DISPLAY_NAME": "NPP",
-    "EXT": "tif",
-    "PATH": ["SiteIndex", "NPP"]
-}
+# 入力ファイル定義
+INPUT_DEM = {"DISPLAY_NAME": "DEM", "EXT": "tif", "PATH": ["DEM"]}
+INPUT_NPP = {"DISPLAY_NAME": "NPP", "EXT": "tif", "PATH": ["SiteIndex", "NPP"]}
 INPUT_SRAD = {
     "DISPLAY_NAME": "SRAD",
     "EXT": "tif",
-    "PATH": ["SiteIndex", "SRAD"]
+    "PATH": ["SiteIndex", "SRAD"],
 }
 INPUT_VTEX = {
     "DISPLAY_NAME": "VTEX",
     "EXT": "tif",
-    "PATH": ["SiteIndex", "VTEX"]
+    "PATH": ["SiteIndex", "VTEX"],
 }
 INPUT_BUILDING = {
     "DISPLAY_NAME": "建物ポリゴン",
     "EXT": "shp",
-    "PATH": ["TATEMONO"]
+    "PATH": ["TATEMONO"],
 }
 INPUT_NETWORK = {
     "DISPLAY_NAME": "既設路網ライン",
     "EXT": "shp",
-    "PATH": ["ROAD"]
+    "PATH": ["ROAD"],
 }
 INPUT_COSTCSV = {
     "DISPLAY_NAME": "作業システムCSV",
     "EXT": "csv",
-    "PATH": ["SAGYO-SYSTEM_CSV"]
+    "PATH": ["SAGYO-SYSTEM_CSV"],
 }
 
-### 出力ファイル定義 ###
+# 出力ファイル定義  #
 OUTPUT_SLOPE = {
     "DISPLAY_NAME": "災害リスク/傾斜",
     "FILE_NAME": "Y_12_keisha",
@@ -74,48 +66,81 @@ OUTPUT_SHC = {
     "DISPLAY_NAME": "災害リスク/地形の複雑さ",
     "FILE_NAME": "Y_11_chikei",
 }
-OUTPUT_PARAMS_JSON = {
-    "FILE_NAME": "params",
-    "EXTENSION": "json"
-}
+OUTPUT_PARAMS_JSON = {"FILE_NAME": "params", "EXTENSION": "json"}
 OUTPUT_PROFIT = {
     "DISPLAY_NAME": "収益性",
     "FILE_NAME": "shuekisei",
-    "EXTENSION": "tif"
+    "EXTENSION": "tif",
 }
 OUTPUT_RISK = {
     "DISPLAY_NAME": "災害リスク",
     "FILE_NAME": "saigairisk",
-    "EXTENSION": "tif"
+    "EXTENSION": "tif",
 }
 OUTPUT_ZONING = {
     "DISPLAY_NAME": "ゾーニング図",
     "FILE_NAME": "zoning",
-    "EXTENSION": "tif"
+    "EXTENSION": "tif",
 }
 OUTPUT_ZONING_THRESHOLDS_JSON = {
     "FILE_NAME": "thresholds",
-    "EXTENSION": "json"
+    "EXTENSION": "json",
 }
-OUTPUT_AGGREGATE = {
-    "DISPLAY_NAME": "ゾーン統計量",
-    "FILE_NAME": "aggregate"
-}
+OUTPUT_AGGREGATE = {"DISPLAY_NAME": "ゾーン統計量", "FILE_NAME": "aggregate"}
 
-### 各レイヤーの色定義 ###
+# 各レイヤーの色定義  #
 RAWDATA_COLORS_SITEIDX_SUGI = (
-    "#cdf1c5", "#a3d5a6", "#7ab987", "#509c68", "#268049")
+    "#cdf1c5",
+    "#a3d5a6",
+    "#7ab987",
+    "#509c68",
+    "#268049",
+)
 RAWDATA_COLORS_SITEIDX_HINOKI = (
-    "#cdf1c5", "#a3d5a6", "#7ab987", "#509c68", "#268049")
+    "#cdf1c5",
+    "#a3d5a6",
+    "#7ab987",
+    "#509c68",
+    "#268049",
+)
 RAWDATA_COLORS_SITEIDX_KARAMATSU = (
-    "#cdf1c5", "#a3d5a6", "#7ab987", "#509c68", "#268049")
+    "#cdf1c5",
+    "#a3d5a6",
+    "#7ab987",
+    "#509c68",
+    "#268049",
+)
 RAWDATA_COLORS_DISTANCE = (
-    "#e8eff6", "#c6d8ee", "#a4c0e6", "#81a8de", "#5f91d6", "#3d79cd")
-RAWDATA_COLORS_COST = ("#e7e7ff", "#bed7f8", "#95c6f0", "#6cb5e8", "#43a4e0",
-                       "#4fc780", "#7be544", "#e3fa4a", "#fece4b", "#fe8c4c", "#ff4d50")
+    "#e8eff6",
+    "#c6d8ee",
+    "#a4c0e6",
+    "#81a8de",
+    "#5f91d6",
+    "#3d79cd",
+)
+RAWDATA_COLORS_COST = (
+    "#e7e7ff",
+    "#bed7f8",
+    "#95c6f0",
+    "#6cb5e8",
+    "#43a4e0",
+    "#4fc780",
+    "#7be544",
+    "#e3fa4a",
+    "#fece4b",
+    "#fe8c4c",
+    "#ff4d50",
+)
 RAWDATA_COLORS_SAVEAREA = ("#98e6ff", "#ffb47f")
-RAWDATA_COLORS_SLOPE = ("#6cabd0", "#b5dee4", "#ecf7c9",
-                        "#ffdf99", "#feb367", "#f08856", "#d74043")
+RAWDATA_COLORS_SLOPE = (
+    "#6cabd0",
+    "#b5dee4",
+    "#ecf7c9",
+    "#ffdf99",
+    "#feb367",
+    "#f08856",
+    "#d74043",
+)
 RAWDATA_COLORS_SHC = ("#f5fff0", "#c5eccb", "#95d9a6", "#66c681", "#36b35b")
 
 SCORING_COLORS_SITEIDX = ("#0000ff", "#00d700", "#ffff00")

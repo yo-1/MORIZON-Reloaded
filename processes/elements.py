@@ -7,12 +7,11 @@
 import os
 import time
 import traceback
+import logging
+
 # QGIS-API
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtCore import QThread, pyqtSignal
+from qgis.core import Qgis, QgsMessageLog, QgsRasterLayer
 
 from . import raster_writer
 from . import raster_styler
@@ -25,7 +24,7 @@ from ..constants import (
     OUTPUT_SITEIDX_KARAMATSU,
     OUTPUT_SITEIDX_SUGI,
     OUTPUT_SHC,
-    OUTPUT_SLOPE
+    OUTPUT_SLOPE,
 )
 
 
@@ -37,7 +36,12 @@ class ProcessingThread(QThread):
     setAbortable = pyqtSignal(bool)
     processFailed = pyqtSignal(str)
 
-    def __init__(self, input_files_dict: dict, target_elements_dict: dict, output_dir: str):
+    def __init__(
+        self,
+        input_files_dict: dict,
+        target_elements_dict: dict,
+        output_dir: str,
+    ):
         super().__init__()
         self.input_files_dict = input_files_dict
         self.target_elements_dict = target_elements_dict
@@ -57,10 +61,15 @@ class ProcessingThread(QThread):
         try:
             elapsed = time.monotonic() - getattr(self, "_t0", time.monotonic())
             QgsMessageLog.logMessage(
-                f"[+{elapsed:7.1f}s] {message}", "MORIZON", Qgis.Info)
-        except Exception:
+                f"[+{elapsed:7.1f}s] {message}",
+                "MORIZON",
+                Qgis.MessageLevel.Info,
+            )
+        except Exception as exc:
             # ログ出力の失敗で本処理を止めない。
-            pass
+            logging.getLogger("MORIZON").warning(
+                "elements._log: %s", exc, exc_info=True
+            )
 
     def _finish_step(self):
         """直前に開始した工程のDONE行（所要秒数付き）を出す。"""
@@ -103,16 +112,21 @@ class ProcessingThread(QThread):
         self._log(
             "要素計算を開始: "
             f"targets={[k for k, v in self.target_elements_dict.items() if v]}, "
-            f"dem={self.input_files_dict.get('dem')}")
+            f"dem={self.input_files_dict.get('dem')}"
+        )
 
         try:
             self._log("DEM情報を取得中 (gdal:gdalinfo)")
             is_resampling = is_resampling_needed(
-                get_tiff_info(self.input_files_dict["dem"]))
+                get_tiff_info(self.input_files_dict["dem"])
+            )
             self._log(f"DEM情報を取得完了: resampling={is_resampling}")
 
-            sum_of_processes = len(list(filter(
-                lambda val: val, self.target_elements_dict.values()))) + int(is_resampling)
+            sum_of_processes = len(
+                list(
+                    filter(lambda val: val, self.target_elements_dict.values())
+                )
+            ) + int(is_resampling)
             self.processStarted.emit(sum_of_processes)
             progress_counter = 0
 
@@ -121,47 +135,60 @@ class ProcessingThread(QThread):
             if is_resampling:
                 self.addProgress.emit(1)
                 progress_counter += 1
-                self._post('DEMをリサンプリング中')
+                self._post("DEMをリサンプリング中")
                 dem_for_processes = raster_writer.resampling(
-                    self.input_files_dict["dem"], 10)
+                    self.input_files_dict["dem"], 10
+                )
 
                 if self.abort_flag:
                     self.processFinished.emit({})
                     return
 
             if self.target_elements_dict["siteidx"]:
-                self._post('地位指数を計算中')
+                self._post("地位指数を計算中")
                 self.setAbortable.emit(sum_of_processes - progress_counter > 1)
                 self.addProgress.emit(1)
                 progress_counter += 1
 
-                siteidx_filepaths = raster_writer.siteidx.generate(dem_for_processes,
-                                                                   self.input_files_dict["npp"],
-                                                                   self.input_files_dict["srad"],
-                                                                   self.input_files_dict["vtex"],
-                                                                   self.output_dir)
+                siteidx_filepaths = raster_writer.siteidx.generate(
+                    dem_for_processes,
+                    self.input_files_dict["npp"],
+                    self.input_files_dict["srad"],
+                    self.input_files_dict["vtex"],
+                    self.output_dir,
+                )
                 display_names = [
                     OUTPUT_SITEIDX_SUGI["DISPLAY_NAME"],
                     OUTPUT_SITEIDX_HINOKI["DISPLAY_NAME"],
-                    OUTPUT_SITEIDX_KARAMATSU["DISPLAY_NAME"]
+                    OUTPUT_SITEIDX_KARAMATSU["DISPLAY_NAME"],
                 ]
                 siteidx_suffixes = ["sugi", "hinoki", "karamatsu"]
 
                 for idx, path in enumerate(siteidx_filepaths):
-                    siteidx_rawdata_qml_filepath = raster_styler.siteidx.write_rawdata_qml(
-                        path, wood_type=siteidx_suffixes[idx])
-                    siteidx_scoring_qml_filepath = raster_styler.siteidx.write_scoring_qml(
-                        path)
-                    siteidx_rawdata_rlayer = QgsRasterLayer(path,
-                                                            display_names[idx])
-                    siteidx_scoring_rlayer = QgsRasterLayer(path,
-                                                            display_names[idx] + "[スコアリング]")
+                    siteidx_rawdata_qml_filepath = (
+                        raster_styler.siteidx.write_rawdata_qml(
+                            path, wood_type=siteidx_suffixes[idx]
+                        )
+                    )
+                    siteidx_scoring_qml_filepath = (
+                        raster_styler.siteidx.write_scoring_qml(path)
+                    )
+                    siteidx_rawdata_rlayer = QgsRasterLayer(
+                        path, display_names[idx]
+                    )
+                    siteidx_scoring_rlayer = QgsRasterLayer(
+                        path, display_names[idx] + "[スコアリング]"
+                    )
                     siteidx_rawdata_rlayer.loadNamedStyle(
-                        siteidx_rawdata_qml_filepath)
+                        siteidx_rawdata_qml_filepath
+                    )
                     siteidx_scoring_rlayer.loadNamedStyle(
-                        siteidx_scoring_qml_filepath)
+                        siteidx_scoring_qml_filepath
+                    )
                     output_rlayers_dict[display_names[idx]] = [
-                        siteidx_rawdata_rlayer, siteidx_scoring_rlayer]
+                        siteidx_rawdata_rlayer,
+                        siteidx_scoring_rlayer,
+                    ]
 
                 if self.abort_flag:
                     self.processFinished.emit(output_rlayers_dict)
@@ -173,22 +200,35 @@ class ProcessingThread(QThread):
                 self.addProgress.emit(1)
                 progress_counter += 1
 
-                cost_filepath = raster_writer.cost.generate(dem_for_processes,
-                                                            self.input_files_dict["costcsv"],
-                                                            self.output_dir)
-                cost_rawdata_qml_filepath = raster_styler.cost.write_rawdata_qml(self.input_files_dict["costcsv"],
-                                                                                 self.output_dir)
-                cost_scoring_qml_filepath = raster_styler.cost.write_scoring_qml(cost_filepath,
-                                                                                 self.output_dir)
-                cost_rawdata_rlayer = QgsRasterLayer(cost_filepath,
-                                                     OUTPUT_COST["DISPLAY_NAME"])
-                cost_scoring_rlayer = QgsRasterLayer(cost_filepath,
-                                                     OUTPUT_COST["DISPLAY_NAME"] + "[スコアリング]")
+                cost_filepath = raster_writer.cost.generate(
+                    dem_for_processes,
+                    self.input_files_dict["costcsv"],
+                    self.output_dir,
+                )
+                cost_rawdata_qml_filepath = (
+                    raster_styler.cost.write_rawdata_qml(
+                        self.input_files_dict["costcsv"], self.output_dir
+                    )
+                )
+                cost_scoring_qml_filepath = (
+                    raster_styler.cost.write_scoring_qml(
+                        cost_filepath, self.output_dir
+                    )
+                )
+                cost_rawdata_rlayer = QgsRasterLayer(
+                    cost_filepath, OUTPUT_COST["DISPLAY_NAME"]
+                )
+                cost_scoring_rlayer = QgsRasterLayer(
+                    cost_filepath,
+                    OUTPUT_COST["DISPLAY_NAME"] + "[スコアリング]",
+                )
                 cost_rawdata_rlayer.loadNamedStyle(cost_rawdata_qml_filepath)
                 cost_scoring_rlayer.loadNamedStyle(cost_scoring_qml_filepath)
 
                 output_rlayers_dict[OUTPUT_COST["DISPLAY_NAME"]] = [
-                    cost_rawdata_rlayer, cost_scoring_rlayer]
+                    cost_rawdata_rlayer,
+                    cost_scoring_rlayer,
+                ]
 
                 if self.abort_flag:
                     self.processFinished.emit(output_rlayers_dict)
@@ -200,23 +240,36 @@ class ProcessingThread(QThread):
                 self.addProgress.emit(1)
                 progress_counter += 1
 
-                distance_filepath = raster_writer.distance.generate(dem_for_processes,
-                                                                    self.input_files_dict["network"],
-                                                                    self.output_dir)
-                distance_rawdata_qml_filepath = raster_styler.distance.write_rawdata_qml(
-                    self.output_dir)
-                distance_scoring_qml_filepath = raster_styler.distance.write_scoring_qml(distance_filepath,
-                                                                                         self.output_dir)
-                distance_rawdata_rlayer = QgsRasterLayer(distance_filepath,
-                                                         OUTPUT_DISTANCE["DISPLAY_NAME"])
-                distance_scoring_rlayer = QgsRasterLayer(distance_filepath,
-                                                         OUTPUT_DISTANCE["DISPLAY_NAME"] + "[スコアリング]")
+                distance_filepath = raster_writer.distance.generate(
+                    dem_for_processes,
+                    self.input_files_dict["network"],
+                    self.output_dir,
+                )
+                distance_rawdata_qml_filepath = (
+                    raster_styler.distance.write_rawdata_qml(self.output_dir)
+                )
+                distance_scoring_qml_filepath = (
+                    raster_styler.distance.write_scoring_qml(
+                        distance_filepath, self.output_dir
+                    )
+                )
+                distance_rawdata_rlayer = QgsRasterLayer(
+                    distance_filepath, OUTPUT_DISTANCE["DISPLAY_NAME"]
+                )
+                distance_scoring_rlayer = QgsRasterLayer(
+                    distance_filepath,
+                    OUTPUT_DISTANCE["DISPLAY_NAME"] + "[スコアリング]",
+                )
                 distance_rawdata_rlayer.loadNamedStyle(
-                    distance_rawdata_qml_filepath)
+                    distance_rawdata_qml_filepath
+                )
                 distance_scoring_rlayer.loadNamedStyle(
-                    distance_scoring_qml_filepath)
+                    distance_scoring_qml_filepath
+                )
                 output_rlayers_dict[OUTPUT_DISTANCE["DISPLAY_NAME"]] = [
-                    distance_rawdata_rlayer, distance_scoring_rlayer]
+                    distance_rawdata_rlayer,
+                    distance_scoring_rlayer,
+                ]
 
                 if self.abort_flag:
                     self.processFinished.emit(output_rlayers_dict)
@@ -228,20 +281,27 @@ class ProcessingThread(QThread):
                 self.addProgress.emit(1)
                 progress_counter += 1
 
-                shc_filepath = raster_writer.shc.generate(dem_for_processes,
-                                                          self.output_dir)
-                shc_rawdata_qml_filepath = raster_styler.shc.write_rawdata_qml(shc_filepath,
-                                                                               self.output_dir)
-                shc_scoring_qml_filepath = raster_styler.shc.write_scoring_qml(shc_filepath,
-                                                                               self.output_dir)
-                shc_rawdata_rlayer = QgsRasterLayer(shc_filepath,
-                                                    OUTPUT_SHC["DISPLAY_NAME"])
-                shc_scoring_rlayer = QgsRasterLayer(shc_filepath,
-                                                    OUTPUT_SHC["DISPLAY_NAME"] + "[スコアリング]")
+                shc_filepath = raster_writer.shc.generate(
+                    dem_for_processes, self.output_dir
+                )
+                shc_rawdata_qml_filepath = raster_styler.shc.write_rawdata_qml(
+                    shc_filepath, self.output_dir
+                )
+                shc_scoring_qml_filepath = raster_styler.shc.write_scoring_qml(
+                    shc_filepath, self.output_dir
+                )
+                shc_rawdata_rlayer = QgsRasterLayer(
+                    shc_filepath, OUTPUT_SHC["DISPLAY_NAME"]
+                )
+                shc_scoring_rlayer = QgsRasterLayer(
+                    shc_filepath, OUTPUT_SHC["DISPLAY_NAME"] + "[スコアリング]"
+                )
                 shc_rawdata_rlayer.loadNamedStyle(shc_rawdata_qml_filepath)
                 shc_scoring_rlayer.loadNamedStyle(shc_scoring_qml_filepath)
                 output_rlayers_dict[OUTPUT_SHC["DISPLAY_NAME"]] = [
-                    shc_rawdata_rlayer, shc_scoring_rlayer]
+                    shc_rawdata_rlayer,
+                    shc_scoring_rlayer,
+                ]
 
                 if self.abort_flag:
                     self.processFinished.emit(output_rlayers_dict)
@@ -253,20 +313,28 @@ class ProcessingThread(QThread):
                 self.addProgress.emit(1)
                 progress_counter += 1
 
-                slope_filepath = raster_writer.slope.generate(dem_for_processes,
-                                                              self.output_dir)
-                slope_rawdata_qml_filepath = raster_styler.slope.write_rawdata_qml(
-                    self.output_dir)
-                slope_scoring_qml_filepath = raster_styler.slope.write_scoring_qml(
-                    self.output_dir)
-                slope_rawdata_rlayer = QgsRasterLayer(slope_filepath,
-                                                      OUTPUT_SLOPE["DISPLAY_NAME"])
-                slope_scoring_rlayer = QgsRasterLayer(slope_filepath,
-                                                      OUTPUT_SLOPE["DISPLAY_NAME"] + "[スコアリング]")
+                slope_filepath = raster_writer.slope.generate(
+                    dem_for_processes, self.output_dir
+                )
+                slope_rawdata_qml_filepath = (
+                    raster_styler.slope.write_rawdata_qml(self.output_dir)
+                )
+                slope_scoring_qml_filepath = (
+                    raster_styler.slope.write_scoring_qml(self.output_dir)
+                )
+                slope_rawdata_rlayer = QgsRasterLayer(
+                    slope_filepath, OUTPUT_SLOPE["DISPLAY_NAME"]
+                )
+                slope_scoring_rlayer = QgsRasterLayer(
+                    slope_filepath,
+                    OUTPUT_SLOPE["DISPLAY_NAME"] + "[スコアリング]",
+                )
                 slope_rawdata_rlayer.loadNamedStyle(slope_rawdata_qml_filepath)
                 slope_scoring_rlayer.loadNamedStyle(slope_scoring_qml_filepath)
                 output_rlayers_dict[OUTPUT_SLOPE["DISPLAY_NAME"]] = [
-                    slope_rawdata_rlayer, slope_scoring_rlayer]
+                    slope_rawdata_rlayer,
+                    slope_scoring_rlayer,
+                ]
 
                 if self.abort_flag:
                     self.processFinished.emit(output_rlayers_dict)
@@ -282,32 +350,45 @@ class ProcessingThread(QThread):
                     dem_for_processes,
                     self.input_files_dict["building"],
                     self.output_dir,
-                    self.input_files_dict.get("building_crs_override_authid")
+                    self.input_files_dict.get("building_crs_override_authid"),
                 )
-                if os.path.basename(savearea_filepath) != OUTPUT_SAVEAREA["FILE_NAME"] + ".tif":
+                if (
+                    os.path.basename(savearea_filepath)
+                    != OUTPUT_SAVEAREA["FILE_NAME"] + ".tif"
+                ):
                     self._post(
                         "既存の保全対象流域ファイルがWindowsで使用中のため、"
                         f"{os.path.basename(savearea_filepath)} として新規保存しました"
                     )
-                savearea_rawdata_qml_filepath = raster_styler.savearea.write_rawdata_qml(
-                    self.output_dir)
-                savearea_scoring_qml_filepath = raster_styler.savearea.write_scoring_qml(
-                    self.output_dir)
-                savearea_rawdata_rlayer = QgsRasterLayer(savearea_filepath,
-                                                         OUTPUT_SAVEAREA["DISPLAY_NAME"])
-                savearea_scoring_rlayer = QgsRasterLayer(savearea_filepath,
-                                                         OUTPUT_SAVEAREA["DISPLAY_NAME"] + "[スコアリング]")
+                savearea_rawdata_qml_filepath = (
+                    raster_styler.savearea.write_rawdata_qml(self.output_dir)
+                )
+                savearea_scoring_qml_filepath = (
+                    raster_styler.savearea.write_scoring_qml(self.output_dir)
+                )
+                savearea_rawdata_rlayer = QgsRasterLayer(
+                    savearea_filepath, OUTPUT_SAVEAREA["DISPLAY_NAME"]
+                )
+                savearea_scoring_rlayer = QgsRasterLayer(
+                    savearea_filepath,
+                    OUTPUT_SAVEAREA["DISPLAY_NAME"] + "[スコアリング]",
+                )
                 savearea_rawdata_rlayer.loadNamedStyle(
-                    savearea_rawdata_qml_filepath)
+                    savearea_rawdata_qml_filepath
+                )
                 savearea_scoring_rlayer.loadNamedStyle(
-                    savearea_scoring_qml_filepath)
+                    savearea_scoring_qml_filepath
+                )
                 output_rlayers_dict[OUTPUT_SAVEAREA["DISPLAY_NAME"]] = [
-                    savearea_rawdata_rlayer, savearea_scoring_rlayer]
+                    savearea_rawdata_rlayer,
+                    savearea_scoring_rlayer,
+                ]
         except Exception as e:
             # エラーはまとめてキャッチして呼び出し元に報告・処理を中断
             step = getattr(self, "_current_step", None)
             self._log(
-                f"FAILED (step={step[0] if step else '-'}): {e}\n{traceback.format_exc()}")
+                f"FAILED (step={step[0] if step else '-'}): {e}\n{traceback.format_exc()}"
+            )
             self.processFailed.emit(str(e))
             self.abort_flag = True
             self.processFinished.emit(output_rlayers_dict)
@@ -315,7 +396,7 @@ class ProcessingThread(QThread):
 
         self._finish_step()
         self._log("全要素の計算が完了")
-        self._post('終了処理中')
+        self._post("終了処理中")
 
         # 本当はここでプロジェクトにレイヤーを追加したい
         # しかし別スレッドでプロジェクトに追加されたレイヤーはUIで認識できない

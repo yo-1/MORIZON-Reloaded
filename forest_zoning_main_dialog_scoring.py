@@ -9,11 +9,22 @@ import json
 import re
 
 # QGIS-API
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt import QtCore
+from qgis.PyQt.QtCore import QCoreApplication, QSignalBlocker
+from qgis.PyQt.QtGui import QPainter
+from qgis.PyQt.QtWidgets import (
+    QDialog,
+    QDoubleSpinBox,
+    QFileDialog,
+    QMessageBox,
+)
+from qgis.core import (
+    QgsMapLayer,
+    QgsMapLayerProxyModel,
+    QgsProject,
+    QgsRasterLayer,
+)
+from qgis.gui import QgsMapLayerComboBox
 from qgis.utils import iface
 
 from .settings_manager import SettingsManager
@@ -26,7 +37,13 @@ from .processes.raster_styler import (
 from . import processes
 from .processes import raster_styler
 from . import utils
-from .diag_log import count_event, log, log_if_slow, processing_active
+from .diag_log import (
+    count_event,
+    log,
+    log_exception,
+    log_if_slow,
+    processing_active,
+)
 from .constants import (
     OUTPUT_SITEIDX_HINOKI,
     OUTPUT_SITEIDX_KARAMATSU,
@@ -98,8 +115,9 @@ class ScoringObject:
 def get_initial_thresholds_of(obj: ScoringObject):
     if obj.layer_name == "slope":  # 「傾斜」だけはしきい値が固定値
         thresholds = (35, 45)
-    elif obj.combobox.currentLayer() is not None and utils.is_valid_elements_layer(
-        obj.combobox.currentLayer()
+    elif (
+        obj.combobox.currentLayer() is not None
+        and utils.is_valid_elements_layer(obj.combobox.currentLayer())
     ):
         thresholds = utils.get_initial_thresholds(obj.combobox.currentLayer())
     else:
@@ -164,7 +182,9 @@ class ForestZoningMainDialogScoring:
         # レイヤー選択プルダウンをラスター限定に
         list(
             map(
-                lambda obj: obj.combobox.setFilters(QgsMapLayerProxyModel.RasterLayer),
+                lambda obj: obj.combobox.setFilters(
+                    QgsMapLayerProxyModel.Filter.RasterLayer
+                ),
                 self.scoring_objs_dict.values(),
             )
         )
@@ -179,7 +199,9 @@ class ForestZoningMainDialogScoring:
         list(
             map(
                 lambda obj: obj.combobox.layerChanged.connect(
-                    lambda _layer=None, obj=obj: self.init_scoring_rlayer_stats(obj)
+                    lambda _layer=None, obj=obj: self.init_scoring_rlayer_stats(
+                        obj
+                    )
                 ),
                 self.scoring_objs_dict.values(),
             )
@@ -192,7 +214,9 @@ class ForestZoningMainDialogScoring:
             )
         )
         self.main.scoringCostStyleReloadPushbutton.clicked.connect(
-            lambda: self.scoring_reload_thresholds(self.scoring_objs_dict.get("cost"))
+            lambda: self.scoring_reload_thresholds(
+                self.scoring_objs_dict.get("cost")
+            )
         )
         self.main.scoringDistanceStyleReloadPushbutton.clicked.connect(
             lambda: self.scoring_reload_thresholds(
@@ -200,10 +224,14 @@ class ForestZoningMainDialogScoring:
             )
         )
         self.main.scoringSlopeStyleReloadPushbutton.clicked.connect(
-            lambda: self.scoring_reload_thresholds(self.scoring_objs_dict.get("slope"))
+            lambda: self.scoring_reload_thresholds(
+                self.scoring_objs_dict.get("slope")
+            )
         )
         self.main.scoringShcStyleReloadPushbutton.clicked.connect(
-            lambda: self.scoring_reload_thresholds(self.scoring_objs_dict.get("shc"))
+            lambda: self.scoring_reload_thresholds(
+                self.scoring_objs_dict.get("shc")
+            )
         )
 
         # 統計値表示ボタン
@@ -213,7 +241,9 @@ class ForestZoningMainDialogScoring:
             )
         )
         self.main.scoringCostStatsButton.clicked.connect(
-            lambda: self.show_scoring_rlayer_stats(self.scoring_objs_dict.get("cost"))
+            lambda: self.show_scoring_rlayer_stats(
+                self.scoring_objs_dict.get("cost")
+            )
         )
         self.main.scoringDistanceStatsButton.clicked.connect(
             lambda: self.show_scoring_rlayer_stats(
@@ -221,48 +251,74 @@ class ForestZoningMainDialogScoring:
             )
         )
         self.main.scoringSlopeStatsButton.clicked.connect(
-            lambda: self.show_scoring_rlayer_stats(self.scoring_objs_dict.get("slope"))
+            lambda: self.show_scoring_rlayer_stats(
+                self.scoring_objs_dict.get("slope")
+            )
         )
         self.main.scoringShcStatsButton.clicked.connect(
-            lambda: self.show_scoring_rlayer_stats(self.scoring_objs_dict.get("shc"))
+            lambda: self.show_scoring_rlayer_stats(
+                self.scoring_objs_dict.get("shc")
+            )
         )
 
         # Undoボタン
         self.main.scoringSiteidxStyleUndoPushbutton.clicked.connect(
-            lambda: self.scoring_undo_thresholds(self.scoring_objs_dict.get("siteidx"))
+            lambda: self.scoring_undo_thresholds(
+                self.scoring_objs_dict.get("siteidx")
+            )
         )
         self.main.scoringCostStyleUndoPushbutton.clicked.connect(
-            lambda: self.scoring_undo_thresholds(self.scoring_objs_dict.get("cost"))
+            lambda: self.scoring_undo_thresholds(
+                self.scoring_objs_dict.get("cost")
+            )
         )
         self.main.scoringDistanceStyleUndoPushbutton.clicked.connect(
-            lambda: self.scoring_undo_thresholds(self.scoring_objs_dict.get("distance"))
+            lambda: self.scoring_undo_thresholds(
+                self.scoring_objs_dict.get("distance")
+            )
         )
         self.main.scoringShcStyleUndoPushbutton.clicked.connect(
-            lambda: self.scoring_undo_thresholds(self.scoring_objs_dict.get("shc"))
+            lambda: self.scoring_undo_thresholds(
+                self.scoring_objs_dict.get("shc")
+            )
         )
         self.main.scoringSlopeStyleUndoPushbutton.clicked.connect(
-            lambda: self.scoring_undo_thresholds(self.scoring_objs_dict.get("slope"))
+            lambda: self.scoring_undo_thresholds(
+                self.scoring_objs_dict.get("slope")
+            )
         )
 
         # 初期値に戻すボタン
         self.main.scoringSiteidxStyleInitPushbutton.clicked.connect(
-            lambda: self.back_to_initial_state(self.scoring_objs_dict.get("siteidx"))
+            lambda: self.back_to_initial_state(
+                self.scoring_objs_dict.get("siteidx")
+            )
         )
         self.main.scoringCostStyleInitPushbutton.clicked.connect(
-            lambda: self.back_to_initial_state(self.scoring_objs_dict.get("cost"))
+            lambda: self.back_to_initial_state(
+                self.scoring_objs_dict.get("cost")
+            )
         )
         self.main.scoringDistanceStyleInitPushbutton.clicked.connect(
-            lambda: self.back_to_initial_state(self.scoring_objs_dict.get("distance"))
+            lambda: self.back_to_initial_state(
+                self.scoring_objs_dict.get("distance")
+            )
         )
         self.main.scoringShcStyleInitPushbutton.clicked.connect(
-            lambda: self.back_to_initial_state(self.scoring_objs_dict.get("shc"))
+            lambda: self.back_to_initial_state(
+                self.scoring_objs_dict.get("shc")
+            )
         )
         self.main.scoringSlopeStyleInitPushbutton.clicked.connect(
-            lambda: self.back_to_initial_state(self.scoring_objs_dict.get("slope"))
+            lambda: self.back_to_initial_state(
+                self.scoring_objs_dict.get("slope")
+            )
         )
 
         # パラメタ読み込みボタン
-        self.main.scoringReadParamsPushbutton.clicked.connect(self.readin_params_json)
+        self.main.scoringReadParamsPushbutton.clicked.connect(
+            self.readin_params_json
+        )
 
         # UIの変更を検知しUI全体を更新する
         for signal in (
@@ -281,7 +337,9 @@ class ForestZoningMainDialogScoring:
         self.refresh_scoring_ui()
 
     def readin_params_json(self):
-        result = QFileDialog.getOpenFileNames(self.main, "ファイル選択", "", "params.json")
+        result = QFileDialog.getOpenFileNames(
+            self.main, "ファイル選択", "", "params.json"
+        )
         if len(result[0]) == 0:
             # 未選択なら処理を終了
             return
@@ -326,11 +384,16 @@ class ForestZoningMainDialogScoring:
             self._scoring_params_loaded = True
             for obj in self.scoring_objs_dict.values():
                 obj.reset_threshold_history(
-                    (obj.threshold1_spinbox.value(), obj.threshold2_spinbox.value())
+                    (
+                        obj.threshold1_spinbox.value(),
+                        obj.threshold2_spinbox.value(),
+                    )
                 )
         except (TypeError, IndexError):
             QMessageBox.information(
-                self.main, "エラー", "本プロクラムで生成したパラメータJSONファイルを選択してください。"
+                self.main,
+                "エラー",
+                "本プロクラムで生成したパラメータJSONファイルを選択してください。",
             )
 
     @log_if_slow("スコアリング: 入力レイヤーの自動設定")
@@ -346,24 +409,59 @@ class ForestZoningMainDialogScoring:
         project = QgsProject.instance()
 
         specs = [
-            ("siteidx", self.main.scoringSiteidxLayerCombobox,
-             [OUTPUT_SITEIDX_SUGI["FILE_NAME"], OUTPUT_SITEIDX_HINOKI["FILE_NAME"], OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"]],
-             [OUTPUT_SITEIDX_SUGI["DISPLAY_NAME"], OUTPUT_SITEIDX_HINOKI["DISPLAY_NAME"], OUTPUT_SITEIDX_KARAMATSU["DISPLAY_NAME"]]),
-            ("cost", self.main.scoringCostLayerCombobox,
-             [OUTPUT_COST["FILE_NAME"]], [OUTPUT_COST["DISPLAY_NAME"]]),
-            ("distance", self.main.scoringDistanceLayerCombobox,
-             [OUTPUT_DISTANCE["FILE_NAME"]], [OUTPUT_DISTANCE["DISPLAY_NAME"]]),
-            ("shc", self.main.scoringShcLayerCombobox,
-             [OUTPUT_SHC["FILE_NAME"]], [OUTPUT_SHC["DISPLAY_NAME"]]),
-            ("slope", self.main.scoringSlopeLayerCombobox,
-             [OUTPUT_SLOPE["FILE_NAME"]], [OUTPUT_SLOPE["DISPLAY_NAME"]]),
-            ("savearea", self.main.scoringSaveareaLayerCombobox,
-             [OUTPUT_SAVEAREA["FILE_NAME"]], [OUTPUT_SAVEAREA["DISPLAY_NAME"]]),
+            (
+                "siteidx",
+                self.main.scoringSiteidxLayerCombobox,
+                [
+                    OUTPUT_SITEIDX_SUGI["FILE_NAME"],
+                    OUTPUT_SITEIDX_HINOKI["FILE_NAME"],
+                    OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"],
+                ],
+                [
+                    OUTPUT_SITEIDX_SUGI["DISPLAY_NAME"],
+                    OUTPUT_SITEIDX_HINOKI["DISPLAY_NAME"],
+                    OUTPUT_SITEIDX_KARAMATSU["DISPLAY_NAME"],
+                ],
+            ),
+            (
+                "cost",
+                self.main.scoringCostLayerCombobox,
+                [OUTPUT_COST["FILE_NAME"]],
+                [OUTPUT_COST["DISPLAY_NAME"]],
+            ),
+            (
+                "distance",
+                self.main.scoringDistanceLayerCombobox,
+                [OUTPUT_DISTANCE["FILE_NAME"]],
+                [OUTPUT_DISTANCE["DISPLAY_NAME"]],
+            ),
+            (
+                "shc",
+                self.main.scoringShcLayerCombobox,
+                [OUTPUT_SHC["FILE_NAME"]],
+                [OUTPUT_SHC["DISPLAY_NAME"]],
+            ),
+            (
+                "slope",
+                self.main.scoringSlopeLayerCombobox,
+                [OUTPUT_SLOPE["FILE_NAME"]],
+                [OUTPUT_SLOPE["DISPLAY_NAME"]],
+            ),
+            (
+                "savearea",
+                self.main.scoringSaveareaLayerCombobox,
+                [OUTPUT_SAVEAREA["FILE_NAME"]],
+                [OUTPUT_SAVEAREA["DISPLAY_NAME"]],
+            ),
         ]
 
         def raster_layers():
-            return [lyr for lyr in project.mapLayers().values()
-                    if lyr is not None and lyr.type() == QgsMapLayer.RasterLayer]
+            return [
+                lyr
+                for lyr in project.mapLayers().values()
+                if lyr is not None
+                and lyr.type() == QgsMapLayer.LayerType.RasterLayer
+            ]
 
         def source_path(layer):
             if layer is None:
@@ -372,16 +470,16 @@ class ForestZoningMainDialogScoring:
                 value = layer.source()
                 if value:
                     return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             try:
                 provider = layer.dataProvider()
                 if provider is not None:
                     value = provider.dataSourceUri()
                     if value:
                         return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             return ""
 
         def base_name(path):
@@ -397,8 +495,14 @@ class ForestZoningMainDialogScoring:
         # YOUSO候補フォルダを一度だけ確定する。
         dirs = []
         known = [
-            "y_01_chii_sugi", "y_01_chii_hinoki", "y_01_chii_karamatsu",
-            "y_02_shuzai", "y_03_chiri", "y_11_chikei", "y_12_keisha", "y_13_hozen"
+            "y_01_chii_sugi",
+            "y_01_chii_hinoki",
+            "y_01_chii_karamatsu",
+            "y_02_shuzai",
+            "y_03_chiri",
+            "y_11_chikei",
+            "y_12_keisha",
+            "y_13_hozen",
         ]
         for lyr in raster_layers():
             path = source_path(lyr)
@@ -415,8 +519,8 @@ class ForestZoningMainDialogScoring:
                 d = os.path.abspath(d)
                 if d not in dirs:
                     dirs.append(d)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_scoring_layer_combobox", exc)
 
         def best_loaded(wanted):
             """指定した1種類だけを、source filenameで厳密に検索する。"""
@@ -494,7 +598,10 @@ class ForestZoningMainDialogScoring:
         else:
             for obj in self.scoring_objs_dict.values():
                 obj.reset_threshold_history(
-                    (obj.threshold1_spinbox.value(), obj.threshold2_spinbox.value())
+                    (
+                        obj.threshold1_spinbox.value(),
+                        obj.threshold2_spinbox.value(),
+                    )
                 )
 
         # QGISへディスクから自動ロードしたレイヤは既定のグレースケールに
@@ -505,22 +612,32 @@ class ForestZoningMainDialogScoring:
             if obj.combobox.currentLayer() is not None:
                 try:
                     self.set_scoring_raster_style(obj)
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_exception("set_scoring_layer_combobox", exc)
 
         # 保全対象は0/1のパレット表示を適用する。
         try:
-            savearea_layer = self.main.scoringSaveareaLayerCombobox.currentLayer()
+            savearea_layer = (
+                self.main.scoringSaveareaLayerCombobox.currentLayer()
+            )
             if savearea_layer is not None:
                 savearea_path = source_path(savearea_layer)
-                savearea_dir = os.path.dirname(os.path.abspath(savearea_path)) if savearea_path else ""
+                savearea_dir = (
+                    os.path.dirname(os.path.abspath(savearea_path))
+                    if savearea_path
+                    else ""
+                )
                 if savearea_dir:
-                    qml = raster_styler.savearea.write_scoring_qml(savearea_dir)
+                    qml = raster_styler.savearea.write_scoring_qml(
+                        savearea_dir
+                    )
                     savearea_layer.loadNamedStyle(qml)
-                    iface.layerTreeView().refreshLayerSymbology(savearea_layer.id())
+                    iface.layerTreeView().refreshLayerSymbology(
+                        savearea_layer.id()
+                    )
                     savearea_layer.triggerRepaint()
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_scoring_layer_combobox", exc)
 
         # 要素レイヤの保存先が .../YOUSO の場合、スコアリング出力は
         # 同じデータセット直下の .../ZONING を自動設定する。
@@ -533,18 +650,26 @@ class ForestZoningMainDialogScoring:
                     if d not in source_dirs:
                         source_dirs.append(d)
             youso_dir = next(
-                (d for d in source_dirs if os.path.basename(d).lower() == "youso"),
-                source_dirs[0] if source_dirs else None
+                (
+                    d
+                    for d in source_dirs
+                    if os.path.basename(d).lower() == "youso"
+                ),
+                source_dirs[0] if source_dirs else None,
             )
             if youso_dir:
                 zoning_dir = os.path.join(os.path.dirname(youso_dir), "ZONING")
                 os.makedirs(zoning_dir, exist_ok=True)
                 self.main.scoringOutputDirFileWidget.setFilePath(zoning_dir)
-                if hasattr(self.main.scoringOutputDirFileWidget, "setDefaultRoot"):
-                    self.main.scoringOutputDirFileWidget.setDefaultRoot(zoning_dir)
-        except Exception:
+                if hasattr(
+                    self.main.scoringOutputDirFileWidget, "setDefaultRoot"
+                ):
+                    self.main.scoringOutputDirFileWidget.setDefaultRoot(
+                        zoning_dir
+                    )
+        except Exception as exc:
             # 出力先自動設定に失敗しても手動指定は可能。
-            pass
+            log_exception("set_scoring_layer_combobox", exc)
 
         self.refresh_scoring_ui()
 
@@ -570,18 +695,49 @@ class ForestZoningMainDialogScoring:
         project = QgsProject.instance()
 
         specs = [
-            ("siteidx", self.main.scoringSiteidxLayerCombobox,
-             [OUTPUT_SITEIDX_SUGI["FILE_NAME"], OUTPUT_SITEIDX_HINOKI["FILE_NAME"], OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"]]),
-            ("cost", self.main.scoringCostLayerCombobox, [OUTPUT_COST["FILE_NAME"]]),
-            ("distance", self.main.scoringDistanceLayerCombobox, [OUTPUT_DISTANCE["FILE_NAME"]]),
-            ("shc", self.main.scoringShcLayerCombobox, [OUTPUT_SHC["FILE_NAME"]]),
-            ("slope", self.main.scoringSlopeLayerCombobox, [OUTPUT_SLOPE["FILE_NAME"]]),
-            ("savearea", self.main.scoringSaveareaLayerCombobox, [OUTPUT_SAVEAREA["FILE_NAME"]]),
+            (
+                "siteidx",
+                self.main.scoringSiteidxLayerCombobox,
+                [
+                    OUTPUT_SITEIDX_SUGI["FILE_NAME"],
+                    OUTPUT_SITEIDX_HINOKI["FILE_NAME"],
+                    OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"],
+                ],
+            ),
+            (
+                "cost",
+                self.main.scoringCostLayerCombobox,
+                [OUTPUT_COST["FILE_NAME"]],
+            ),
+            (
+                "distance",
+                self.main.scoringDistanceLayerCombobox,
+                [OUTPUT_DISTANCE["FILE_NAME"]],
+            ),
+            (
+                "shc",
+                self.main.scoringShcLayerCombobox,
+                [OUTPUT_SHC["FILE_NAME"]],
+            ),
+            (
+                "slope",
+                self.main.scoringSlopeLayerCombobox,
+                [OUTPUT_SLOPE["FILE_NAME"]],
+            ),
+            (
+                "savearea",
+                self.main.scoringSaveareaLayerCombobox,
+                [OUTPUT_SAVEAREA["FILE_NAME"]],
+            ),
         ]
 
         def raster_layers():
-            return [lyr for lyr in project.mapLayers().values()
-                    if lyr is not None and lyr.type() == QgsMapLayer.RasterLayer]
+            return [
+                lyr
+                for lyr in project.mapLayers().values()
+                if lyr is not None
+                and lyr.type() == QgsMapLayer.LayerType.RasterLayer
+            ]
 
         def source_path(layer):
             if layer is None:
@@ -590,16 +746,16 @@ class ForestZoningMainDialogScoring:
                 value = layer.source()
                 if value:
                     return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             try:
                 provider = layer.dataProvider()
                 if provider is not None:
                     value = provider.dataSourceUri()
                     if value:
                         return value.split("|", 1)[0]
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("source_path", exc)
             return ""
 
         def base_name(path):
@@ -617,7 +773,10 @@ class ForestZoningMainDialogScoring:
             if not path:
                 return False
             base = base_name(path)
-            return any(match_generation(base, wanted) is not None for wanted in wanted_list)
+            return any(
+                match_generation(base, wanted) is not None
+                for wanted in wanted_list
+            )
 
         def best_loaded(wanted):
             candidates = []
@@ -633,8 +792,11 @@ class ForestZoningMainDialogScoring:
             candidates.sort(key=lambda x: x[0], reverse=True)
             return candidates[0][1]
 
-        broken = [(key, combo, wanted_list) for key, combo, wanted_list in specs
-                  if not is_bound_correctly(combo, wanted_list)]
+        broken = [
+            (key, combo, wanted_list)
+            for key, combo, wanted_list in specs
+            if not is_bound_correctly(combo, wanted_list)
+        ]
         if not broken:
             return
 
@@ -647,7 +809,11 @@ class ForestZoningMainDialogScoring:
                     break
             resolved.append((key, combo, layer))
 
-        blockers = [QSignalBlocker(combo) for _, combo, layer in resolved if layer is not None]
+        blockers = [
+            QSignalBlocker(combo)
+            for _, combo, layer in resolved
+            if layer is not None
+        ]
         try:
             for _, combo, layer in resolved:
                 if layer is not None:
@@ -659,14 +825,18 @@ class ForestZoningMainDialogScoring:
         for key in fixed_keys:
             if key == "savearea":
                 continue
-            self.init_scoring_rlayer_stats(self.scoring_objs_dict[key], force=True)
+            self.init_scoring_rlayer_stats(
+                self.scoring_objs_dict[key], force=True
+            )
             try:
                 self.set_scoring_raster_style(self.scoring_objs_dict[key])
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("fix_broken_scoring_layer_bindings", exc)
 
         if fixed_keys:
-            count_event(f"スコアリングのレイヤー紐付けを自動修正: {','.join(fixed_keys)}")
+            count_event(
+                f"スコアリングのレイヤー紐付けを自動修正: {','.join(fixed_keys)}"
+            )
             self.refresh_scoring_ui()
 
     @log_if_slow("スコアリング: UI更新(refresh_scoring_ui)")
@@ -677,7 +847,14 @@ class ForestZoningMainDialogScoring:
         self.main.scoringRunPushButton.setEnabled(len(error_texts) == 0)
 
         # 各要素ごとのボタンの有効化チェック
-        for combobox, stats_button, reload_button, undo_button, init_button, obj in (
+        for (
+            combobox,
+            stats_button,
+            reload_button,
+            undo_button,
+            init_button,
+            obj,
+        ) in (
             (
                 self.main.scoringSiteidxLayerCombobox,
                 self.main.scoringSiteidxStatsButton,
@@ -727,7 +904,9 @@ class ForestZoningMainDialogScoring:
 
             # 使用可能なボタンのみ有効化する
             if combobox.currentLayer() is not None:
-                is_valid = utils.is_valid_elements_layer(combobox.currentLayer())
+                is_valid = utils.is_valid_elements_layer(
+                    combobox.currentLayer()
+                )
                 stats_button.setEnabled(is_valid)
                 reload_button.setEnabled(is_valid)
                 init_button.setEnabled(is_valid)
@@ -748,8 +927,12 @@ class ForestZoningMainDialogScoring:
         target_layer = scoring_obj.combobox.currentLayer()
 
         target_layer.loadNamedStyle(qml_filepath)
-        iface.layerTreeView().refreshLayerSymbology(target_layer.id())  # レイヤー一覧の凡例を更新
-        target_layer.setBlendMode(QPainter.CompositionMode_Multiply)  # 乗算に設定
+        iface.layerTreeView().refreshLayerSymbology(
+            target_layer.id()
+        )  # レイヤー一覧の凡例を更新
+        target_layer.setBlendMode(
+            QPainter.CompositionMode.CompositionMode_Multiply
+        )  # 乗算に設定
         target_layer.triggerRepaint()  # キャンバス上の見た目を更新
 
     def scoring_reload_thresholds(self, scoring_obj: ScoringObject):
@@ -791,9 +974,9 @@ class ForestZoningMainDialogScoring:
             scoring_obj.threshold1_spinbox.value(),
             scoring_obj.threshold2_spinbox.value(),
         )
-        result = stats_dialog.exec_()
+        result = stats_dialog.exec()
 
-        if result == QDialog.Accepted:
+        if result == QDialog.DialogCode.Accepted:
             # しきい値をメイン画面で反映
             threshold1, threshold2 = stats_dialog.get_thresholds()
             scoring_obj.threshold1_spinbox.setValue(threshold1)
@@ -803,10 +986,12 @@ class ForestZoningMainDialogScoring:
             scoring_obj.append_threshold_history([threshold1, threshold2])
             self.refresh_scoring_ui()
 
-        self.main.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+        self.main.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
         self.main.show()
 
-    def init_scoring_rlayer_stats(self, scoring_obj: ScoringObject, force: bool = False):
+    def init_scoring_rlayer_stats(
+        self, scoring_obj: ScoringObject, force: bool = False
+    ):
         """レイヤがリセットされた時の挙動。
 
         要素計算の終了処理でレイヤーが一括追加される際、同一レイヤーに対して
@@ -817,14 +1002,18 @@ class ForestZoningMainDialogScoring:
         自動設定の一括反映時）は常に実行する。
         """
         current_layer = scoring_obj.combobox.currentLayer()
-        current_layer_id = current_layer.id() if current_layer is not None else None
+        current_layer_id = (
+            current_layer.id() if current_layer is not None else None
+        )
 
         if (
             not force
             and current_layer_id is not None
             and current_layer_id == scoring_obj.last_init_layer_id
         ):
-            count_event(f"しきい値初期化のスキップ(同一レイヤー): {scoring_obj.layer_name}")
+            count_event(
+                f"しきい値初期化のスキップ(同一レイヤー): {scoring_obj.layer_name}"
+            )
             return
 
         thresholds = get_initial_thresholds_of(scoring_obj)
@@ -913,7 +1102,10 @@ class ForestZoningMainDialogScoring:
                 OUTPUT_DISTANCE["DISPLAY_NAME"],
                 self.main.scoringDistanceLayerCombobox,
             ),  # nopep8
-            (OUTPUT_SLOPE["DISPLAY_NAME"], self.main.scoringSlopeLayerCombobox),
+            (
+                OUTPUT_SLOPE["DISPLAY_NAME"],
+                self.main.scoringSlopeLayerCombobox,
+            ),
             (OUTPUT_SHC["DISPLAY_NAME"], self.main.scoringShcLayerCombobox),
             (
                 OUTPUT_SAVEAREA["DISPLAY_NAME"],
@@ -929,7 +1121,10 @@ class ForestZoningMainDialogScoring:
                 error_texts.append(f"{name}ラスターを指定してください")
                 continue
 
-            if combobox.currentLayer().type() != QgsMapLayer.RasterLayer:
+            if (
+                combobox.currentLayer().type()
+                != QgsMapLayer.LayerType.RasterLayer
+            ):
                 error_texts.append(f"{name}ラスターを指定してください")
                 continue
 
@@ -943,9 +1138,14 @@ class ForestZoningMainDialogScoring:
             # MORIZON自身が生成した要素ラスタを別欄へ誤設定していないか確認する。
             # 任意の外部ラスタは妨げず、Y_01～Y_13の既知ファイル名だけを厳密判定する。
             try:
-                base = os.path.splitext(os.path.basename(
-                    combobox.currentLayer().dataProvider().dataSourceUri().split("|", 1)[0]
-                ))[0].lower()
+                base = os.path.splitext(
+                    os.path.basename(
+                        combobox.currentLayer()
+                        .dataProvider()
+                        .dataSourceUri()
+                        .split("|", 1)[0]
+                    )
+                )[0].lower()
                 base = re.sub(r"_v[0-9]+$", "", base)
                 known = {
                     OUTPUT_SITEIDX_SUGI["FILE_NAME"].lower(),
@@ -963,24 +1163,36 @@ class ForestZoningMainDialogScoring:
                         OUTPUT_SITEIDX_HINOKI["FILE_NAME"].lower(),
                         OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"].lower(),
                     },
-                    OUTPUT_COST["DISPLAY_NAME"]: {OUTPUT_COST["FILE_NAME"].lower()},
-                    OUTPUT_DISTANCE["DISPLAY_NAME"]: {OUTPUT_DISTANCE["FILE_NAME"].lower()},
-                    OUTPUT_SLOPE["DISPLAY_NAME"]: {OUTPUT_SLOPE["FILE_NAME"].lower()},
-                    OUTPUT_SHC["DISPLAY_NAME"]: {OUTPUT_SHC["FILE_NAME"].lower()},
-                    OUTPUT_SAVEAREA["DISPLAY_NAME"]: {OUTPUT_SAVEAREA["FILE_NAME"].lower()},
+                    OUTPUT_COST["DISPLAY_NAME"]: {
+                        OUTPUT_COST["FILE_NAME"].lower()
+                    },
+                    OUTPUT_DISTANCE["DISPLAY_NAME"]: {
+                        OUTPUT_DISTANCE["FILE_NAME"].lower()
+                    },
+                    OUTPUT_SLOPE["DISPLAY_NAME"]: {
+                        OUTPUT_SLOPE["FILE_NAME"].lower()
+                    },
+                    OUTPUT_SHC["DISPLAY_NAME"]: {
+                        OUTPUT_SHC["FILE_NAME"].lower()
+                    },
+                    OUTPUT_SAVEAREA["DISPLAY_NAME"]: {
+                        OUTPUT_SAVEAREA["FILE_NAME"].lower()
+                    },
                 }
                 if base in known and base not in expected.get(name, set()):
                     error_texts.append(
                         f"{name}に別要素のMORIZONラスターが選択されています（{base}.tif）"
                     )
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("get_scoring_error_texts", exc)
 
         if (
             not self.main.scoringSiteidxLayerCombobox.parent().isChecked()
             and not self.main.scoringSlopeLayerCombobox.parent().isChecked()
         ):
-            error_texts.append("「収益性軸」「災害リスク軸」のいずれかにひとつ以上にチェックしてください")
+            error_texts.append(
+                "「収益性軸」「災害リスク軸」のいずれかにひとつ以上にチェックしてください"
+            )
 
         if self.main.scoringOutputDirFileWidget.filePath() == "":
             error_texts.append("出力先フォルダを指定してください")
@@ -999,11 +1211,8 @@ class ForestZoningMainDialogScoring:
         existing_filenames = []
 
         def append_filename_if_exist(file_info: dict):
-            if os.path.exists(
-                os.path.join(
-                    output_dir, f"{file_info['FILE_NAME']}.{file_info['EXTENSION']}"
-                )
-            ):
+            filename = f"{file_info['FILE_NAME']}.{file_info['EXTENSION']}"
+            if os.path.exists(os.path.join(output_dir, filename)):
                 existing_filenames.append(
                     f"{file_info['FILE_NAME']}.{file_info['EXTENSION']}"
                 )
@@ -1047,8 +1256,8 @@ class ForestZoningMainDialogScoring:
                     ).lower()
                     if src in output_names:
                         combo.setLayer(None)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_remove_existing_scoring_results", exc)
 
         # 「スコアリング」グループだけを対象にレイヤ削除
         for group in list(root.findGroups()):
@@ -1058,16 +1267,16 @@ class ForestZoningMainDialogScoring:
             for child in group.findLayers():
                 try:
                     ids.append(child.layerId())
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_exception("_remove_existing_scoring_results", exc)
             if ids:
                 project.removeMapLayers(ids)
             try:
                 parent = group.parent()
                 if parent is not None:
                     parent.removeChildNode(group)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_remove_existing_scoring_results", exc)
 
         QCoreApplication.processEvents()
 
@@ -1075,14 +1284,17 @@ class ForestZoningMainDialogScoring:
         log("スコアリング: 実行ボタン押下")
         existing_filenames = self.scoring_get_existing_filenames()
         if len(existing_filenames) > 0:
-            if QMessageBox.No == QMessageBox.question(
+            if QMessageBox.StandardButton.No == QMessageBox.question(
                 self.main,
                 "上書き確認",
-                "出力先フォルダに同名ファイルが存在します、上書きしますか？\n" + "\n".join(existing_filenames),
-                QMessageBox.Yes,
-                QMessageBox.No,
+                "出力先フォルダに同名ファイルが存在します、上書きしますか？\n"
+                + "\n".join(existing_filenames),
+                QMessageBox.StandardButton.Yes,
+                QMessageBox.StandardButton.No,
             ):
-                QMessageBox.information(self.main, "処理中断", "処理を中断しました。")
+                QMessageBox.information(
+                    self.main, "処理中断", "処理を中断しました。"
+                )
                 return
 
         # STEP8A: 既存スコアリング結果をQGISから自動解除して再計算可能にする
@@ -1125,7 +1337,9 @@ class ForestZoningMainDialogScoring:
             self.main.scoringOutputDirFileWidget.filePath(), "params.json"
         )
         with open(params_filepath, "wt") as file:
-            json.dump(input_thresholds_dict, file, ensure_ascii=False, indent=2)
+            json.dump(
+                input_thresholds_dict, file, ensure_ascii=False, indent=2
+            )
 
         target_score_dict = {
             "profit": self.main.scoringSiteidxLayerCombobox.parent().isChecked(),
@@ -1147,13 +1361,15 @@ class ForestZoningMainDialogScoring:
         thread.processFinished.connect(self.add_layers_to_project)
         thread.processFailed.connect(
             lambda error_message: QMessageBox.information(
-                self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
+                self.main,
+                "エラー",
+                f"エラーが発生しました。\n\n{error_message}",
             )
         )
         log("スコアリング: 処理スレッドを開始します")
         with processing_active():
             thread.start()
-            progress_dialog.exec_()
+            progress_dialog.exec()
 
         if thread.abort_flag:
             QMessageBox.information(self.main, "中断", "処理を中断しました。")

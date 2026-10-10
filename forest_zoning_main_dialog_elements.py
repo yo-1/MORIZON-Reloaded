@@ -5,15 +5,28 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import os
-import glob
 import re
 
 # QGIS-API
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtCore import QCoreApplication, QDir, QEvent, QSettings
+from qgis.PyQt.QtGui import QPainter
+from qgis.PyQt.QtWidgets import (
+    QComboBox,
+    QDialog,
+    QFileDialog,
+    QLabel,
+    QMessageBox,
+)
+from qgis.core import (
+    Qgis,
+    QgsApplication,
+    QgsCoordinateReferenceSystem,
+    QgsMessageLog,
+    QgsProject,
+    QgsRasterLayer,
+    QgsVectorLayer,
+)
+from qgis.gui import QgsProjectionSelectionDialog
 
 
 from .progress_dialog import ProgressDialog
@@ -36,7 +49,7 @@ from .constants import (
     OUTPUT_SAVEAREA,
 )
 from .utils import is_tmpdir_valid, get_tiff_info
-from .diag_log import log, log_if_slow, processing_active
+from .diag_log import log, log_exception, log_if_slow, processing_active
 from pathlib import Path
 
 
@@ -133,13 +146,21 @@ class ForestZoningMainDialogElements:
         mondatory_files_dict = self.get_elements_mandatory_files_dict()
         self.main.elementsDemFileWidget.setEnabled(mondatory_files_dict["dem"])
         self.main.elementsNppFileWidget.setEnabled(mondatory_files_dict["npp"])
-        self.main.elementsSradFileWidget.setEnabled(mondatory_files_dict["srad"])
-        self.main.elementsVtexFileWidget.setEnabled(mondatory_files_dict["vtex"])
+        self.main.elementsSradFileWidget.setEnabled(
+            mondatory_files_dict["srad"]
+        )
+        self.main.elementsVtexFileWidget.setEnabled(
+            mondatory_files_dict["vtex"]
+        )
         self.main.elementsBuildingFileWidget.setEnabled(
             mondatory_files_dict["building"]
         )
-        self.main.elementsNetworkFileWidget.setEnabled(mondatory_files_dict["network"])
-        self.main.elementsCostCsvFileWidget.setEnabled(mondatory_files_dict["costcsv"])
+        self.main.elementsNetworkFileWidget.setEnabled(
+            mondatory_files_dict["network"]
+        )
+        self.main.elementsCostCsvFileWidget.setEnabled(
+            mondatory_files_dict["costcsv"]
+        )
 
     def get_elements_error_texts(self) -> list:
         """
@@ -157,26 +178,32 @@ class ForestZoningMainDialogElements:
             if filepath == "":
                 error_texts.append(f"{input_name}を設定してください")
             else:
-                if re.search("[^\x01-\x7E]", filepath):
-                    error_texts.append(f"{input_name}のファイルパスに全角文字列が含まれています")
+                if re.search("[^\x01-\x7e]", filepath):
+                    error_texts.append(
+                        f"{input_name}のファイルパスに全角文字列が含まれています"
+                    )
 
         # 必須データをバリデーション
         mondatory_files_dict = self.get_elements_mandatory_files_dict()
         if mondatory_files_dict["dem"]:
             validate_input(
-                self.main.elementsDemFileWidget.filePath(), INPUT_DEM["DISPLAY_NAME"]
+                self.main.elementsDemFileWidget.filePath(),
+                INPUT_DEM["DISPLAY_NAME"],
             )
         if mondatory_files_dict["npp"]:
             validate_input(
-                self.main.elementsNppFileWidget.filePath(), INPUT_NPP["DISPLAY_NAME"]
+                self.main.elementsNppFileWidget.filePath(),
+                INPUT_NPP["DISPLAY_NAME"],
             )
         if mondatory_files_dict["srad"]:
             validate_input(
-                self.main.elementsSradFileWidget.filePath(), INPUT_SRAD["DISPLAY_NAME"]
+                self.main.elementsSradFileWidget.filePath(),
+                INPUT_SRAD["DISPLAY_NAME"],
             )
         if mondatory_files_dict["vtex"]:
             validate_input(
-                self.main.elementsVtexFileWidget.filePath(), INPUT_VTEX["DISPLAY_NAME"]
+                self.main.elementsVtexFileWidget.filePath(),
+                INPUT_VTEX["DISPLAY_NAME"],
             )
         if mondatory_files_dict["building"]:
             validate_input(
@@ -201,7 +228,9 @@ class ForestZoningMainDialogElements:
             groups = QgsProject.instance().layerTreeRoot().findGroups()
             group_names = list(map(lambda g: g.name(), groups))
             if output_name in group_names:
-                error_texts.append(f"プロジェクトにすでに「{output_name}」が存在します")
+                error_texts.append(
+                    f"プロジェクトにすでに「{output_name}」が存在します"
+                )
 
         if self.main.elementsSiteIdxCheckbox.isChecked():
             validate_output(OUTPUT_SITEIDX_SUGI["DISPLAY_NAME"])
@@ -266,13 +295,13 @@ class ForestZoningMainDialogElements:
             p = os.path.normpath(str(p))
             if p and p not in result:
                 result.append(p)
-        return result[:self._recent_dataset_limit]
+        return result[: self._recent_dataset_limit]
 
     def _save_recent_dataset(self, dataset_root):
         dataset_root = os.path.normpath(dataset_root)
         recent = [p for p in self._recent_datasets() if p != dataset_root]
         recent.insert(0, dataset_root)
-        recent = recent[:self._recent_dataset_limit]
+        recent = recent[: self._recent_dataset_limit]
 
         self._dataset_settings.setValue(
             f"{self._settings_prefix}/recentDatasets", recent
@@ -359,8 +388,12 @@ class ForestZoningMainDialogElements:
         last_output = self._settings_value("lastOutputDir", "")
         if last_output and os.path.isdir(last_output):
             self.main.elementsOutputDirFileWidget.setFilePath(last_output)
-            if hasattr(self.main.elementsOutputDirFileWidget, "setDefaultRoot"):
-                self.main.elementsOutputDirFileWidget.setDefaultRoot(last_output)
+            if hasattr(
+                self.main.elementsOutputDirFileWidget, "setDefaultRoot"
+            ):
+                self.main.elementsOutputDirFileWidget.setDefaultRoot(
+                    last_output
+                )
 
     def _apply_migration_safety_mode(self):
         """QGIS 3.44へ移植済みのSTEP5～STEP7Bを有効化する。"""
@@ -431,7 +464,9 @@ class ForestZoningMainDialogElements:
             for root, _dirs, files in os.walk(folder):
                 for name in files:
                     lname = name.lower()
-                    if lname.endswith(ext) or (ext == ".tif" and ".tif" in lname):
+                    if lname.endswith(ext) or (
+                        ext == ".tif" and ".tif" in lname
+                    ):
                         candidates.append(os.path.join(root, name))
         except OSError:
             return []
@@ -465,15 +500,17 @@ class ForestZoningMainDialogElements:
 
         # 一時成果・auxファイルを避け、短いパスを優先
         candidates = [
-            f for f in candidates
-            if "_morizon_work" not in f.lower()
-            and ".aux." not in f.lower()
+            f
+            for f in candidates
+            if "_morizon_work" not in f.lower() and ".aux." not in f.lower()
         ] or candidates
         candidates.sort(key=lambda p: (len(Path(p).parts), len(p), p.lower()))
         return candidates[0]
 
     def _load_dataset(self, selected_dir, remember=True):
-        dataset_root, data_dir = self._find_dataset_root_and_data_dir(selected_dir)
+        dataset_root, data_dir = self._find_dataset_root_and_data_dir(
+            selected_dir
+        )
 
         found = 0
         for input_def, filewidget in (
@@ -535,7 +572,7 @@ class ForestZoningMainDialogElements:
             self.main,
             "ZoningKit / DATA フォルダを選択",
             last_dir,
-            QFileDialog.ShowDirsOnly,
+            QFileDialog.Option.ShowDirsOnly,
         )
 
         # キャンセル時は何もしない
@@ -591,9 +628,9 @@ class ForestZoningMainDialogElements:
         if not existing_filenames:
             return
 
-        output_dir = os.path.normcase(os.path.abspath(
-            self.main.elementsOutputDirFileWidget.filePath()
-        ))
+        output_dir = os.path.normcase(
+            os.path.abspath(self.main.elementsOutputDirFileWidget.filePath())
+        )
         target_paths = {
             os.path.normcase(os.path.abspath(os.path.join(output_dir, name)))
             for name in existing_filenames
@@ -629,17 +666,20 @@ class ForestZoningMainDialogElements:
                         combo.setLayer(None)
                     elif hasattr(combo, "setCurrentIndex"):
                         combo.setCurrentIndex(-1)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_release_existing_output_layers", exc)
 
         # 2. 旧版の統計キャッシュがメモリに残っていればclear。
         try:
             from . import utils as morizon_utils
-            cache_clear = getattr(morizon_utils.get_raster_stats, "cache_clear", None)
+
+            cache_clear = getattr(
+                morizon_utils.get_raster_stats, "cache_clear", None
+            )
             if callable(cache_clear):
                 cache_clear()
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("_release_existing_output_layers", exc)
 
         # 3. プロジェクト内で同じGeoTIFFを参照する全レイヤを削除。
         remove_ids = []
@@ -656,8 +696,8 @@ class ForestZoningMainDialogElements:
             try:
                 if len(group.children()) == 0:
                     root.removeChildNode(group)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("_release_existing_output_layers", exc)
 
         # 5. QtのdeleteLaterとPython参照を解放。
         import gc
@@ -665,9 +705,9 @@ class ForestZoningMainDialogElements:
 
         QCoreApplication.processEvents()
         try:
-            QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
-        except Exception:
-            pass
+            QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+        except Exception as exc:
+            log_exception("_release_existing_output_layers", exc)
         QCoreApplication.processEvents()
         gc.collect()
 
@@ -690,9 +730,11 @@ class ForestZoningMainDialogElements:
                     last_error = e
                     QCoreApplication.processEvents()
                     try:
-                        QCoreApplication.sendPostedEvents(None, QEvent.DeferredDelete)
-                    except Exception:
-                        pass
+                        QCoreApplication.sendPostedEvents(
+                            None, QEvent.Type.DeferredDelete
+                        )
+                    except Exception as exc:
+                        log_exception("_release_existing_output_layers", exc)
                     gc.collect()
                     time.sleep(0.20)
                 except OSError as e:
@@ -710,7 +752,6 @@ class ForestZoningMainDialogElements:
         # 戻り値は診断用。現時点では呼び出し側でエラー扱いにしない。
         return locked
 
-
     def _resolve_building_crs_override(self, building_path):
         """保全対象データのCRSを、QGISレイヤとして開く前に確認する。
 
@@ -722,26 +763,29 @@ class ForestZoningMainDialogElements:
         if not building_path:
             return True, None
 
-        source_path = str(building_path).split('|', 1)[0]
+        source_path = str(building_path).split("|", 1)[0]
 
         # IMPORTANT:
         # ここでは QgsVectorLayer を生成しない。
         # CRSなしデータでQGIS標準CRSダイアログが先に出るのを防ぐ。
         try:
             from osgeo import ogr
+
             ds = ogr.Open(source_path, 0)
             if ds is None:
                 QMessageBox.warning(
-                    self.main, "保全対象データ",
-                    "保全対象データを開けません。\n" + source_path
+                    self.main,
+                    "保全対象データ",
+                    "保全対象データを開けません。\n" + source_path,
                 )
                 return False, None
             ogr_layer = ds.GetLayer(0)
             if ogr_layer is None:
                 ds = None
                 QMessageBox.warning(
-                    self.main, "保全対象データ",
-                    "保全対象データのレイヤを取得できません。\n" + source_path
+                    self.main,
+                    "保全対象データ",
+                    "保全対象データのレイヤを取得できません。\n" + source_path,
                 )
                 return False, None
 
@@ -769,14 +813,15 @@ class ForestZoningMainDialogElements:
 
         except Exception as e:
             QMessageBox.warning(
-                self.main, "保全対象データ",
-                "保全対象データのCRS確認に失敗しました。\n" + str(e)
+                self.main,
+                "保全対象データ",
+                "保全対象データのCRS確認に失敗しました。\n" + str(e),
             )
             return False, None
 
         # CRS不明の場合、まずMORIZON独自ダイアログを表示する。
         box = QMessageBox(self.main)
-        box.setIcon(QMessageBox.Warning)
+        box.setIcon(QMessageBox.Icon.Warning)
         box.setWindowTitle("保全対象データの座標参照系")
         box.setText(
             "保全対象データに座標参照系（CRS）が設定されていません。\n\n"
@@ -785,14 +830,19 @@ class ForestZoningMainDialogElements:
             "DM、自治体GIS、その他のデータの場合は、元データのCRSを指定してください。"
         )
         box.setInformativeText(
-            "データの座標範囲:\n" + extent_text +
-            "\n\n※元のShapeファイルは変更しません。MORIZONの今回の処理内だけでCRSを設定します。"
+            "データの座標範囲:\n"
+            + extent_text
+            + "\n\n※元のShapeファイルは変更しません。MORIZONの今回の処理内だけでCRSを設定します。"
         )
-        btn_fgd = box.addButton("基盤地図情報（EPSG:6668）", QMessageBox.AcceptRole)
-        btn_select = box.addButton("CRSを指定...", QMessageBox.ActionRole)
-        btn_cancel = box.addButton(QMessageBox.Cancel)
+        btn_fgd = box.addButton(
+            "基盤地図情報（EPSG:6668）", QMessageBox.ButtonRole.AcceptRole
+        )
+        btn_select = box.addButton(
+            "CRSを指定...", QMessageBox.ButtonRole.ActionRole
+        )
+        btn_cancel = box.addButton(QMessageBox.StandardButton.Cancel)
         box.setDefaultButton(btn_fgd)
-        box.exec_()
+        box.exec()
 
         clicked = box.clickedButton()
         if clicked == btn_cancel or clicked is None:
@@ -801,7 +851,9 @@ class ForestZoningMainDialogElements:
         if clicked == btn_fgd:
             crs = QgsCoordinateReferenceSystem("EPSG:6668")
             if not crs.isValid():
-                QMessageBox.critical(self.main, "CRSエラー", "EPSG:6668を読み込めませんでした。")
+                QMessageBox.critical(
+                    self.main, "CRSエラー", "EPSG:6668を読み込めませんでした。"
+                )
                 return False, None
             return True, crs.authid() or crs.toWkt()
 
@@ -811,13 +863,17 @@ class ForestZoningMainDialogElements:
             dlg.setWindowTitle("保全対象データの座標参照系を指定")
             try:
                 dlg.setCrs(QgsCoordinateReferenceSystem("EPSG:6668"))
-            except Exception:
-                pass
-            if dlg.exec_() != QDialog.Accepted:
+            except Exception as exc:
+                log_exception("_resolve_building_crs_override", exc)
+            if dlg.exec() != QDialog.DialogCode.Accepted:
                 return False, None
             crs = dlg.crs()
             if not crs.isValid():
-                QMessageBox.warning(self.main, "CRSエラー", "有効な座標参照系を選択してください。")
+                QMessageBox.warning(
+                    self.main,
+                    "CRSエラー",
+                    "有効な座標参照系を選択してください。",
+                )
                 return False, None
             return True, crs.authid() or crs.toWkt()
 
@@ -835,7 +891,7 @@ class ForestZoningMainDialogElements:
         registry = QgsApplication.processingRegistry()
         return any(
             registry.algorithmById(alg_id) is not None
-            for alg_id in ('grass:r.watershed', 'grass7:r.watershed')
+            for alg_id in ("grass:r.watershed", "grass7:r.watershed")
         )
 
     def _confirm_distance_crs_consistency(self, dem_path, network_path):
@@ -847,7 +903,9 @@ class ForestZoningMainDialogElements:
         警告せず先へ進める（安全側の既存チェックはdistance.py側に残る）。
         """
         dem_layer = QgsRasterLayer(str(dem_path), "dem_crs_preflight")
-        network_layer = QgsVectorLayer(str(network_path), "network_crs_preflight", "ogr")
+        network_layer = QgsVectorLayer(
+            str(network_path), "network_crs_preflight", "ogr"
+        )
         if not dem_layer.isValid() or not network_layer.isValid():
             return True
         dem_crs = dem_layer.crs()
@@ -857,7 +915,7 @@ class ForestZoningMainDialogElements:
         if dem_crs == network_crs:
             return True
 
-        return QMessageBox.Yes == QMessageBox.warning(
+        return QMessageBox.StandardButton.Yes == QMessageBox.warning(
             self.main,
             "地利計算のCRS確認",
             "DEMと既設路網データの座標参照系が一致していません。\n\n"
@@ -868,11 +926,13 @@ class ForestZoningMainDialogElements:
             "QGISの「プロセッシング」→「ラスタ/ベクタの再投影」で、"
             "どちらかを他方のCRSへ揃えてから再実行することを推奨します。\n\n"
             "このまま処理を続行しますか？",
-            QMessageBox.Yes,
-            QMessageBox.No,
+            QMessageBox.StandardButton.Yes,
+            QMessageBox.StandardButton.No,
         )
 
-    def _confirm_siteidx_grid_alignment(self, dem_path, npp_path, srad_path, vtex_path):
+    def _confirm_siteidx_grid_alignment(
+        self, dem_path, npp_path, srad_path, vtex_path
+    ):
         """地位指数計算前に、DEMとNPP/SRAD/VTEXの解像度・CRSを診断する。
 
         NPP/SRAD/VTEXは処理内でDEMの基準グリッドへ自動整合される
@@ -887,15 +947,26 @@ class ForestZoningMainDialogElements:
             return True
 
         mismatches = []
-        for label, path in (("NPP", npp_path), ("SRAD", srad_path), ("VTEX", vtex_path)):
+        for label, path in (
+            ("NPP", npp_path),
+            ("SRAD", srad_path),
+            ("VTEX", vtex_path),
+        ):
             try:
                 info = get_tiff_info(path)
-            except Exception:
+            except Exception as exc:
+                log_exception("_confirm_siteidx_grid_alignment", exc)
                 continue
             diffs = []
             dem_crs = dem_info.get("crs")
             src_crs = info.get("crs")
-            if dem_crs and src_crs and dem_crs.isValid() and src_crs.isValid() and dem_crs != src_crs:
+            if (
+                dem_crs
+                and src_crs
+                and dem_crs.isValid()
+                and src_crs.isValid()
+                and dem_crs != src_crs
+            ):
                 diffs.append(
                     f"CRS: DEM={dem_crs.authid()} / {label}={src_crs.authid()}"
                 )
@@ -909,7 +980,7 @@ class ForestZoningMainDialogElements:
         if not mismatches:
             return True
 
-        return QMessageBox.Yes == QMessageBox.warning(
+        return QMessageBox.StandardButton.Yes == QMessageBox.warning(
             self.main,
             "地位指数計算の入力データ確認",
             "解析DEMと以下の入力データで、座標系または解像度が異なります。\n\n"
@@ -918,8 +989,8 @@ class ForestZoningMainDialogElements:
             "差が大きいほど地位指数の補間誤差が大きくなる可能性があります。\n"
             "可能であれば操作マニュアルの前処理手順で解像度・CRSを揃えることを推奨します。\n\n"
             "このまま処理を続行しますか？",
-            QMessageBox.Yes,
-            QMessageBox.No,
+            QMessageBox.StandardButton.Yes,
+            QMessageBox.StandardButton.No,
         )
 
     def run_elements(self):
@@ -929,21 +1000,26 @@ class ForestZoningMainDialogElements:
 
         existing_filenames = self.elements_get_existing_filenames()
         if len(existing_filenames) > 0:
-            if QMessageBox.No == QMessageBox.question(
+            if QMessageBox.StandardButton.No == QMessageBox.question(
                 self.main,
                 "上書き確認",
-                "出力先フォルダに同名ファイルが存在します、上書きしますか？\n" + "\n".join(existing_filenames),
-                QMessageBox.Yes,
-                QMessageBox.No,
+                "出力先フォルダに同名ファイルが存在します、上書きしますか？\n"
+                + "\n".join(existing_filenames),
+                QMessageBox.StandardButton.Yes,
+                QMessageBox.StandardButton.No,
             ):
-                QMessageBox.information(self.main, "処理中断", "処理を中断しました。")
+                QMessageBox.information(
+                    self.main, "処理中断", "処理を中断しました。"
+                )
                 self.main.show()
                 return
 
             # STEP5A: 上書き対象を参照しているQGISレイヤを自動解除し、
             # WindowsのGeoTIFFファイルロックを処理開始前に解放する。
             try:
-                locked_outputs = self._release_existing_output_layers(existing_filenames)
+                locked_outputs = self._release_existing_output_layers(
+                    existing_filenames
+                )
                 if locked_outputs:
                     # ロックが残る場合も処理継続。
                     # 対応writerは世代付きファイルへ出力し、新しい結果をQGISへ登録する。
@@ -952,13 +1028,11 @@ class ForestZoningMainDialogElements:
                         "処理は安全な新規出力へ継続します: "
                         + ", ".join(path for path, _err in locked_outputs),
                         "MORIZON",
-                        Qgis.Warning
+                        Qgis.MessageLevel.Warning,
                     )
             except Exception as e:
                 QMessageBox.information(
-                    self.main,
-                    "既存出力の解放処理でエラー",
-                    str(e)
+                    self.main, "既存出力の解放処理でエラー", str(e)
                 )
                 self.main.show()
                 return
@@ -991,7 +1065,11 @@ class ForestZoningMainDialogElements:
                 input_files_dict["building"]
             )
             if not ok:
-                QMessageBox.information(self.main, "処理中断", "保全対象データのCRS確認をキャンセルしました。")
+                QMessageBox.information(
+                    self.main,
+                    "処理中断",
+                    "保全対象データのCRS確認をキャンセルしました。",
+                )
                 self.main.show()
                 return
             input_files_dict["building_crs_override_authid"] = override_authid
@@ -1007,7 +1085,7 @@ class ForestZoningMainDialogElements:
                     "r.watershedが必要です。\n\n"
                     "QGISの「プラグイン」→「プラグインの管理とインストール」→"
                     "インストール済みタブで「GRASS」にチェックが入っているか確認し、"
-                    "有効化後にQGISを再起動してから再実行してください。"
+                    "有効化後にQGISを再起動してから再実行してください。",
                 )
                 self.main.show()
                 return
@@ -1046,7 +1124,7 @@ class ForestZoningMainDialogElements:
                 QMessageBox.information(
                     self.main,
                     "エラー",
-                    f"TEMPディレクトリーに不正な文字があります。\nマニュアルに従い、システム環境変数を設定していください。",
+                    "TEMPディレクトリーに不正な文字があります。\nマニュアルに従い、システム環境変数を設定していください。",
                 )
                 self.main.show()
                 return
@@ -1066,13 +1144,15 @@ class ForestZoningMainDialogElements:
         thread.processFinished.connect(self.add_elements_layer_to_project)
         thread.processFailed.connect(
             lambda error_message: QMessageBox.information(
-                self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
+                self.main,
+                "エラー",
+                f"エラーが発生しました。\n\n{error_message}",
             )
         )
         log("要素計算: 処理スレッドを開始します")
         with processing_active():
             thread.start()
-            progress_dialog.exec_()
+            progress_dialog.exec()
 
         if thread.abort_flag:
             QMessageBox.information(self.main, "中断", "処理を中断しました。")
@@ -1085,14 +1165,18 @@ class ForestZoningMainDialogElements:
         """
         要素計算の処理結果を受け取って各要素ごとの2レイヤーを1つのグループとしてプロジェクトに追加
         """
-        for display_name, rlayers in reversed(list(output_rlayers_dict.items())):
+        for display_name, rlayers in reversed(
+            list(output_rlayers_dict.items())
+        ):
             root = QgsProject.instance().layerTreeRoot()
             group_node = root.insertGroup(0, display_name)
             group_node.setExpanded(False)
 
             for rlayer in rlayers:
                 # QMLでの定義がQGISの不具合で反映されないのでコードでも設定する
-                rlayer.setBlendMode(QPainter.CompositionMode_Multiply)
+                rlayer.setBlendMode(
+                    QPainter.CompositionMode.CompositionMode_Multiply
+                )
 
                 QgsProject.instance().addMapLayer(rlayer, False)
                 group_node.addLayer(rlayer)
@@ -1105,4 +1189,7 @@ class ForestZoningMainDialogElements:
         try:
             self.main.scoring.fix_broken_scoring_layer_bindings()
         except Exception:
-            log("要素計算完了後のスコアリングレイヤー自動修正に失敗しました", Qgis.Warning)
+            log(
+                "要素計算完了後のスコアリングレイヤー自動修正に失敗しました",
+                Qgis.MessageLevel.Warning,
+            )

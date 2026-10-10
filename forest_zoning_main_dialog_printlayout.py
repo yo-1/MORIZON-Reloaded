@@ -5,11 +5,8 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 # QGIS-API
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtWidgets import QMessageBox
+from qgis.core import QgsMapLayerProxyModel, QgsProject
 
 from . import processes
 from .constants import (
@@ -43,13 +40,13 @@ class ForestZoningMainDialogPrintlayout:
         )
 
         self.main.printlayoutBackgroundLayerCombobox.setFilters(
-            QgsMapLayerProxyModel.RasterLayer
+            QgsMapLayerProxyModel.Filter.RasterLayer
         )
         self.main.printlayoutZoningLayerCombobox.setFilters(
-            QgsMapLayerProxyModel.RasterLayer
+            QgsMapLayerProxyModel.Filter.RasterLayer
         )
         self.main.printlayoutAggregateLayerCombobox.setFilters(
-            QgsMapLayerProxyModel.VectorLayer
+            QgsMapLayerProxyModel.Filter.VectorLayer
         )
 
         self.main.printlayoutBackgroundLayerCombobox.layerChanged.connect(
@@ -70,7 +67,9 @@ class ForestZoningMainDialogPrintlayout:
     def refresh_create_zoning_printlayout_ui(self):
         error_texts = self.get_create_zoning_printlayout_error()
         has_no_error = len(error_texts) == 0
-        self.main.createZoningPrintlayoutErrorLabel.setText("\n".join(error_texts))
+        self.main.createZoningPrintlayoutErrorLabel.setText(
+            "\n".join(error_texts)
+        )
         self.main.createZoningPrintlayoutPushButton.setEnabled(has_no_error)
 
     def get_create_zoning_printlayout_error(self) -> list:
@@ -84,7 +83,9 @@ class ForestZoningMainDialogPrintlayout:
     def refresh_create_aggregate_printlayout_ui(self):
         error_texts = self.get_create_aggregate_printlayout_error()
         has_no_error = len(error_texts) == 0
-        self.main.createAggregatePrintlayoutErrorLabel.setText("\n".join(error_texts))
+        self.main.createAggregatePrintlayoutErrorLabel.setText(
+            "\n".join(error_texts)
+        )
         self.main.createAggregatePrintlayoutPushButton.setEnabled(has_no_error)
 
     def get_create_aggregate_printlayout_error(self) -> list:
@@ -103,7 +104,9 @@ class ForestZoningMainDialogPrintlayout:
             zoning_layer = zoning_rlayers[0]
             self.main.printlayoutZoningLayerCombobox.setLayer(zoning_layer)
         else:
-            QMessageBox.information(self.main, "エラー", "ゾーニング図を作成してください。")
+            QMessageBox.information(
+                self.main, "エラー", "ゾーニング図を作成してください。"
+            )
             return
 
     def set_aggregate_layer_printlayout_combobox(self):
@@ -112,35 +115,49 @@ class ForestZoningMainDialogPrintlayout:
         )
         if len(aggregate_layers) > 0:
             aggregate_layer = aggregate_layers[0]
-            self.main.printlayoutAggregateLayerCombobox.setLayer(aggregate_layer)
+            self.main.printlayoutAggregateLayerCombobox.setLayer(
+                aggregate_layer
+            )
         else:
-            QMessageBox.information(self.main, "エラー", "ゾーン統計量を作成してください。")
+            QMessageBox.information(
+                self.main, "エラー", "ゾーン統計量を作成してください。"
+            )
             return
 
     def run_printlayout(self, target_name):
         project = QgsProject.instance()
         manager = project.layoutManager()
         printlayout_list = [layout.name() for layout in manager.printLayouts()]
-        background_layer = self.main.printlayoutBackgroundLayerCombobox.currentLayer()
+        background_layer = (
+            self.main.printlayoutBackgroundLayerCombobox.currentLayer()
+        )
 
         if target_name == "zoning":
-            target_layer = self.main.printlayoutZoningLayerCombobox.currentLayer()
+            target_layer = (
+                self.main.printlayoutZoningLayerCombobox.currentLayer()
+            )
             printlayout_name = "ゾーニング図"
         else:
-            target_layer = self.main.printlayoutAggregateLayerCombobox.currentLayer()
+            target_layer = (
+                self.main.printlayoutAggregateLayerCombobox.currentLayer()
+            )
             printlayout_name = "ゾーン統計量"
 
         if printlayout_name in printlayout_list:
-            if QMessageBox.No == QMessageBox.question(
+            if QMessageBox.StandardButton.No == QMessageBox.question(
                 self.main,
                 "上書き確認",
                 f'出力先フォルダに"{printlayout_name}"のレイアウトが存在します、上書きしますか？',
-                QMessageBox.Yes,
-                QMessageBox.No,
+                QMessageBox.StandardButton.Yes,
+                QMessageBox.StandardButton.No,
             ):
-                QMessageBox.information(self.main, "処理中断", "処理を中断しました。")
+                QMessageBox.information(
+                    self.main, "処理中断", "処理を中断しました。"
+                )
                 return
-            project.layoutManager().removeLayout(manager.layoutByName(printlayout_name))
+            project.layoutManager().removeLayout(
+                manager.layoutByName(printlayout_name)
+            )
 
         processes.printlayout.create_printlayout.generate(
             target_name, background_layer, target_layer

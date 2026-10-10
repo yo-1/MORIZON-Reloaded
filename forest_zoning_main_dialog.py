@@ -12,8 +12,12 @@ from qgis.PyQt.QtWidgets import QDialog
 from .forest_zoning_main_dialog_elements import ForestZoningMainDialogElements
 from .forest_zoning_main_dialog_scoring import ForestZoningMainDialogScoring
 from .forest_zoning_main_dialog_zoning import ForestZoningMainDialogZoning
-from .forest_zoning_main_dialog_aggregate import ForestZoningMainDialogAggregate
-from .forest_zoning_main_dialog_printlayout import ForestZoningMainDialogPrintlayout
+from .forest_zoning_main_dialog_aggregate import (
+    ForestZoningMainDialogAggregate,
+)
+from .forest_zoning_main_dialog_printlayout import (
+    ForestZoningMainDialogPrintlayout,
+)
 from .branding import apply_window_branding
 
 
@@ -21,7 +25,9 @@ class ForestZoningMainDialog(QDialog):
     def __init__(self):
         super().__init__()
         self.ui = uic.loadUi(
-            os.path.join(os.path.dirname(__file__), "forest_zoning_main_dialog.ui"),
+            os.path.join(
+                os.path.dirname(__file__), "forest_zoning_main_dialog.ui"
+            ),
             self,
         )
         apply_window_branding(self, header=True)

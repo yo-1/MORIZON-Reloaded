@@ -1,5 +1,25 @@
 # 試験記録
 
+## 2026-10-11 JST / 公式Qt6検査器のローカル再現
+
+- 環境: QGIS Plugins Websiteの`qt6-validator`が使用する`ghcr.io/qgis/pyqgis4-checker:main-ubuntu`（digest `sha256:c96df111845eb0c86ad56364fb792d35fa6931e01d3d629d2b1bc6388ed43ece`）。サイト側コード参照コミット`2e73cac`。
+- 確定: 添付された公開版v2.3.1 ZIPは48 Pythonファイルを走査して104件の指摘を再現。`scripts/check_qt6_zip.py`は終了コード1。
+- 確定: `codex/plugin-preflight`の再生成ZIPは48 Pythonファイルを走査して指摘0件。スクリプトは終了コード0。
+- 注意: 元の`pyqt5_to_pyqt6.py --dry_run`は指摘があっても終了コード0を返す。ラッパーはログ件数を判定し、コンテナから48ファイルが読めることを確認する。
+- 未確認: 公式サイトへ修正版をアップロードした際の表示、QGIS 3.44 Windowsの機能試験。
+
+
+## 2026-10-10 UTC / `codex/plugin-preflight` 試験ZIP
+
+- 環境: Debian 13、QGIS 3.40.6、Python 3.13 (`/usr/bin/python3`)、GUIなし。
+- 対象: `dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip`（同版名の公開済みZIPとは内容が異なる）。
+- 確定: `scripts/static_check.py`が48ファイルの構文検査に成功。`scripts/preflight_plugin_zip.py`はZIP構造・メタデータを検査し、Flake8 0件、Bandit 0件、detect-secrets 0件で終了コード0。
+- 確定: `scripts/qgis_import_smoke.py`でZIP内の48 PythonモジュールをQGIS 3.40.6へ読み込んだ。
+- 確定: Qt6互換の列挙型参照へ置き換えた前後のPython AST定数を比較し、計算用の数値定数とQML文字列に変更がないことを確認した。
+- 確定: PR #12の`7ee509e`でGitHub ActionsのFlake8/構文、ZIP/セキュリティ、QGIS 3.40モジュール読み込みの3ジョブが成功した（GitHub PRのChecks画面、2026-10-10 UTC）。QGISジョブは30種類の列挙値参照の解決も確認した。
+- 未確認: QGIS 3.44 WindowsでのUI、六要素計算、スコアリング、ゾーニング、集計、印刷、再実行、採用済み画像との画素比較。Qt6公式チェック結果。
+
+
 ## accepted reference run（v2.3.0 受入済み基準実行）
 
 CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted reference run」
@@ -464,6 +484,22 @@ CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted ref
 - 判定: **合格**。v2.3.0正式リリースZIPのクリーンインストール・有効化／無効化／再有効化／再起動という一連の動作に問題は見られなかった。
 - ログ・画像・比較表: ユーザー提供のスクリーンショット7枚（プラグイン一覧×2（有効時・無効時）、MORIZONダイアログ×3、QGIS再起動後の全体画面×2）。
 - 備考: 本テストはパッケージング（ZIP・metadata.txt・experimentalフラグ）の確認が目的であり、六要素の処理実行自体はdev17で実機確認済み（本ファイル上記「dev17 全工程完走確認」等）のため本テストでは実施していない。これでCLAUDE.md「Definition of done」の`Clean installation from ZIP in a clean QGIS 3.44.x Windows profile`も実機確認済みとなった。
+
+## 2026-10-11 配布ZIPの公開前検査スクリプト確認
+
+- 環境: クラウド Linux / Python 3.12.14。QGISは使わず、配布ZIPの静的検査のみ。
+- 対象: ユーザー提供の `MORIZON_Reloaded_QGIS344_v2.3.1.zip`（内部版2.3.1、Python 48ファイル）。
+- 手順: `scripts/preflight_plugin_zip.py` に対象ZIPを指定。Flake8 7.4.1、Bandit 1.9.4、detect-secrets 1.5.0を使用。
+- 結果: ZIP構造とPython構文は合格。Banditの中高リスク0件、低リスク42件。detect-secrets 0件。Flake8 923件（E501 392、F405 305、F403 115、F401 62、ほか49）で終了コード1。
+- 判定: 公開前の品質ゲートとしては不合格。QGIS公式サイトの423件とはツール設定が異なるため、件数は一致しない。QGIS機能、画像全画素一致、GitHubチェックはこの試験では未実行。
+- ユーザー提供のQGIS公式サイト画面（v2.3.1、2026-10-09の表示）: Security Scanは4件通過・情報項目1件、警告0件、Critical 0件、合格率80%。Bandit・Secrets・File Permissions・Suspicious Filesは各0件、Flake8は423件。開発者がB110とB112をスキップ。別タブのQt6 Checkは104件の互換性指摘。これはサイト側の観測値であり、上記ローカル検査の件数とは別に記録する。
+
+## 2026-10-11 B110/B112のローカル修正確認
+
+- 対象: v2.3.1ソースから生成したローカル試験ZIP。公開済みZIPとは内容が異なるため、同じ版名でも公開物の検証結果として扱わない。
+- 修正: B110の40箇所とB112の2箇所。例外時に診断を残し、従来の継続・スキップ動作を保つ。不要な例外捕捉1箇所は削除。
+- 確認: `scripts/static_check.py`合格、Python 48ファイルの構文合格、Bandit全件0、detect-secrets 0。ログ出力失敗を模擬しPython loggingへの代替出力を確認。Linux/QGIS 3.40.6のオフスクリーン環境で関連モジュールのimportに成功。Flake8は923件で、修正前の公開ZIPと同数。公開前ゲート全体は不合格。
+- 未確認: QGIS 3.44 Windows実機での例外経路・フルワークフロー。今回の環境のQGISは3.40.6のため、実機合格とは判定しない。
 
 ## QGIS試験テンプレート
 

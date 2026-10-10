@@ -5,20 +5,26 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import tempfile
-import xml.etree.ElementTree as ET  # nosec B405 - only parses QML style files this plugin itself generates on local disk, never external/network XML
-import sys
 
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+# nosec B405 - only parses QML style files this plugin itself generates on
+# local disk, never external/network XML
+import xml.etree.ElementTree as ET  # nosec B405 - local XML
+
+from qgis.PyQt.QtGui import QColor
+from qgis.core import (
+    Qgis,
+    QgsPresetSchemeColorRamp,
+    QgsRasterLayer,
+    QgsSingleBandPseudoColorRenderer,
+)
 
 from ...diag_log import log, timed
 from ...settings_manager import SettingsManager
 
 
-def get_quantile_renderer(rlayer: QgsRasterLayer, colors=[[255, 255, 255], [255, 0, 0]]):
+def get_quantile_renderer(
+    rlayer: QgsRasterLayer, colors=[[255, 255, 255], [255, 0, 0]]
+):
     """
     QGIS 3.44 対応の等量（Quantile）レンダラーを生成する。
 
@@ -34,13 +40,16 @@ def get_quantile_renderer(rlayer: QgsRasterLayer, colors=[[255, 255, 255], [255,
 
     provider = rlayer.dataProvider()
     # sampleSize=0 は全ピクセルを走査する。大きなラスターでは時間がかかるため計測する。
-    with timed(f"ラスター統計(Min/Max)の取得 layer={rlayer.name()}, "
-               f"size={rlayer.width()}x{rlayer.height()}"):
+    with timed(
+        f"ラスター統計(Min/Max)の取得 layer={rlayer.name()}, "
+        f"size={rlayer.width()}x{rlayer.height()}"
+    ):
         stats = provider.bandStatistics(
             1,
-            QgsRasterBandStats.Min | QgsRasterBandStats.Max,
+            Qgis.RasterBandStatistic.Min
+            | Qgis.RasterBandStatistic.Max,
             rlayer.extent(),
-            0
+            0,
         )
     min_value = stats.minimumValue
     max_value = stats.maximumValue
@@ -69,7 +78,7 @@ def get_quantile_renderer(rlayer: QgsRasterLayer, colors=[[255, 255, 255], [255,
         classificationMode=Qgis.ShaderClassificationMethod.Quantile,
         classes=len(colors),
         clip=False,
-        extent=rlayer.extent()
+        extent=rlayer.extent(),
     )
 
     # 診断用: 実機で「QML内に連続値カラーランプ（colorrampshader/item）が
@@ -77,24 +86,35 @@ def get_quantile_renderer(rlayer: QgsRasterLayer, colors=[[255, 255, 255], [255,
     # Min=Maxの定数ラスタでQuantile分類が区分を作れない可能性を含め、
     # 次回発生時に実測値で切り分けられるよう記録する。挙動は変更しない。
     try:
-        shader_fn = renderer.shader().rasterShaderFunction() if renderer.shader() else None
-        item_count = len(shader_fn.colorRampItemList()) if shader_fn is not None else -1
+        shader_fn = (
+            renderer.shader().rasterShaderFunction()
+            if renderer.shader()
+            else None
+        )
+        item_count = (
+            len(shader_fn.colorRampItemList()) if shader_fn is not None else -1
+        )
     except Exception:
         item_count = -1
-    log(f"Quantile分類(ラスタ): layer={rlayer.name()}, Min={min_value}, Max={max_value}, "
-        f"生成された区分数={item_count}")
+    log(
+        f"Quantile分類(ラスタ): layer={rlayer.name()}, Min={min_value}, Max={max_value}, "
+        f"生成された区分数={item_count}"
+    )
     if min_value == max_value:
-        log(f"Quantile分類: layer={rlayer.name()} は全ピクセルが同一値（{min_value}）です。"
-            "分類区分が作れずQML出力に失敗する可能性があります。", Qgis.Warning)
+        log(
+            f"Quantile分類: layer={rlayer.name()} は全ピクセルが同一値（{min_value}）です。"
+            "分類区分が作れずQML出力に失敗する可能性があります。",
+            Qgis.MessageLevel.Warning,
+        )
 
     return renderer
-
 
 
 def get_two_class_quantile_threshold_from_file(filepath: str) -> int:
     """QGIS 3.44互換: 2区分表示用Quantile(50%点)をラスターから直接取得。"""
     import numpy as np
     from osgeo import gdal
+
     gdal.UseExceptions()
     ds = gdal.Open(filepath, gdal.GA_ReadOnly)
     if ds is None:
@@ -103,7 +123,9 @@ def get_two_class_quantile_threshold_from_file(filepath: str) -> int:
     arr = band.ReadAsArray()
     if arr is None:
         ds = None
-        raise RuntimeError(f"Quantile計算対象ラスターを読み込めません: {filepath}")
+        raise RuntimeError(
+            f"Quantile計算対象ラスターを読み込めません: {filepath}"
+        )
     arr = np.asarray(arr)
     valid = np.isfinite(arr)
     nodata = band.GetNoDataValue()
@@ -112,17 +134,25 @@ def get_two_class_quantile_threshold_from_file(filepath: str) -> int:
             if np.isnan(float(nodata)):
                 valid &= ~np.isnan(arr)
             else:
-                valid &= ~np.isclose(arr, float(nodata), rtol=0.0, atol=1.0e-12)
+                valid &= ~np.isclose(
+                    arr, float(nodata), rtol=0.0, atol=1.0e-12
+                )
         except (TypeError, ValueError):
             pass
     values = arr[valid]
     ds = None
     if values.size == 0:
-        raise RuntimeError(f"Quantile計算に使用できる有効セルがありません: {filepath}")
+        raise RuntimeError(
+            f"Quantile計算に使用できる有効セルがありません: {filepath}"
+        )
     try:
-        q50 = np.quantile(values.astype(np.float64, copy=False), 0.5, method="linear")
+        q50 = np.quantile(
+            values.astype(np.float64, copy=False), 0.5, method="linear"
+        )
     except TypeError:
-        q50 = np.quantile(values.astype(np.float64, copy=False), 0.5, interpolation="linear")
+        q50 = np.quantile(
+            values.astype(np.float64, copy=False), 0.5, interpolation="linear"
+        )
     if not np.isfinite(q50):
         raise RuntimeError(f"Quantileしきい値が有限値になりません: {filepath}")
     return int(round(float(q50)))
@@ -130,8 +160,8 @@ def get_two_class_quantile_threshold_from_file(filepath: str) -> int:
 
 def hex_to_rgb(hex: str) -> str:
     # https://stackoverflow.com/questions/29643352/converting-hex-to-rgb-value-in-python
-    h = hex.lstrip('#')
-    return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+    h = hex.lstrip("#")
+    return tuple(int(h[i : i + 2], 16) for i in (0, 2, 4))
 
 
 def __make_qml_str_with(items_str: str) -> str:
@@ -200,19 +230,18 @@ def __write_qmlfile(qml_str: str, output_filepath=None):
         str: 生成されたQMLのファイルパス
     """
     if output_filepath is None:
-        with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
             f.write(qml_str)
             return f.name
     else:
-        with open(output_filepath, mode='w') as f:
+        with open(output_filepath, mode="w") as f:
             f.write(qml_str)
             return output_filepath
 
 
-def write_qml_deviding_by_threshold(threshold: int,
-                                    lower_color: str,
-                                    higher_color: str,
-                                    output_filepath=None) -> str:
+def write_qml_deviding_by_threshold(
+    threshold: int, lower_color: str, higher_color: str, output_filepath=None
+) -> str:
     """しきい値1つで2つに区分したラスタースタイルを書き出す
     しきい値が1の場合、ラベルは低(>= 1), 高(> 1)となる
 
@@ -241,10 +270,9 @@ def write_qml_deviding_by_threshold(threshold: int,
     return __write_qmlfile(qml_str, output_filepath)
 
 
-def write_qml_by_thresholds_and_colors(thresholds: tuple,
-                                       colors: tuple,
-                                       scores: tuple,
-                                       output_filepath=None) -> str:
+def write_qml_by_thresholds_and_colors(
+    thresholds: tuple, colors: tuple, scores: tuple, output_filepath=None
+) -> str:
     """しきい値で区分して色分けしたラスタースタイルを書き出す
     ラベル例：1点(>= 1), 2点(1 -2), 3点(> 2)
 
@@ -260,11 +288,25 @@ def write_qml_by_thresholds_and_colors(thresholds: tuple,
     items_str = ""
     for i in range(len(colors)):
         if i == 0:
-            items_str += f'<item value="{thresholds[i]}" color="{colors[i]}" label="{scores[i]}点(&lt;= {thresholds[i]})" alpha="255"/>'
+            items_str += f'<item value="{
+                thresholds[i]}" color="{
+                colors[i]}" label="{
+                scores[i]}点(&lt;= {
+                thresholds[i]})" alpha="255"/>'
         elif i == len(colors) - 1:
-            items_str += f'<item value="inf" color="{colors[i]}" label="{scores[i]}点(> {thresholds[i-1]})" alpha="255"/>'
+            items_str += f'<item value="inf" color="{
+                colors[i]}" label="{
+                scores[i]}点(> {
+                thresholds[
+                    i-1]})" alpha="255"/>'
         else:
-            items_str += f'<item value="{thresholds[i]}" color="{colors[i]}" label="{scores[i]}点({thresholds[i-1]} - {thresholds[i]})" alpha="255"/>'
+            items_str += f'<item value="{
+                thresholds[i]}" color="{
+                colors[i]}" label="{
+                scores[i]}点({
+                thresholds[
+                    i-1]} - {
+                        thresholds[i]})" alpha="255"/>'
 
     qml_str = __make_qml_str_with(items_str)
     return __write_qmlfile(qml_str, output_filepath)
@@ -282,7 +324,9 @@ def _get_colorramp_items_from_qml_root(root):
     return list(shader.findall("item"))
 
 
-def replace_colorramp_labels(qml_filepath: str, output_filepath: str, labels=[]) -> str:
+def replace_colorramp_labels(
+    qml_filepath: str, output_filepath: str, labels=[]
+) -> str:
     """
     QMLをパースして区分ごとの凡例ラベル文字列を所定の規則に置き換え、新たなQMLを生成する
     所定のルール：1点(<= 1), 2点(1 - 2), 3点(> 2)
@@ -298,7 +342,9 @@ def replace_colorramp_labels(qml_filepath: str, output_filepath: str, labels=[])
     Returns:
         str: 生成されたQMLのファイルパス
     """
-    tree = ET.parse(qml_filepath)  # nosec B314 - local QML file this plugin generated itself, not external data
+    tree = ET.parse(
+        qml_filepath
+    )  # nosec B314 - local QML file this plugin generated itself, not external data
     root = tree.getroot()
     items = _get_colorramp_items_from_qml_root(root)
     if not items:
@@ -308,7 +354,9 @@ def replace_colorramp_labels(qml_filepath: str, output_filepath: str, labels=[])
         )
 
     if len(items) > len(labels):
-        raise Exception("labelsの配列長は、QMLで定義されている色の数以上でなければなりません")
+        raise Exception(
+            "labelsの配列長は、QMLで定義されている色の数以上でなければなりません"
+        )
 
     for i in range(len(items)):
         if i == 0:
@@ -316,7 +364,8 @@ def replace_colorramp_labels(qml_filepath: str, output_filepath: str, labels=[])
         elif i == len(items) - 1:
             new_label = f"{labels[i]}(> {items[i-1].attrib['value']})"
         else:
-            new_label = f"{labels[i]}({items[i-1].attrib['value']} - {items[i].attrib['value']})"
+            new_label = f"{labels[i]}({items[i -
+                                             1].attrib['value']} - {items[i].attrib['value']})"
 
         # ラベル定義を上書き
         items[i].attrib["label"] = new_label
@@ -336,7 +385,9 @@ def get_colorramp_label_prefixes(raster_name: str) -> list:
     return list(map(lambda score: str(score) + "点", scores_siteidx))
 
 
-def round_label_precision(qml_filepath: str, output_filepath: str, precision=2) -> str:
+def round_label_precision(
+    qml_filepath: str, output_filepath: str, precision=2
+) -> str:
     """
     QMLをパースして、等量区分のしきい値の小数点精度を丸めて、別ファイルに書き出す
 
@@ -347,7 +398,9 @@ def round_label_precision(qml_filepath: str, output_filepath: str, precision=2) 
     Returns:
         str: 出力ファイルパス
     """
-    tree = ET.parse(qml_filepath)  # nosec B314 - local QML file this plugin generated itself, not external data
+    tree = ET.parse(
+        qml_filepath
+    )  # nosec B314 - local QML file this plugin generated itself, not external data
     root = tree.getroot()
     items = _get_colorramp_items_from_qml_root(root)
     if not items:
@@ -361,14 +414,19 @@ def round_label_precision(qml_filepath: str, output_filepath: str, precision=2) 
         return round(val, precision) if precision > 0 else round(val)
 
     for item in items:
-        item.attrib['value'] = str(round_method(
-            float(item.attrib['value']))) if item.attrib['value'] != 'inf' else 'inf'
+        item.attrib["value"] = (
+            str(round_method(float(item.attrib["value"])))
+            if item.attrib["value"] != "inf"
+            else "inf"
+        )
 
     tree.write(output_filepath)
     return output_filepath
 
 
-def add_tiny_value_to_thresholds(qml_filepath: str, output_filepath: str, tiny_value=0.0000001) -> str:
+def add_tiny_value_to_thresholds(
+    qml_filepath: str, output_filepath: str, tiny_value=0.0000001
+) -> str:
     """
     QMLをパースして、等量区分のしきい値に0に近い非常に小さい値を加算して、別ファイルに書き出す
 
@@ -388,7 +446,9 @@ def add_tiny_value_to_thresholds(qml_filepath: str, output_filepath: str, tiny_v
     Returns:
         str: 出力ファイルパス
     """
-    tree = ET.parse(qml_filepath)  # nosec B314 - local QML file this plugin generated itself, not external data
+    tree = ET.parse(
+        qml_filepath
+    )  # nosec B314 - local QML file this plugin generated itself, not external data
     root = tree.getroot()
     items = _get_colorramp_items_from_qml_root(root)
     if not items:
@@ -399,8 +459,11 @@ def add_tiny_value_to_thresholds(qml_filepath: str, output_filepath: str, tiny_v
 
     # しきい値に小さい値を加算
     for item in items:
-        item.attrib['value'] = str(float(
-            item.attrib['value']) + tiny_value) if item.attrib['value'] != 'inf' else 'inf'
+        item.attrib["value"] = (
+            str(float(item.attrib["value"]) + tiny_value)
+            if item.attrib["value"] != "inf"
+            else "inf"
+        )
 
     tree.write(output_filepath)
     return output_filepath

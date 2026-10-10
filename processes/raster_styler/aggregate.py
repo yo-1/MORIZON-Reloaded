@@ -21,7 +21,8 @@ def write_qml(output_shp_path: str, threshold=0.3) -> str:
       <rule filter=" &quot;_majority&quot;  =  3 " label="最頻値：第3象限（要収益性向上）" symbol="2" key="{83974236-af15-4a37-b0d4-d3da28f0b3ba}"/>
       <rule filter=" &quot;_majority&quot;  =  4 " label="最頻値：第4象限（災害に強い森林管理）" symbol="3" key="{dbe878d9-8f12-47f6-9969-fe00150b9ad8}"/>
 """
-            + f'<rule filter=" &quot;ratio_1_4&quot; >= {threshold / 100}" label="災害リスク高≧{threshold}%" symbol="4" '
+            + f'<rule filter=" &quot;ratio_1_4&quot; >= {
+                threshold / 100}" label="災害リスク高≧{threshold}%" symbol="4" '
             + ' key="{e8aa2cf8-9152-4a40-8a66-4bc0a62c2259}"/> '
             + f"""
     </rules>

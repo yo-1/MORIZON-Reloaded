@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import os
-import tempfile
 
 from osgeo import gdal
 import numpy as np
@@ -31,7 +30,9 @@ def _read_band(path):
     return ds, band, arr, nd, gt, prj
 
 
-def _write_like(reference_path, output_path, array, nodata=-9999, dtype=gdal.GDT_Float32):
+def _write_like(
+    reference_path, output_path, array, nodata=-9999, dtype=gdal.GDT_Float32
+):
     ref = gdal.Open(reference_path, gdal.GA_ReadOnly)
     if ref is None:
         raise RuntimeError(f"基準ラスターを開けません: {reference_path}")
@@ -41,8 +42,14 @@ def _write_like(reference_path, output_path, array, nodata=-9999, dtype=gdal.GDT
     # Permission deniedで失敗する事例を確認したため追加（O-09の延長）。
     output_path = resolve_writable_output_path(output_path)
     drv = gdal.GetDriverByName("GTiff")
-    out = drv.Create(output_path, ref.RasterXSize, ref.RasterYSize, 1, dtype,
-                     options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"])
+    out = drv.Create(
+        output_path,
+        ref.RasterXSize,
+        ref.RasterYSize,
+        1,
+        dtype,
+        options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"],
+    )
     if out is None:
         raise RuntimeError(f"出力ラスターを作成できません: {output_path}")
     out.SetGeoTransform(ref.GetGeoTransform())
@@ -68,12 +75,18 @@ def _run_grass_neighbors(params: dict):
         try:
             QgsMessageLog.logMessage(
                 f"{alg_id} 実行開始 (初回のGRASS起動には時間がかかることがあります)",
-                "MORIZON", Qgis.Info)
+                "MORIZON",
+                Qgis.MessageLevel.Info,
+            )
             result = processing.run(alg_id, params)
-            QgsMessageLog.logMessage(f"{alg_id} 実行完了", "MORIZON", Qgis.Info)
+            QgsMessageLog.logMessage(
+                f"{alg_id} 実行完了", "MORIZON", Qgis.MessageLevel.Info
+            )
             return result
         except Exception as e:
-            QgsMessageLog.logMessage(f"{alg_id} 失敗: {e}", "MORIZON", Qgis.Warning)
+            QgsMessageLog.logMessage(
+                f"{alg_id} 失敗: {e}", "MORIZON", Qgis.MessageLevel.Warning
+            )
             errors.append(f"{alg_id}: {e}")
     raise RuntimeError(
         "r.neighbors を実行できませんでした。GRASS Processing Providerを確認してください。\n"
@@ -89,18 +102,18 @@ def generate(dem_filepath: str, costcsv_filepath: str, output_dir: str) -> str:
 
     if SettingsManager().get_setting("cost_algorithm") == "ruggedness":
         element_filepath = _generate_ruggedness(
-            dem_filepath, os.path.join(work_dir, "cost_ruggedness.tif"))
+            dem_filepath, os.path.join(work_dir, "cost_ruggedness.tif")
+        )
     else:
         shc_dir = os.path.join(work_dir, "cost_shc")
         os.makedirs(shc_dir, exist_ok=True)
         element_filepath = shc.generate(dem_filepath, shc_dir)
 
     slope_filepath = os.path.join(work_dir, "cost_slope.tif")
-    processing.run("native:slope", {
-        "INPUT": dem_filepath,
-        "Z_FACTOR": 1.0,
-        "OUTPUT": slope_filepath
-    })
+    processing.run(
+        "native:slope",
+        {"INPUT": dem_filepath, "Z_FACTOR": 1.0, "OUTPUT": slope_filepath},
+    )
     if not os.path.exists(slope_filepath):
         raise RuntimeError(f"傾斜ラスターを作成できません: {slope_filepath}")
 
@@ -110,7 +123,8 @@ def generate(dem_filepath: str, costcsv_filepath: str, output_dir: str) -> str:
 
     if dem.shape != ele.shape or dem.shape != slp.shape:
         raise RuntimeError(
-            f"作業システム計算ラスターのサイズが一致しません: DEM={dem.shape}, element={ele.shape}, slope={slp.shape}")
+            f"作業システム計算ラスターのサイズが一致しません: DEM={dem.shape}, element={ele.shape}, slope={slp.shape}"
+        )
 
     valid = np.isfinite(dem) & np.isfinite(ele) & np.isfinite(slp)
     if dem_nd is not None:
@@ -126,8 +140,12 @@ def generate(dem_filepath: str, costcsv_filepath: str, output_dir: str) -> str:
     # 元MORIZONの条件: lower <= value < upper。表の欄外は0。
     for r0, r1, s0, s1, score in parser._get_score_tuples():
         try:
-            r0, r1 = float(str(r0).replace("\ufeff", "").strip()), float(str(r1).replace("\ufeff", "").strip())
-            s0, s1 = float(str(s0).replace("\ufeff", "").strip()), float(str(s1).replace("\ufeff", "").strip())
+            r0, r1 = float(str(r0).replace("\ufeff", "").strip()), float(
+                str(r1).replace("\ufeff", "").strip()
+            )
+            s0, s1 = float(str(s0).replace("\ufeff", "").strip()), float(
+                str(s1).replace("\ufeff", "").strip()
+            )
             score = float(str(score).replace("\ufeff", "").strip())
         except ValueError as e:
             raise RuntimeError(
@@ -139,10 +157,14 @@ def generate(dem_filepath: str, costcsv_filepath: str, output_dir: str) -> str:
 
     nodata = -9999.0
     result[~valid] = nodata
-    output_filepath = os.path.join(output_dir, OUTPUT_COST["FILE_NAME"] + ".tif")
-    output_filepath = _write_like(dem_filepath, output_filepath, result, nodata, gdal.GDT_Float32)
+    output_filepath = os.path.join(
+        output_dir, OUTPUT_COST["FILE_NAME"] + ".tif"
+    )
+    output_filepath = _write_like(
+        dem_filepath, output_filepath, result, nodata, gdal.GDT_Float32
+    )
 
-    dem_ds = ele_ds = slp_ds = None
+    del dem_ds, ele_ds, slp_ds
     return output_filepath
 
 
@@ -155,36 +177,53 @@ def _generate_ruggedness(dem_filepath: str, output_filepath: str) -> str:
     max_filepath = os.path.join(work_dir, "ruggedness_max.tif")
 
     common = {
-        "-a": False, "-c": False,
-        "GRASS_RASTER_FORMAT_META": "", "GRASS_RASTER_FORMAT_OPT": "",
+        "-a": False,
+        "-c": False,
+        "GRASS_RASTER_FORMAT_META": "",
+        "GRASS_RASTER_FORMAT_OPT": "",
         "GRASS_REGION_CELLSIZE_PARAMETER": 0,
         "GRASS_REGION_PARAMETER": None,
-        "gauss": None, "input": dem_filepath,
-        "quantile": "", "selection": None,
-        "size": size, "weight": "",
+        "gauss": None,
+        "input": dem_filepath,
+        "quantile": "",
+        "selection": None,
+        "size": size,
+        "weight": "",
     }
-    p = dict(common); p.update({"method": 3, "output": min_filepath})
+    p = dict(common)
+    p.update({"method": 3, "output": min_filepath})
     _run_grass_neighbors(p)
-    p = dict(common); p.update({"method": 4, "output": max_filepath})
+    p = dict(common)
+    p.update({"method": 4, "output": max_filepath})
     _run_grass_neighbors(p)
 
     if not os.path.exists(min_filepath) or not os.path.exists(max_filepath):
-        raise RuntimeError("起伏量計算用の最小値/最大値ラスターを作成できません")
+        raise RuntimeError(
+            "起伏量計算用の最小値/最大値ラスターを作成できません"
+        )
 
     min_ds, min_band, mn, min_nd, _, _ = _read_band(min_filepath)
     max_ds, max_band, mx, max_nd, _, _ = _read_band(max_filepath)
     dem_ds, dem_band, dem, dem_nd, _, _ = _read_band(dem_filepath)
     if mn.shape != mx.shape or mn.shape != dem.shape:
-        raise RuntimeError(f"起伏量計算ラスターのサイズが一致しません: min={mn.shape}, max={mx.shape}, dem={dem.shape}")
+        raise RuntimeError(f"起伏量計算ラスターのサイズが一致しません: min={
+            mn.shape}, max={
+            mx.shape}, dem={
+                dem.shape}")
 
     valid = np.isfinite(mn) & np.isfinite(mx) & np.isfinite(dem)
-    if min_nd is not None: valid &= mn != min_nd
-    if max_nd is not None: valid &= mx != max_nd
-    if dem_nd is not None: valid &= dem != dem_nd
+    if min_nd is not None:
+        valid &= mn != min_nd
+    if max_nd is not None:
+        valid &= mx != max_nd
+    if dem_nd is not None:
+        valid &= dem != dem_nd
 
     nodata = -9999.0
     rugged = np.full(dem.shape, nodata, dtype=np.float32)
     rugged[valid] = (mx[valid] - mn[valid]).astype(np.float32)
-    output_filepath = _write_like(dem_filepath, output_filepath, rugged, nodata, gdal.GDT_Float32)
-    min_ds = max_ds = dem_ds = None
+    output_filepath = _write_like(
+        dem_filepath, output_filepath, rugged, nodata, gdal.GDT_Float32
+    )
+    del min_ds, max_ds, dem_ds
     return output_filepath

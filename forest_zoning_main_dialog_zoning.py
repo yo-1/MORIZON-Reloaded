@@ -7,11 +7,15 @@
 import os
 
 # QGIS-API
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtCore import QSignalBlocker
+from qgis.PyQt.QtWidgets import QMessageBox
+from qgis.core import (
+    QgsLayerTreeGroup,
+    QgsMapLayer,
+    QgsMapLayerProxyModel,
+    QgsProject,
+    QgsRasterLayer,
+)
 from qgis.utils import iface
 
 from .processes.raster_styler import (
@@ -19,7 +23,7 @@ from .processes.raster_styler import (
 )
 from . import processes
 from . import utils
-from .diag_log import log, log_if_slow, processing_active
+from .diag_log import log, log_exception, log_if_slow, processing_active
 from .progress_dialog import ProgressDialog
 from .constants import (
     OUTPUT_PROFIT,
@@ -45,7 +49,9 @@ class ForestZoningMainDialogZoning:
         初回にのみ発火してUIと関数の紐付けなどの初期化処理を行う関数
         """
         self.main.zoningRunButton.clicked.connect(self.run_zoning)
-        self.main.zoningSetLayersButton.clicked.connect(self.set_zoning_layer_combobox)
+        self.main.zoningSetLayersButton.clicked.connect(
+            self.set_zoning_layer_combobox
+        )
         self.main.zoningProfitUpdateButton.clicked.connect(
             lambda: self.set_zoning_raster_style("profit")
         )
@@ -58,7 +64,7 @@ class ForestZoningMainDialogZoning:
             self.main.zoningProfitLayerCombobox,
             self.main.zoningRiskLayerCombobox,
         ):
-            combobox.setFilters(QgsMapLayerProxyModel.RasterLayer)
+            combobox.setFilters(QgsMapLayerProxyModel.Filter.RasterLayer)
 
         # UI入力時にステート更新
         self.main.zoningProfitLayerCombobox.layerChanged.connect(
@@ -92,8 +98,14 @@ class ForestZoningMainDialogZoning:
         self.main.zoningRunButton.setEnabled(has_no_error)
 
         for combobox, reload_button in (
-            (self.main.zoningProfitLayerCombobox, self.main.zoningProfitUpdateButton),
-            (self.main.zoningRiskLayerCombobox, self.main.zoningRiskUpdateButton),
+            (
+                self.main.zoningProfitLayerCombobox,
+                self.main.zoningProfitUpdateButton,
+            ),
+            (
+                self.main.zoningRiskLayerCombobox,
+                self.main.zoningRiskUpdateButton,
+            ),
         ):
             combobox_has_layer = combobox.currentLayer() is not None
             reload_button.setEnabled(combobox_has_layer)
@@ -107,7 +119,10 @@ class ForestZoningMainDialogZoning:
         """
         error_texts = []
         for name, combobox in (
-            (OUTPUT_PROFIT["DISPLAY_NAME"], self.main.zoningProfitLayerCombobox),
+            (
+                OUTPUT_PROFIT["DISPLAY_NAME"],
+                self.main.zoningProfitLayerCombobox,
+            ),
             (OUTPUT_RISK["DISPLAY_NAME"], self.main.zoningRiskLayerCombobox),
         ):
             if combobox.currentLayer() is None:
@@ -149,8 +164,8 @@ class ForestZoningMainDialogZoning:
                     value = getter()
                     if value:
                         return value.split("|", 1)[0]
-                except Exception:
-                    pass
+                except Exception as exc:
+                    log_exception("source_path", exc)
             return ""
 
         def generation(path, wanted):
@@ -159,13 +174,16 @@ class ForestZoningMainDialogZoning:
             if base == wanted:
                 return 0
             import re
+
             m = re.fullmatch(re.escape(wanted) + r"_v([0-9]+)", base, re.I)
             return int(m.group(1)) if m else None
 
         def raster_layers():
             return [
-                lyr for lyr in project.mapLayers().values()
-                if lyr is not None and lyr.type() == QgsMapLayer.RasterLayer
+                lyr
+                for lyr in project.mapLayers().values()
+                if lyr is not None
+                and lyr.type() == QgsMapLayer.LayerType.RasterLayer
             ]
 
         def add_dir(d, dirs):
@@ -183,22 +201,31 @@ class ForestZoningMainDialogZoning:
 
         try:
             add_dir(self.main.zoningOutputDirFileWidget.filePath(), dirs)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_zoning_layer_combobox", exc)
 
         try:
             add_dir(self.main.scoringOutputDirFileWidget.filePath(), dirs)
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_zoning_layer_combobox", exc)
 
         try:
             elements_dir = self.main.elementsOutputDirFileWidget.filePath()
             if elements_dir:
                 add_dir(elements_dir, dirs)
-                if os.path.basename(os.path.abspath(elements_dir)).lower() == "youso":
-                    add_dir(os.path.join(os.path.dirname(os.path.abspath(elements_dir)), "ZONING"), dirs)
-        except Exception:
-            pass
+                if (
+                    os.path.basename(os.path.abspath(elements_dir)).lower()
+                    == "youso"
+                ):
+                    add_dir(
+                        os.path.join(
+                            os.path.dirname(os.path.abspath(elements_dir)),
+                            "ZONING",
+                        ),
+                        dirs,
+                    )
+        except Exception as exc:
+            log_exception("set_zoning_layer_combobox", exc)
 
         for lyr in raster_layers():
             path = source_path(lyr)
@@ -262,7 +289,9 @@ class ForestZoningMainDialogZoning:
             project.addMapLayer(lyr, True)
             return lyr
 
-        profit = resolve(OUTPUT_PROFIT["FILE_NAME"], OUTPUT_PROFIT["DISPLAY_NAME"])
+        profit = resolve(
+            OUTPUT_PROFIT["FILE_NAME"], OUTPUT_PROFIT["DISPLAY_NAME"]
+        )
         risk = resolve(OUTPUT_RISK["FILE_NAME"], OUTPUT_RISK["DISPLAY_NAME"])
 
         blockers = [
@@ -283,10 +312,14 @@ class ForestZoningMainDialogZoning:
                 try:
                     os.makedirs(output_dir, exist_ok=True)
                     self.main.zoningOutputDirFileWidget.setFilePath(output_dir)
-                    if hasattr(self.main.zoningOutputDirFileWidget, "setDefaultRoot"):
-                        self.main.zoningOutputDirFileWidget.setDefaultRoot(output_dir)
-                except Exception:
-                    pass
+                    if hasattr(
+                        self.main.zoningOutputDirFileWidget, "setDefaultRoot"
+                    ):
+                        self.main.zoningOutputDirFileWidget.setDefaultRoot(
+                            output_dir
+                        )
+                except Exception as exc:
+                    log_exception("set_zoning_layer_combobox", exc)
                 break
 
         # ゾーニング閾値(4/6等)は入力ラスターから再設定する。
@@ -299,8 +332,8 @@ class ForestZoningMainDialogZoning:
                 self.set_zoning_raster_style("profit")
             if risk is not None:
                 self.set_zoning_raster_style("risk")
-        except Exception:
-            pass
+        except Exception as exc:
+            log_exception("set_zoning_layer_combobox", exc)
 
         self.refresh_zoning_ui()
 
@@ -310,7 +343,10 @@ class ForestZoningMainDialogZoning:
         収益性・災害リスクのしきい値を、入力ラスターの値域から計算してセットする
         """
         for combobox, spinbox in (
-            (self.main.zoningProfitLayerCombobox, self.main.zoningProfitSpinbox),
+            (
+                self.main.zoningProfitLayerCombobox,
+                self.main.zoningProfitSpinbox,
+            ),
             (self.main.zoningRiskLayerCombobox, self.main.zoningRiskSpinbox),
         ):
             spinbox.setValue(0)  # 初期化
@@ -341,7 +377,9 @@ class ForestZoningMainDialogZoning:
 
         target_layer.loadNamedStyle(qml_filepath)
         target_layer.renderer().setOpacity(opacity)
-        iface.layerTreeView().refreshLayerSymbology(target_layer.id())  # レイヤー一覧の凡例を更新
+        iface.layerTreeView().refreshLayerSymbology(
+            target_layer.id()
+        )  # レイヤー一覧の凡例を更新
         target_layer.triggerRepaint()  # キャンバス上の見た目を更新
 
     def get_existing_filenames(self):
@@ -391,13 +429,15 @@ class ForestZoningMainDialogZoning:
         thread.processFinished.connect(self.add_layers_to_project)
         thread.processFailed.connect(
             lambda error_message: QMessageBox.information(
-                self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
+                self.main,
+                "エラー",
+                f"エラーが発生しました。\n\n{error_message}",
             )
         )
         log("ゾーニング: 処理スレッドを開始します")
         with processing_active():
             thread.start()
-            progress_dialog.exec_()
+            progress_dialog.exec()
 
         if thread.abort_flag:
             QMessageBox.information(self.main, "中断", "処理を中断しました。")
@@ -421,7 +461,8 @@ class ForestZoningMainDialogZoning:
             try:
                 if not rlayer.isValid():
                     continue
-            except Exception:
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
                 continue
             valid_layers.append(rlayer)
 
@@ -431,18 +472,24 @@ class ForestZoningMainDialogZoning:
         # 旧実行で残った同名結果レイヤをプロジェクトから除去。
         for layer in list(project.mapLayers().values()):
             try:
-                if layer.name() == OUTPUT_ZONING["DISPLAY_NAME"] and layer not in valid_layers:
+                if (
+                    layer.name() == OUTPUT_ZONING["DISPLAY_NAME"]
+                    and layer not in valid_layers
+                ):
                     project.removeMapLayer(layer.id())
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
 
         # 旧グループ参照を整理。「?」表示の原因となる空/壊れたノードを残さない。
         for child in list(root.children()):
             try:
-                if isinstance(child, QgsLayerTreeGroup) and child.name() == OUTPUT_ZONING["DISPLAY_NAME"]:
+                if (
+                    isinstance(child, QgsLayerTreeGroup)
+                    and child.name() == OUTPUT_ZONING["DISPLAY_NAME"]
+                ):
                     root.removeChildNode(child)
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
 
         group = root.insertGroup(0, OUTPUT_ZONING["DISPLAY_NAME"])
         group.setExpanded(True)
@@ -453,12 +500,11 @@ class ForestZoningMainDialogZoning:
             group.addLayer(rlayer)
             try:
                 rlayer.triggerRepaint()
-            except Exception:
-                pass
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
 
         try:
             iface.layerTreeView().refreshLayerSymbology(valid_layers[0].id())
             iface.mapCanvas().refresh()
-        except Exception:
-            pass
-
+        except Exception as exc:
+            log_exception("add_layers_to_project", exc)
