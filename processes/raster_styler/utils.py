@@ -14,7 +14,6 @@ from qgis.PyQt.QtGui import QColor
 from qgis.core import (
     Qgis,
     QgsPresetSchemeColorRamp,
-    QgsRasterBandStats,
     QgsRasterLayer,
     QgsSingleBandPseudoColorRenderer,
 )
@@ -47,8 +46,8 @@ def get_quantile_renderer(
     ):
         stats = provider.bandStatistics(
             1,
-            QgsRasterBandStats.RasterBandStatistic.Min
-            | QgsRasterBandStats.RasterBandStatistic.Max,
+            Qgis.RasterBandStatistic.Min
+            | Qgis.RasterBandStatistic.Max,
             rlayer.extent(),
             0,
         )
