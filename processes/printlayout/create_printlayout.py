@@ -4,11 +4,25 @@
 # Licensed under the GNU General Public License version 3.
 # SPDX-License-Identifier: GPL-3.0-only
 
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtCore import QRectF
+from qgis.PyQt.QtGui import QColor, QFont
+from qgis.core import (
+    Qgis,
+    QgsCoordinateTransform,
+    QgsGeometry,
+    QgsLayoutItem,
+    QgsLayoutItemLegend,
+    QgsLayoutItemMap,
+    QgsLayoutItemScaleBar,
+    QgsLayoutPoint,
+    QgsLayoutSize,
+    QgsPointXY,
+    QgsPrintLayout,
+    QgsProject,
+    QgsReadWriteContext,
+    QgsRectangle,
+    QgsUnitTypes,
+)
 from qgis.PyQt.QtXml import QDomDocument
 from qgis.utils import iface
 import os
@@ -22,9 +36,13 @@ def generate(target_name, background_layer, target_layer):
     plugin_dir = os.path.dirname(__file__)
 
     if target_name == "zoning":
-        template_file = os.path.join(plugin_dir, "template/zoning_template.qpt")
+        template_file = os.path.join(
+            plugin_dir, "template/zoning_template.qpt"
+        )
     else:
-        template_file = os.path.join(plugin_dir, "template/aggregate_template.qpt")
+        template_file = os.path.join(
+            plugin_dir, "template/aggregate_template.qpt"
+        )
     with open(template_file) as f:
         template_content = f.read()
 
@@ -41,8 +59,12 @@ def generate(target_name, background_layer, target_layer):
     map.setFrameEnabled(True)
 
     # マップの表示の調整
-    map.attemptMove(QgsLayoutPoint(20, 10, QgsUnitTypes.LayoutMillimeters))
-    map.attemptResize(QgsLayoutSize(310, 270, QgsUnitTypes.LayoutMillimeters))
+    map.attemptMove(
+        QgsLayoutPoint(20, 10, QgsUnitTypes.LayoutUnit.LayoutMillimeters)
+    )
+    map.attemptResize(
+        QgsLayoutSize(310, 270, QgsUnitTypes.LayoutUnit.LayoutMillimeters)
+    )
     target_layer_extent = get_target_layer_extent(target_layer)
     map.zoomToExtent(target_layer_extent)
     layout.addLayoutItem(map)
@@ -56,7 +78,7 @@ def generate(target_name, background_layer, target_layer):
     scalebar.setFont(QFont("Arial", 14))
     scalebar.setStyle("Single Box")
     scalebar.setFillColor(QColor("Black"))
-    scalebar.setUnits(QgsUnitTypes.DistanceKilometers)
+    scalebar.setUnits(QgsUnitTypes.DistanceUnit.DistanceKilometers)
     scalebar.setUnitLabel("km")
     scalebar.setLinkedMap(map)
     # QGIS 3.40以降は整数ではなくQgisのstrong enumを要求する。
@@ -66,9 +88,11 @@ def generate(target_name, background_layer, target_layer):
     scalebar.setMinimumBarWidth(15)
     scalebar.setMaximumBarWidth(120)
     scalebar.update()
-    scalebar.setReferencePoint(QgsLayoutItem.Middle)
+    scalebar.setReferencePoint(QgsLayoutItem.ReferencePoint.Middle)
     layout.addLayoutItem(scalebar)
-    scalebar.attemptMove(QgsLayoutPoint(210, 287, QgsUnitTypes.LayoutMillimeters))
+    scalebar.attemptMove(
+        QgsLayoutPoint(210, 287, QgsUnitTypes.LayoutUnit.LayoutMillimeters)
+    )
 
     # 凡例の追加
     legend = QgsLayoutItemLegend(layout)
@@ -76,10 +100,15 @@ def generate(target_name, background_layer, target_layer):
     group = legend.model().rootGroup()
     group.clear()
     group.addLayer(
-        QgsProject.instance().layerTreeRoot().findLayer(target_layer.id()).layer()
+        QgsProject.instance()
+        .layerTreeRoot()
+        .findLayer(target_layer.id())
+        .layer()
     )
     layout.addItem(legend)
-    legend.attemptMove(QgsLayoutPoint(334, 14, QgsUnitTypes.LayoutMillimeters))
+    legend.attemptMove(
+        QgsLayoutPoint(334, 14, QgsUnitTypes.LayoutUnit.LayoutMillimeters)
+    )
     layout.addLayoutItem(legend)
 
     # レイアウトを開く

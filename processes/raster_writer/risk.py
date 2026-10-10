@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 
+from ...constants import OUTPUT_RISK
 import os
 import uuid
 import numpy as np
@@ -68,9 +69,7 @@ def _publish_atomic(reference_ds, arr, valid, output_filepath):
     work_dir = os.path.join(output_dir, "_MORIZON_work")
     os.makedirs(work_dir, exist_ok=True)
 
-    temp_path = os.path.join(
-        work_dir, f"scoring_{uuid.uuid4().hex}.tif"
-    )
+    temp_path = os.path.join(work_dir, f"scoring_{uuid.uuid4().hex}.tif")
     drv = gdal.GetDriverByName("GTiff")
     dst = drv.Create(
         temp_path,
@@ -81,7 +80,9 @@ def _publish_atomic(reference_ds, arr, valid, output_filepath):
         options=["COMPRESS=LZW", "TILED=YES", "BIGTIFF=IF_SAFER"],
     )
     if dst is None:
-        raise RuntimeError(f"スコアリング一時ラスターを作成できません: {temp_path}")
+        raise RuntimeError(
+            f"スコアリング一時ラスターを作成できません: {temp_path}"
+        )
     dst.SetGeoTransform(reference_ds.GetGeoTransform())
     dst.SetProjection(reference_ds.GetProjection())
     band = dst.GetRasterBand(1)
@@ -117,15 +118,15 @@ def _publish_atomic(reference_ds, arr, valid, output_filepath):
 
     return target
 
-from ...constants import OUTPUT_RISK
 
-
-def generate(slope_rlayer,
-             slope_thresholds,
-             shc_rlayer,
-             shc_thresholds,
-             savearea_rlayer,
-             output_dir):
+def generate(
+    slope_rlayer,
+    slope_thresholds,
+    shc_rlayer,
+    shc_thresholds,
+    savearea_rlayer,
+    output_dir,
+):
     """
     林野庁原版の災害リスクスコアリングをQGIS 3.44向けに安定実装。
 
@@ -165,7 +166,7 @@ def generate(slope_rlayer,
     save_score[save == 1] = float(save_scores[1])
 
     # 原版ではsaveareaは0/1のみを想定。その他の値は有効値にしない。
-    valid &= ((save == 0) | (save == 1))
+    valid &= (save == 0) | (save == 1)
 
     result = (
         _score_three(slope, slope_thresholds, settings["scores_slope"])

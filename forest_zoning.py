@@ -7,11 +7,9 @@
 import os
 
 # QGIS-API
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt import QtCore
+from qgis.PyQt.QtGui import QAction, QIcon
+from qgis.core import QgsProject
 
 # 診断用（O-15）: diag_log自体はqgis.core/qgis.PyQt.QtCoreのみに依存する
 # 軽量モジュールなので、重い可能性のあるimportより先に読み込んでも安全。
@@ -163,7 +161,9 @@ class ForestZoning:
         if self.main_dialog is None:
             with timed("メイン画面の生成"):
                 self.main_dialog = ForestZoningMainDialog()
-            self.main_dialog.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
+            self.main_dialog.setWindowFlags(
+                QtCore.Qt.WindowType.WindowStaysOnTopHint
+            )
         with timed("メイン画面の表示", min_seconds=0.3):
             self.main_dialog.show()
 

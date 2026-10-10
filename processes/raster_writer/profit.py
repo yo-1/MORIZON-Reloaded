@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 
+from ...constants import OUTPUT_PROFIT
 import os
 import uuid
 import numpy as np
@@ -68,9 +69,7 @@ def _publish_atomic(reference_ds, arr, valid, output_filepath):
     work_dir = os.path.join(output_dir, "_MORIZON_work")
     os.makedirs(work_dir, exist_ok=True)
 
-    temp_path = os.path.join(
-        work_dir, f"scoring_{uuid.uuid4().hex}.tif"
-    )
+    temp_path = os.path.join(work_dir, f"scoring_{uuid.uuid4().hex}.tif")
     drv = gdal.GetDriverByName("GTiff")
     dst = drv.Create(
         temp_path,
@@ -81,7 +80,9 @@ def _publish_atomic(reference_ds, arr, valid, output_filepath):
         options=["COMPRESS=LZW", "TILED=YES", "BIGTIFF=IF_SAFER"],
     )
     if dst is None:
-        raise RuntimeError(f"スコアリング一時ラスターを作成できません: {temp_path}")
+        raise RuntimeError(
+            f"スコアリング一時ラスターを作成できません: {temp_path}"
+        )
     dst.SetGeoTransform(reference_ds.GetGeoTransform())
     dst.SetProjection(reference_ds.GetProjection())
     band = dst.GetRasterBand(1)
@@ -117,16 +118,16 @@ def _publish_atomic(reference_ds, arr, valid, output_filepath):
 
     return target
 
-from ...constants import OUTPUT_PROFIT
 
-
-def generate(siteidx_rlayer,
-             siteidx_thresholds,
-             cost_rlayer,
-             cost_thresholds,
-             distance_rlayer,
-             distance_thresholds,
-             output_dir):
+def generate(
+    siteidx_rlayer,
+    siteidx_thresholds,
+    cost_rlayer,
+    cost_thresholds,
+    distance_rlayer,
+    distance_thresholds,
+    output_dir,
+):
     """
     林野庁原版の収益性スコアリングをQGIS 3.44向けに安定実装。
 

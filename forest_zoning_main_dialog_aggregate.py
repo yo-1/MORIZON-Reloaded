@@ -9,24 +9,21 @@ import glob
 from pathlib import Path
 
 # QGIS-API
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtWidgets import QFileDialog, QMessageBox
+from qgis.core import QgsMapLayer, QgsMapLayerProxyModel, QgsProject
 
 from . import processes
-from .constants import OUTPUT_ZONING, OUTPUT_AGGREGATE, INPUT_DEM
+from .constants import OUTPUT_ZONING, OUTPUT_AGGREGATE
 from .utils import is_tmpdir_valid
-from .diag_log import log, log_exception, log_if_slow, processing_active
+from .diag_log import log, log_exception, processing_active
 from .progress_dialog import ProgressDialog
-
 
 
 class ForestZoningMainDialogAggregate:
     """
     メイン画面の「集計」タブの処理を実装するクラス
     """
+
     def __init__(self, main):
         self.main = main
         self.init_aggregate_ui()
@@ -35,17 +32,21 @@ class ForestZoningMainDialogAggregate:
         self.main.aggregateSetLayersButton.clicked.connect(
             self.set_aggregate_layer_combobox
         )
-        self.main.aggregateSetDemButton.clicked.connect(self.load_aggregate_dem_path)
+        self.main.aggregateSetDemButton.clicked.connect(
+            self.load_aggregate_dem_path
+        )
         self.main.aggregateZoningLayerCombobox.setFilters(
-            QgsMapLayerProxyModel.RasterLayer
+            QgsMapLayerProxyModel.Filter.RasterLayer
         )
         self.main.aggregatePolygonLayerCommbobox.setFilters(
-            QgsMapLayerProxyModel.VectorLayer
+            QgsMapLayerProxyModel.Filter.VectorLayer
         )
         self.main.aggregateRunButton.clicked.connect(self.run_aggregate)
         self.main.aggregateOutputDirFileWidget.setFilter("*.shp")
         filename = OUTPUT_AGGREGATE.get("FILE_NAME")
-        self.main.aggregateOutputDirFileWidget.setDefaultRoot(f"{filename}.shp")
+        self.main.aggregateOutputDirFileWidget.setDefaultRoot(
+            f"{filename}.shp"
+        )
 
         self.main.aggregateZoningLayerCombobox.layerChanged.connect(
             self.refresh_aggregate_ui
@@ -56,7 +57,9 @@ class ForestZoningMainDialogAggregate:
         self.main.aggregateOutputDirFileWidget.fileChanged.connect(
             self.refresh_aggregate_ui
         )
-        self.main.aggregateDemFileWidget.fileChanged.connect(self.refresh_aggregate_ui)
+        self.main.aggregateDemFileWidget.fileChanged.connect(
+            self.refresh_aggregate_ui
+        )
 
         # ラジオボタンの変更時にUI更新
         # 一方のラジオボタンの変更が発火するともう一方も発火するので一方だけconnect
@@ -91,6 +94,7 @@ class ForestZoningMainDialogAggregate:
 
         def generation(path):
             import re
+
             stem = os.path.splitext(os.path.basename(path))[0].lower()
             wanted = OUTPUT_ZONING["FILE_NAME"].lower()
             if stem == wanted:
@@ -101,7 +105,10 @@ class ForestZoningMainDialogAggregate:
         # まずプロジェクト上の zoning[_vN] を実ファイル名で探索する。
         candidates = []
         for layer in project.mapLayers().values():
-            if layer is None or layer.type() != QgsMapLayer.RasterLayer:
+            if (
+                layer is None
+                or layer.type() != QgsMapLayer.LayerType.RasterLayer
+            ):
                 continue
             path = source_path(layer)
             if not path:
@@ -112,13 +119,17 @@ class ForestZoningMainDialogAggregate:
 
         # 表示名「ゾーニング図」もフォールバック候補。
         if not candidates:
-            for layer in project.mapLayersByName(OUTPUT_ZONING["DISPLAY_NAME"]):
+            for layer in project.mapLayersByName(
+                OUTPUT_ZONING["DISPLAY_NAME"]
+            ):
                 path = source_path(layer)
                 if path:
                     candidates.append((0, layer, path))
 
         if not candidates:
-            QMessageBox.information(self.main, "エラー", "ゾーニング図を作成してください。")
+            QMessageBox.information(
+                self.main, "エラー", "ゾーニング図を作成してください。"
+            )
             return
 
         candidates.sort(key=lambda x: x[0], reverse=True)
@@ -149,7 +160,10 @@ class ForestZoningMainDialogAggregate:
                     lower = name.lower()
                     if lower.endswith(".tif") or lower.endswith(".tiff"):
                         path = os.path.join(folder, name)
-                        if "_morizon_work" not in lower and ".aux." not in lower:
+                        if (
+                            "_morizon_work" not in lower
+                            and ".aux." not in lower
+                        ):
                             found.append(path)
             except OSError:
                 return []
@@ -172,7 +186,9 @@ class ForestZoningMainDialogAggregate:
 
         def dem_rank(path):
             name = os.path.basename(path).lower()
-            priority = 0 if name == "merge.tif" else (1 if name == "dem.tif" else 2)
+            priority = (
+                0 if name == "merge.tif" else (1 if name == "dem.tif" else 2)
+            )
             return (priority, len(Path(path).parts), len(path), path.lower())
 
         if unique:
@@ -186,8 +202,12 @@ class ForestZoningMainDialogAggregate:
                 zoning_dir, OUTPUT_AGGREGATE["FILE_NAME"] + ".shp"
             )
             self.main.aggregateOutputDirFileWidget.setFilePath(output_path)
-            if hasattr(self.main.aggregateOutputDirFileWidget, "setDefaultRoot"):
-                self.main.aggregateOutputDirFileWidget.setDefaultRoot(zoning_dir)
+            if hasattr(
+                self.main.aggregateOutputDirFileWidget, "setDefaultRoot"
+            ):
+                self.main.aggregateOutputDirFileWidget.setDefaultRoot(
+                    zoning_dir
+                )
         except Exception as exc:
             log_exception("set_aggregate_layer_combobox", exc)
 
@@ -209,10 +229,12 @@ class ForestZoningMainDialogAggregate:
 
         # 上位がDATA/DEMの場合も吸収
         parent = os.path.dirname(selected_dir)
-        search_dirs.extend([
-            os.path.join(parent, "DEM"),
-            os.path.join(parent, "DATA", "DEM"),
-        ])
+        search_dirs.extend(
+            [
+                os.path.join(parent, "DEM"),
+                os.path.join(parent, "DATA", "DEM"),
+            ]
+        )
 
         candidates = []
         for d in search_dirs:
@@ -237,8 +259,9 @@ class ForestZoningMainDialogAggregate:
         else:
             self.main.aggregateDemFileWidget.setFilePath("")
             QMessageBox.information(
-                self.main, "DEM未検出",
-                "選択した場所からDEM（*.tif）を検出できませんでした。"
+                self.main,
+                "DEM未検出",
+                "選択した場所からDEM（*.tif）を検出できませんでした。",
             )
 
     def run_aggregate(self):
@@ -248,7 +271,7 @@ class ForestZoningMainDialogAggregate:
             QMessageBox.information(
                 self.main,
                 "エラー",
-                f"TEMPディレクトリーに不正な文字があります。\nマニュアルに従い、システム環境変数を設定していください。",
+                "TEMPディレクトリーに不正な文字があります。\nマニュアルに従い、システム環境変数を設定していください。",
             )
             return
 
@@ -266,31 +289,49 @@ class ForestZoningMainDialogAggregate:
         # .shpがすでに存在している場合、同名の.shp/.dbf/.shx/.prjファイルを削除する
         if os.path.exists(output_path):
             folderpath = os.path.dirname(output_path)
-            filename_no_extension = os.path.splitext(os.path.basename(output_path))[0]
+            filename_no_extension = os.path.splitext(
+                os.path.basename(output_path)
+            )[0]
             # Shapefileの既知の構成ファイルだけを対象とし、同じbasenameを
             # 持つ利用者の無関係なファイルは削除しない。
             shapefile_extensions = {
-                ".shp", ".shx", ".dbf", ".prj", ".qpj", ".cpg",
-                ".sbn", ".sbx", ".fbn", ".fbx", ".ain", ".aih",
-                ".ixs", ".mxs", ".atx", ".shp.xml", ".qml",
+                ".shp",
+                ".shx",
+                ".dbf",
+                ".prj",
+                ".qpj",
+                ".cpg",
+                ".sbn",
+                ".sbx",
+                ".fbn",
+                ".fbx",
+                ".ain",
+                ".aih",
+                ".ixs",
+                ".mxs",
+                ".atx",
+                ".shp.xml",
+                ".qml",
             }
             file_list = []
             for candidate in glob.glob(
                 os.path.join(folderpath, f"{filename_no_extension}.*")
             ):
                 candidate_name = os.path.basename(candidate).lower()
-                matched_extension = candidate_name[len(filename_no_extension):]
+                matched_extension = candidate_name[
+                    len(filename_no_extension) :
+                ]
                 if matched_extension in shapefile_extensions:
                     file_list.append(candidate)
 
             # deletableを初期化
             deletable = True
             for file in file_list:
-                if is_file_used(file) == True:
+                if is_file_used(file):
                     deletable = False
                     break
 
-            if deletable == True:
+            if deletable:
                 for file in file_list:
                     os.remove(file)
             else:
@@ -302,20 +343,26 @@ class ForestZoningMainDialogAggregate:
                     candidate = f"{base}_v{version}{ext}"
                     if not os.path.exists(candidate):
                         output_path = candidate
-                        self.main.aggregateOutputDirFileWidget.setFilePath(output_path)
+                        self.main.aggregateOutputDirFileWidget.setFilePath(
+                            output_path
+                        )
                         break
                     version += 1
 
         self.main.hide()
 
         mode = "polygon" if self.main.radioButtonPolygon.isChecked() else "dem"
-        input_layer = self.main.aggregatePolygonLayerCommbobox.currentLayer() if mode=="polygon" else self.main.aggregateDemFileWidget.filePath()
+        input_layer = (
+            self.main.aggregatePolygonLayerCommbobox.currentLayer()
+            if mode == "polygon"
+            else self.main.aggregateDemFileWidget.filePath()
+        )
         thread = processes.aggregate.ProcessingThread(
             mode=mode,
             zoning_layer_path=zoning_rlayer,
             input_layer=input_layer,
             output_path=output_path,
-            style_threshold=self.main.aggregateStyleThresholdspinBox.value()
+            style_threshold=self.main.aggregateStyleThresholdspinBox.value(),
         )
         progress_dialog = ProgressDialog(thread.set_abort_flag)
         progress_dialog.set_abortable(False)
@@ -330,14 +377,16 @@ class ForestZoningMainDialogAggregate:
             aggregate_state["failed"] = True
             progress_dialog.close()
             QMessageBox.information(
-                self.main, "エラー", f"エラーが発生しました。\n\n{error_message}"
+                self.main,
+                "エラー",
+                f"エラーが発生しました。\n\n{error_message}",
             )
 
         thread.processFailed.connect(on_failed)
         log("集計: 処理スレッドを開始します")
         with processing_active():
             thread.start()
-            progress_dialog.exec_()
+            progress_dialog.exec()
 
         self.main.show()
 
@@ -366,13 +415,13 @@ class ForestZoningMainDialogAggregate:
         if self.main.aggregateZoningLayerCombobox.currentLayer() is None:
             error_texts.append("ゾーニング図を指定してください")
         if (
-                self.main.radioButtonPolygon.isChecked()
-                and self.main.aggregatePolygonLayerCommbobox.currentLayer() is None
+            self.main.radioButtonPolygon.isChecked()
+            and self.main.aggregatePolygonLayerCommbobox.currentLayer() is None
         ):
             error_texts.append("ポリゴンレイヤを指定してください")
         if (
-                self.main.radioButtonWatershed.isChecked()
-                and self.main.aggregateDemFileWidget.filePath() == ""
+            self.main.radioButtonWatershed.isChecked()
+            and self.main.aggregateDemFileWidget.filePath() == ""
         ):
             error_texts.append("DEMファイルを指定してください")
         if self.main.aggregateOutputDirFileWidget.filePath() == "":

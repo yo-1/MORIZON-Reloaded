@@ -9,15 +9,16 @@ import os
 from ...constants import (
     OUTPUT_SLOPE,
     RAWDATA_COLORS_SLOPE,
-    SCORING_COLORS_SLOPE
+    SCORING_COLORS_SLOPE,
 )
 
 from ...settings_manager import SettingsManager
 
 
 def write_rawdata_qml(output_dir: str) -> str:
-    output_filepath = os.path.join(output_dir,
-                                   OUTPUT_SLOPE["FILE_NAME"] + "_raw.qml")
+    output_filepath = os.path.join(
+        output_dir, OUTPUT_SLOPE["FILE_NAME"] + "_raw.qml"
+    )
     with open(output_filepath, mode="w") as f:
         f.write(f"""
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
@@ -85,8 +86,9 @@ def write_rawdata_qml(output_dir: str) -> str:
 def write_scoring_qml(output_dir: str) -> str:
     settings_manager = SettingsManager()
     scores_slope = settings_manager.get_setting("scores_slope")
-    output_filepath = os.path.join(output_dir,
-                                   OUTPUT_SLOPE["FILE_NAME"] + "_score.qml")
+    output_filepath = os.path.join(
+        output_dir, OUTPUT_SLOPE["FILE_NAME"] + "_score.qml"
+    )
     with open(output_filepath, mode="w") as f:
         f.write(f"""
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>

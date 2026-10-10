@@ -1,5 +1,15 @@
 # 試験記録
 
+## 2026-10-10 UTC / `codex/plugin-preflight` 試験ZIP
+
+- 環境: Debian 13、QGIS 3.40.6、Python 3.13 (`/usr/bin/python3`)、GUIなし。
+- 対象: `dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip`（同版名の公開済みZIPとは内容が異なる）。
+- 確定: `scripts/static_check.py`が48ファイルの構文検査に成功。`scripts/preflight_plugin_zip.py`はZIP構造・メタデータを検査し、Flake8 0件、Bandit 0件、detect-secrets 0件で終了コード0。
+- 確定: `scripts/qgis_import_smoke.py`でZIP内の48 PythonモジュールをQGIS 3.40.6へ読み込んだ。
+- 確定: Qt6互換の列挙型参照へ置き換えた前後のPython AST定数を比較し、計算用の数値定数とQML文字列に変更がないことを確認した。
+- 未確認: QGIS 3.44 WindowsでのUI、六要素計算、スコアリング、ゾーニング、集計、印刷、再実行、採用済み画像との画素比較。Qt6公式チェック結果。GitHub Actions 3ジョブの結果。
+
+
 ## accepted reference run（v2.3.0 受入済み基準実行）
 
 CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted reference run」

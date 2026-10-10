@@ -80,13 +80,15 @@ def _is_morizon_operation_active() -> bool:
     return _is_dialog_visible() or _processing_active_count > 0
 
 
-def log(message: str, level=Qgis.Info):
+def log(message: str, level=Qgis.MessageLevel.Info):
     try:
         QgsMessageLog.logMessage(
-            f"[{time.strftime('%H:%M:%S')}] {message}", LOG_TAG, level)
+            f"[{time.strftime('%H:%M:%S')}] {message}", LOG_TAG, level
+        )
     except Exception:
         logging.getLogger("MORIZON").warning(
-            "QGIS log unavailable: %s", message, exc_info=True)
+            "QGIS log unavailable: %s", message, exc_info=True
+        )
 
 
 def log_exception(context: str, error: Exception) -> None:
@@ -111,15 +113,20 @@ def timed(label: str, min_seconds=None):
     try:
         yield
     except Exception as e:
-        log(f"{label} 失敗 ({time.monotonic() - started:.1f}s): "
-            f"{type(e).__name__}: {e}", Qgis.Warning)
+        log(
+            f"{label} 失敗 ({time.monotonic() - started:.1f}s): "
+            f"{type(e).__name__}: {e}",
+            Qgis.MessageLevel.Warning,
+        )
         raise
     else:
         elapsed = time.monotonic() - started
         if min_seconds is None:
             log(f"{label} 完了 ({elapsed:.1f}s)")
         elif elapsed >= min_seconds:
-            log(f"{label} 完了 ({elapsed:.1f}s) ※{min_seconds}秒以上かかりました")
+            log(
+                f"{label} 完了 ({elapsed:.1f}s) ※{min_seconds}秒以上かかりました"
+            )
     finally:
         if _is_ui_thread():
             _recent_spans.append((label, started, time.monotonic()))
@@ -132,12 +139,15 @@ def log_if_slow(label: str, min_seconds: float = 0.3):
     TypeErrorにならないよう、wrapperの引数は self のみにしている。
     引数を取るメソッドには使わないこと。
     """
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(self):
             with timed(label, min_seconds=min_seconds):
                 return func(self)
+
         return wrapper
+
     return decorator
 
 
@@ -177,7 +187,9 @@ class UiStallWatchdog:
         self._timer.setInterval(self.INTERVAL_MS)
         self._timer.timeout.connect(self._on_tick)
         self._timer.start()
-        log(f"UI停止ウォッチドッグを開始しました（{self.THRESHOLD_SECONDS}秒以上の停止を記録）")
+        log(
+            f"UI停止ウォッチドッグを開始しました（{self.THRESHOLD_SECONDS}秒以上の停止を記録）"
+        )
 
     def stop(self):
         if self._timer is None:
@@ -207,8 +219,11 @@ class UiStallWatchdog:
             if end >= last and start <= now
         ]
         if overlapping:
-            log(f"UIスレッドが約{stalled:.1f}秒応答していませんでした。"
-                f"重なった計測区間: {', '.join(overlapping[-5:])}", Qgis.Warning)
+            log(
+                f"UIスレッドが約{stalled:.1f}秒応答していませんでした。"
+                f"重なった計測区間: {', '.join(overlapping[-5:])}",
+                Qgis.MessageLevel.Warning,
+            )
             return
 
         if _is_morizon_operation_active():
@@ -220,12 +235,17 @@ class UiStallWatchdog:
                 # 証拠ではないが、「MORIZON側の既知の処理は何も動いていな
                 # かった」ことを示す手がかりになる。
                 label, start, end = _recent_spans[-1]
-                detail = (f"未計測の処理（直近の完了区間: {label}、"
-                          f"停止開始の{last - end:.1f}秒前に完了）")
+                detail = (
+                    f"未計測の処理（直近の完了区間: {label}、"
+                    f"停止開始の{last - end:.1f}秒前に完了）"
+                )
             else:
                 detail = "未計測の処理（計測区間の記録なし）"
-            log(f"UIスレッドが約{stalled:.1f}秒応答していませんでした。"
-                f"重なった計測区間: {detail}", Qgis.Warning)
+            log(
+                f"UIスレッドが約{stalled:.1f}秒応答していませんでした。"
+                f"重なった計測区間: {detail}",
+                Qgis.MessageLevel.Warning,
+            )
             return
 
         # dev9: 計測区間と重ならず、ダイアログも閉じている・処理中でもない
@@ -235,9 +255,14 @@ class UiStallWatchdog:
         # 大量に出て不具合に見えていた問題への対処）。
         self._info_stall_count += 1
         self._info_stall_total_seconds += stalled
-        log(f"QGISのUIスレッドが約{stalled:.1f}秒応答していませんでした"
+        log(
+            f"QGISのUIスレッドが約{stalled:.1f}秒応答していませんでした"
             f"（MORIZONの処理とは重なっていません。QGIS本体・他プラグイン等の"
-            f"可能性があります）", Qgis.Info)
-        log(f"参考: 起動後、MORIZON外要因と判定したUI停止は累計"
+            f"可能性があります）",
+            Qgis.MessageLevel.Info,
+        )
+        log(
+            f"参考: 起動後、MORIZON外要因と判定したUI停止は累計"
             f"{self._info_stall_count}件、合計{self._info_stall_total_seconds:.1f}秒です。",
-            Qgis.Info)
+            Qgis.MessageLevel.Info,
+        )

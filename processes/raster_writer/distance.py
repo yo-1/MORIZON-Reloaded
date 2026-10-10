@@ -16,7 +16,6 @@ from qgis.core import QgsRasterLayer, QgsVectorLayer
 from ...constants import OUTPUT_DISTANCE
 from .utils import resolve_writable_output_path
 
-
 NODATA_DISTANCE = -9999.0
 
 
@@ -46,9 +45,9 @@ def _snap_up(value, origin, step):
     return origin + n * step
 
 
-def generate(basis_dem_filepath: str,
-             line_vector_filepath: str,
-             output_dir: str) -> str:
+def generate(
+    basis_dem_filepath: str, line_vector_filepath: str, output_dir: str
+) -> str:
     """
     林野庁MORIZON「地利」用の既設路網からの直線距離ラスターを生成する。
 
@@ -82,7 +81,9 @@ def generate(basis_dem_filepath: str,
     vector_layer = QgsVectorLayer(str(line_vector_filepath), "network", "ogr")
     if not vector_layer.isValid():
         dem_ds = None
-        raise RuntimeError(f"既設路網ラインを開けません: {line_vector_filepath}")
+        raise RuntimeError(
+            f"既設路網ラインを開けません: {line_vector_filepath}"
+        )
 
     if vector_layer.featureCount() <= 0:
         dem_ds = None
@@ -92,12 +93,18 @@ def generate(basis_dem_filepath: str,
     # 誤った距離計算を防ぐため、異なる場合は明示的に停止する。
     dem_wkt = dem_ds.GetProjection()
     dem_layer = QgsRasterLayer(str(basis_dem_filepath), "dem_for_chiri")
-    if dem_layer.isValid() and vector_layer.crs().isValid() and dem_layer.crs().isValid():
+    if (
+        dem_layer.isValid()
+        and vector_layer.crs().isValid()
+        and dem_layer.crs().isValid()
+    ):
         if vector_layer.crs() != dem_layer.crs():
             dem_ds = None
             raise RuntimeError(
                 "DEMと既設路網ラインのCRSが一致していません。"
-                f" DEM={dem_layer.crs().authid()}, ROAD={vector_layer.crs().authid()}。"
+                f" DEM={
+                    dem_layer.crs().authid()}, ROAD={
+                    vector_layer.crs().authid()}。"
                 "MORIZON地利計算では同一の平面直角座標系にしてください。"
             )
 
@@ -114,10 +121,18 @@ def generate(basis_dem_filepath: str,
     # O-23: 路網がDEM extentの外側へはみ出す場合に備え、DEM extentと路網extentの
     # 和集合を、DEMのピクセル格子に整列させた上で計算グリッドとする。
     road_extent = vector_layer.extent()
-    union_xmin = _snap_down(min(dem_xmin, road_extent.xMinimum()), dem_xmin, res_x)
-    union_xmax = _snap_up(max(dem_xmax, road_extent.xMaximum()), dem_xmin, res_x)
-    union_ymin = _snap_down(min(dem_ymin, road_extent.yMinimum()), dem_ymin, res_y)
-    union_ymax = _snap_up(max(dem_ymax, road_extent.yMaximum()), dem_ymin, res_y)
+    union_xmin = _snap_down(
+        min(dem_xmin, road_extent.xMinimum()), dem_xmin, res_x
+    )
+    union_xmax = _snap_up(
+        max(dem_xmax, road_extent.xMaximum()), dem_xmin, res_x
+    )
+    union_ymin = _snap_down(
+        min(dem_ymin, road_extent.yMinimum()), dem_ymin, res_y
+    )
+    union_ymax = _snap_up(
+        max(dem_ymax, road_extent.yMaximum()), dem_ymin, res_y
+    )
 
     union_width = int(round((union_xmax - union_xmin) / res_x))
     union_height = int(round((union_ymax - union_ymin) / res_y))
@@ -127,7 +142,8 @@ def generate(basis_dem_filepath: str,
     col_offset = int(round((dem_xmin - union_xmin) / res_x))
     row_offset = int(round((union_ymax - dem_ymax) / res_y))
     if (
-        col_offset < 0 or row_offset < 0
+        col_offset < 0
+        or row_offset < 0
         or col_offset + width > union_width
         or row_offset + height > union_height
     ):
@@ -164,8 +180,12 @@ def generate(basis_dem_filepath: str,
     try:
         driver = gdal.GetDriverByName("GTiff")
         mask_ds = driver.Create(
-            mask_path, union_width, union_height, 1, gdal.GDT_Byte,
-            options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"]
+            mask_path,
+            union_width,
+            union_height,
+            1,
+            gdal.GDT_Byte,
+            options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"],
         )
         if mask_ds is None:
             raise RuntimeError("地利計算用の路網ラスターを作成できません。")
@@ -179,17 +199,20 @@ def generate(basis_dem_filepath: str,
         # GDAL Rasterize APIを使用。ALL_TOUCHED=TRUEで10mセル上の細い路網を落としにくくする。
         vec_ds = gdal.OpenEx(str(line_vector_filepath), gdal.OF_VECTOR)
         if vec_ds is None:
-            raise RuntimeError(f"既設路網ラインをGDALで開けません: {line_vector_filepath}")
+            raise RuntimeError(
+                f"既設路網ラインをGDALで開けません: {line_vector_filepath}"
+            )
         layer = vec_ds.GetLayer(0)
         err = gdal.RasterizeLayer(
-            mask_ds, [1], layer, burn_values=[1],
-            options=["ALL_TOUCHED=TRUE"]
+            mask_ds, [1], layer, burn_values=[1], options=["ALL_TOUCHED=TRUE"]
         )
         vec_ds = None
         mask_band.FlushCache()
         mask_ds.FlushCache()
         if err != 0:
-            raise RuntimeError("既設路網ラインの10mラスタライズに失敗しました。")
+            raise RuntimeError(
+                "既設路網ラインの10mラスタライズに失敗しました。"
+            )
 
         mask_stats = mask_band.GetStatistics(False, True)
         if not mask_stats or mask_stats[1] is None or mask_stats[1] <= 0:
@@ -200,20 +223,24 @@ def generate(basis_dem_filepath: str,
 
         # 距離計算は和集合グリッド上で行い、DISTUNITS=GEOでユークリッド距離を求める。
         union_dist_ds = driver.Create(
-            union_dist_path, union_width, union_height, 1, gdal.GDT_Float32,
-            options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"]
+            union_dist_path,
+            union_width,
+            union_height,
+            1,
+            gdal.GDT_Float32,
+            options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"],
         )
         if union_dist_ds is None:
-            raise RuntimeError("地利計算用の和集合距離ラスターを作成できません。")
+            raise RuntimeError(
+                "地利計算用の和集合距離ラスターを作成できません。"
+            )
         union_dist_ds.SetGeoTransform(union_gt)
         union_dist_ds.SetProjection(dem_wkt)
         union_dist_band = union_dist_ds.GetRasterBand(1)
         union_dist_band.SetNoDataValue(NODATA_DISTANCE)
 
         err = gdal.ComputeProximity(
-            mask_band,
-            union_dist_band,
-            options=["VALUES=1", "DISTUNITS=GEO"]
+            mask_band, union_dist_band, options=["VALUES=1", "DISTUNITS=GEO"]
         )
         if err != 0:
             raise RuntimeError("既設路網からの距離計算に失敗しました。")
@@ -222,9 +249,13 @@ def generate(basis_dem_filepath: str,
 
         # 和集合グリッドはDEMと同一解像度・同一ピクセル格子に整列しているため、
         # DEM範囲は再サンプリングではなく整数ピクセル単位のクロップで取り出せる。
-        cropped = union_dist_band.ReadAsArray(col_offset, row_offset, width, height)
+        cropped = union_dist_band.ReadAsArray(
+            col_offset, row_offset, width, height
+        )
         if cropped is None:
-            raise RuntimeError("地利計算結果からDEM範囲を切り出せませんでした。")
+            raise RuntimeError(
+                "地利計算結果からDEM範囲を切り出せませんでした。"
+            )
 
         # 距離出力をDEMと完全同一グリッドで作成。
         # STEP: 他のwriter（savearea/shc/risk/profit/zoning）と同じく、
@@ -233,11 +264,17 @@ def generate(basis_dem_filepath: str,
         output_filepath = resolve_writable_output_path(output_filepath)
 
         dist_ds = driver.Create(
-            output_filepath, width, height, 1, gdal.GDT_Float32,
-            options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"]
+            output_filepath,
+            width,
+            height,
+            1,
+            gdal.GDT_Float32,
+            options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"],
         )
         if dist_ds is None:
-            raise RuntimeError(f"地利計算ラスターを作成できません: {output_filepath}")
+            raise RuntimeError(
+                f"地利計算ラスターを作成できません: {output_filepath}"
+            )
 
         dist_ds.SetGeoTransform(gt)
         dist_ds.SetProjection(dem_wkt)
@@ -266,7 +303,9 @@ def generate(basis_dem_filepath: str,
                     dem_arr = dem_band.ReadAsArray(xoff, yoff, xsize, ysize)
                     dist_arr = dist_band.ReadAsArray(xoff, yoff, xsize, ysize)
                     if dem_arr is None or dist_arr is None:
-                        raise RuntimeError("地利計算ラスターのブロック読み込みに失敗しました。")
+                        raise RuntimeError(
+                            "地利計算ラスターのブロック読み込みに失敗しました。"
+                        )
                     dist_arr = np.asarray(dist_arr, dtype=np.float32)
                     if np.isnan(dem_nodata):
                         invalid = np.isnan(dem_arr)
@@ -274,7 +313,8 @@ def generate(basis_dem_filepath: str,
                         invalid = np.isclose(
                             np.asarray(dem_arr, dtype=np.float64),
                             float(dem_nodata),
-                            rtol=0.0, atol=1.0e-12
+                            rtol=0.0,
+                            atol=1.0e-12,
                         )
                     dist_arr[invalid] = np.float32(NODATA_DISTANCE)
                     dist_band.WriteArray(dist_arr, xoff, yoff)
@@ -283,7 +323,9 @@ def generate(basis_dem_filepath: str,
         dist_ds.FlushCache()
 
         if not _same_grid(dem_ds, dist_ds):
-            raise RuntimeError("地利計算結果のグリッドが解析DEMと一致しません。")
+            raise RuntimeError(
+                "地利計算結果のグリッドが解析DEMと一致しません。"
+            )
 
         # 明示的に閉じてからQGIS側が読み込める状態にする。
         dist_band = None
@@ -294,7 +336,9 @@ def generate(basis_dem_filepath: str,
 
         check = gdal.Open(output_filepath, gdal.GA_ReadOnly)
         if check is None:
-            raise RuntimeError(f"地利計算ラスターを開けません: {output_filepath}")
+            raise RuntimeError(
+                f"地利計算ラスターを開けません: {output_filepath}"
+            )
         band = check.GetRasterBand(1)
         stats = band.GetStatistics(False, True)
         check = None

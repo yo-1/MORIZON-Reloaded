@@ -14,7 +14,7 @@ from ...settings_manager import SettingsManager
 from ...constants import (
     OUTPUT_SITEIDX_SUGI,
     OUTPUT_SITEIDX_HINOKI,
-    OUTPUT_SITEIDX_KARAMATSU
+    OUTPUT_SITEIDX_KARAMATSU,
 )
 from .utils import resolve_writable_output_path
 
@@ -102,16 +102,18 @@ def _align_parameter_to_dem(reference_dem: str, source: str, output: str):
 def _valid_mask(arr, nodata):
     mask = np.isfinite(arr)
     if nodata is not None and math.isfinite(float(nodata)):
-        mask &= (arr != nodata)
+        mask &= arr != nodata
     return mask
 
 
-def _calculate_siteidx_blockwise(dem_path: str,
-                                 npp_path: str,
-                                 srad_path: str,
-                                 vtex_path: str,
-                                 output_path: str,
-                                 p):
+def _calculate_siteidx_blockwise(
+    dem_path: str,
+    npp_path: str,
+    srad_path: str,
+    vtex_path: str,
+    output_path: str,
+    p,
+):
     """
     QgsRasterCalculator / Processing TEMPORARY_OUTPUTを使わず、
     GDALでブロック単位に林野庁版の地位指数式をそのまま計算する。
@@ -143,7 +145,9 @@ def _calculate_siteidx_blockwise(dem_path: str,
         if ds.RasterXSize != width or ds.RasterYSize != height:
             raise RuntimeError(
                 f"{name}のグリッドサイズが解析DEMと一致しません。"
-                f" DEM={width}x{height}, {name}={ds.RasterXSize}x{ds.RasterYSize}"
+                f" DEM={width}x{height}, {name}={
+                    ds.RasterXSize}x{
+                    ds.RasterYSize}"
             )
 
     driver = gdal.GetDriverByName("GTiff")
@@ -153,8 +157,12 @@ def _calculate_siteidx_blockwise(dem_path: str,
     output_path = resolve_writable_output_path(output_path)
 
     out = driver.Create(
-        output_path, width, height, 1, gdal.GDT_Float32,
-        options=["COMPRESS=LZW", "TILED=YES", "BIGTIFF=IF_SAFER"]
+        output_path,
+        width,
+        height,
+        1,
+        gdal.GDT_Float32,
+        options=["COMPRESS=LZW", "TILED=YES", "BIGTIFF=IF_SAFER"],
     )
     if out is None:
         raise RuntimeError(f"地位指数ラスターを作成できません: {output_path}")
@@ -165,12 +173,16 @@ def _calculate_siteidx_blockwise(dem_path: str,
     ob.SetNoDataValue(_DST_NODATA)
 
     db, nb, sb, vb = (
-        dem.GetRasterBand(1), npp.GetRasterBand(1),
-        srad.GetRasterBand(1), vtex.GetRasterBand(1)
+        dem.GetRasterBand(1),
+        npp.GetRasterBand(1),
+        srad.GetRasterBand(1),
+        vtex.GetRasterBand(1),
     )
     dnd, nnd, snd, vnd = (
-        db.GetNoDataValue(), nb.GetNoDataValue(),
-        sb.GetNoDataValue(), vb.GetNoDataValue()
+        db.GetNoDataValue(),
+        nb.GetNoDataValue(),
+        sb.GetNoDataValue(),
+        vb.GetNoDataValue(),
     )
 
     # メモリ使用量を抑えるため行ブロックで処理。
@@ -189,10 +201,10 @@ def _calculate_siteidx_blockwise(dem_path: str,
         c = vb.ReadAsArray(0, yoff, width, rows).astype(np.float64, copy=False)
 
         valid = (
-            _valid_mask(d, dnd) &
-            _valid_mask(a, nnd) &
-            _valid_mask(b, snd) &
-            _valid_mask(c, vnd)
+            _valid_mask(d, dnd)
+            & _valid_mask(a, nnd)
+            & _valid_mask(b, snd)
+            & _valid_mask(c, vnd)
         )
 
         result = np.full((rows, width), _DST_NODATA, dtype=np.float32)
@@ -240,11 +252,13 @@ def _calculate_siteidx_blockwise(dem_path: str,
     return output_path
 
 
-def generate(basis_dem_filepath: str,
-             npp_filepath: str,
-             srad_filepath: str,
-             vtex_filepath: str,
-             output_dir: str) -> list:
+def generate(
+    basis_dem_filepath: str,
+    npp_filepath: str,
+    srad_filepath: str,
+    vtex_filepath: str,
+    output_dir: str,
+) -> list:
     """
     林野庁MORIZON準拠の地位指数生成。
     解析仕様は維持し、QGIS 3.44/Windowsで不安定だった
@@ -255,28 +269,43 @@ def generate(basis_dem_filepath: str,
     os.makedirs(aligned_dir, exist_ok=True)
 
     adjusted_npp_filepath = _align_parameter_to_dem(
-        basis_dem_filepath, npp_filepath,
-        os.path.join(aligned_dir, "siteidx_npp_aligned.tif")
+        basis_dem_filepath,
+        npp_filepath,
+        os.path.join(aligned_dir, "siteidx_npp_aligned.tif"),
     )
     adjusted_srad_filepath = _align_parameter_to_dem(
-        basis_dem_filepath, srad_filepath,
-        os.path.join(aligned_dir, "siteidx_srad_aligned.tif")
+        basis_dem_filepath,
+        srad_filepath,
+        os.path.join(aligned_dir, "siteidx_srad_aligned.tif"),
     )
     adjusted_vtex_filepath = _align_parameter_to_dem(
-        basis_dem_filepath, vtex_filepath,
-        os.path.join(aligned_dir, "siteidx_vtex_aligned.tif")
+        basis_dem_filepath,
+        vtex_filepath,
+        os.path.join(aligned_dir, "siteidx_vtex_aligned.tif"),
     )
 
     smanager = SettingsManager()
     settings = smanager.get_settings()
 
     outputs = (
-        (os.path.join(output_dir, OUTPUT_SITEIDX_SUGI["FILE_NAME"] + ".tif"),
-         settings["siteidx_sugi_params"]),
-        (os.path.join(output_dir, OUTPUT_SITEIDX_HINOKI["FILE_NAME"] + ".tif"),
-         settings["siteidx_hinoki_params"]),
-        (os.path.join(output_dir, OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"] + ".tif"),
-         settings["siteidx_karamatsu_params"]),
+        (
+            os.path.join(
+                output_dir, OUTPUT_SITEIDX_SUGI["FILE_NAME"] + ".tif"
+            ),
+            settings["siteidx_sugi_params"],
+        ),
+        (
+            os.path.join(
+                output_dir, OUTPUT_SITEIDX_HINOKI["FILE_NAME"] + ".tif"
+            ),
+            settings["siteidx_hinoki_params"],
+        ),
+        (
+            os.path.join(
+                output_dir, OUTPUT_SITEIDX_KARAMATSU["FILE_NAME"] + ".tif"
+            ),
+            settings["siteidx_karamatsu_params"],
+        ),
     )
 
     # STEP: 世代付き退避が発生した場合に備え、実際に書き込んだパスを収集する
@@ -290,7 +319,7 @@ def generate(basis_dem_filepath: str,
                 adjusted_srad_filepath,
                 adjusted_vtex_filepath,
                 output_filepath,
-                params
+                params,
             )
         )
 
