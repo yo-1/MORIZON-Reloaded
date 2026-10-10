@@ -38,8 +38,9 @@
 `codex/plugin-preflight`の試験ZIPではFlake8、Bandit、detect-secretsの指摘が
 各0件。公開済みv2.3.1には反映されていない。Qt6互換性の列挙型参照を108箇所
 （文字列照合による概数）変更し、QGIS 3.40.6で48モジュールの読み込みに成功した。
-公式サイトのQt6再検査、QGIS 3.44 Windowsでの全工程回帰、GitHub Actionsの
-3ジョブ成功を確認してから新しい版として配布する。画素一致はMORIZONの採用済み
+GitHub Actionsの3ジョブは`7ee509e`で成功。公式サイトのQt6再検査と
+QGIS 3.44 Windowsでの全工程回帰を確認してから新しい版として配布する。
+画素一致はMORIZONの採用済み
 画像がこのリポジトリに無いため未確認。詳細は`docs/TEST_RECORD.md`を参照。
 
 
