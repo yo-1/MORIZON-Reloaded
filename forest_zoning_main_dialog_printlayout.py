@@ -162,4 +162,3 @@ class ForestZoningMainDialogPrintlayout:
         processes.printlayout.create_printlayout.generate(
             target_name, background_layer, target_layer
         )
-        self.main.hide()
