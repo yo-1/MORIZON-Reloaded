@@ -48,3 +48,9 @@ jobs:
           debian:trixie bash -lc
           'apt-get update && apt-get install -y python3-qgis qgis-providers python3-gdal &&
           /usr/bin/python3 scripts/qgis_import_smoke.py dist/MORIZON_Reloaded_QGIS344_v2.3.2.zip'
+      - name: Check legacy Qt enums
+        if: always()
+        run: python3 scripts/qt6_autofixer.py --check
+      - name: Smoke import plugin entry point with QGIS stubs
+        if: always()
+        run: python3 scripts/test_import_smoke.py
