@@ -6,14 +6,13 @@
 
 # QGIS-API
 from qgis.PyQt.QtWidgets import QMessageBox
-from qgis.core import QgsMapLayerProxyModel, QgsProject, QgsRasterLayer, QgsVectorLayer
+from qgis.core import QgsMapLayerProxyModel, QgsProject
 
 from . import processes
 from .constants import (
     OUTPUT_ZONING,
     OUTPUT_AGGREGATE,
 )
-from .result_layers import latest_result_layer
 
 
 class ForestZoningMainDialogPrintlayout:
@@ -98,10 +97,11 @@ class ForestZoningMainDialogPrintlayout:
         return error_texts
 
     def set_zoning_layer_printlayout_combobox(self):
-        zoning_layer = latest_result_layer(
-            QgsProject.instance(), OUTPUT_ZONING["FILE_NAME"], QgsRasterLayer
+        zoning_rlayers = QgsProject.instance().mapLayersByName(
+            OUTPUT_ZONING.get("DISPLAY_NAME")
         )
-        if zoning_layer is not None:
+        if len(zoning_rlayers) > 0:
+            zoning_layer = zoning_rlayers[0]
             self.main.printlayoutZoningLayerCombobox.setLayer(zoning_layer)
         else:
             QMessageBox.information(
@@ -110,10 +110,11 @@ class ForestZoningMainDialogPrintlayout:
             return
 
     def set_aggregate_layer_printlayout_combobox(self):
-        aggregate_layer = latest_result_layer(
-            QgsProject.instance(), OUTPUT_AGGREGATE["FILE_NAME"], QgsVectorLayer
+        aggregate_layers = QgsProject.instance().mapLayersByName(
+            OUTPUT_AGGREGATE.get("DISPLAY_NAME")
         )
-        if aggregate_layer is not None:
+        if len(aggregate_layers) > 0:
+            aggregate_layer = aggregate_layers[0]
             self.main.printlayoutAggregateLayerCombobox.setLayer(
                 aggregate_layer
             )

@@ -25,7 +25,6 @@ from . import processes
 from . import utils
 from .diag_log import log, log_exception, log_if_slow, processing_active
 from .progress_dialog import ProgressDialog
-from .result_layers import is_result_label, result_generation, result_layer_name
 from .constants import (
     OUTPUT_PROFIT,
     OUTPUT_RISK,
@@ -449,7 +448,8 @@ class ForestZoningMainDialogZoning:
     def add_layers_to_project(rlayers_dict):
         """ゾーニング結果をQGIS 3.44で安定してプロジェクトへ登録する。
 
-        同じ出力ファイルの古い参照だけを整理し、世代ごとに結果グループを残す。
+        既存の壊れた/空の「ゾーニング図」グループを整理し、
+        有効な結果レイヤだけを新しい結果グループへ追加する。
         """
         project = QgsProject.instance()
         root = project.layerTreeRoot()
@@ -469,76 +469,29 @@ class ForestZoningMainDialogZoning:
         if not valid_layers:
             return
 
-        current_source = os.path.normcase(os.path.abspath(
-            valid_layers[0].source().split("|", 1)[0]
-        ))
-        current_label = result_layer_name(
-            OUTPUT_ZONING["DISPLAY_NAME"], valid_layers[0].source(),
-            OUTPUT_ZONING["FILE_NAME"],
-        )
-
-        # 更新前に追加された結果にも、実ファイル名から世代を表示する。
-        for layer in project.mapLayers().values():
-            try:
-                if (layer.name() == OUTPUT_ZONING["DISPLAY_NAME"]
-                        and result_generation(
-                            layer.source(), OUTPUT_ZONING["FILE_NAME"]
-                        ) is not None):
-                    layer.setName(result_layer_name(
-                        OUTPUT_ZONING["DISPLAY_NAME"], layer.source(),
-                        OUTPUT_ZONING["FILE_NAME"],
-                    ))
-            except Exception as exc:
-                log_exception("add_layers_to_project", exc)
-
-        # 同じファイルを再利用した場合のみ、古いレイヤー参照を置き換える。
+        # 旧実行で残った同名結果レイヤをプロジェクトから除去。
         for layer in list(project.mapLayers().values()):
             try:
                 if (
-                    result_generation(
-                        layer.source(), OUTPUT_ZONING["FILE_NAME"]
-                    ) is not None
-                    and os.path.normcase(os.path.abspath(
-                        layer.source().split("|", 1)[0]
-                    )) == current_source
+                    layer.name() == OUTPUT_ZONING["DISPLAY_NAME"]
                     and layer not in valid_layers
                 ):
                     project.removeMapLayer(layer.id())
             except Exception as exc:
                 log_exception("add_layers_to_project", exc)
 
-        # 同じ出力世代のグループと、空になった旧形式グループだけを整理する。
+        # 旧グループ参照を整理。「?」表示の原因となる空/壊れたノードを残さない。
         for child in list(root.children()):
             try:
-                if (isinstance(child, QgsLayerTreeGroup)
-                        and child.name() == OUTPUT_ZONING["DISPLAY_NAME"]
-                        and child.children()):
-                    first_layer = next(
-                        (node.layer() for node in child.children()
-                         if hasattr(node, "layer") and node.layer() is not None),
-                        None,
-                    )
-                    if first_layer is not None:
-                        child.setName(result_layer_name(
-                            OUTPUT_ZONING["DISPLAY_NAME"], first_layer.source(),
-                            OUTPUT_ZONING["FILE_NAME"],
-                        ))
                 if (
                     isinstance(child, QgsLayerTreeGroup)
-                    and (child.name() == current_label or (
-                        is_result_label(
-                            child.name(), OUTPUT_ZONING["DISPLAY_NAME"]
-                        ) and not child.children()
-                    ))
+                    and child.name() == OUTPUT_ZONING["DISPLAY_NAME"]
                 ):
                     root.removeChildNode(child)
             except Exception as exc:
                 log_exception("add_layers_to_project", exc)
 
-        group = root.insertGroup(
-            0,
-            current_label,
-        )
+        group = root.insertGroup(0, OUTPUT_ZONING["DISPLAY_NAME"])
         group.setExpanded(True)
 
         for rlayer in valid_layers:
