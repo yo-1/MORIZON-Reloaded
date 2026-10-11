@@ -5,7 +5,6 @@ import configparser
 import zipfile
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT
 PLUGIN_ZIP_ROOT = "MORIZON"
@@ -38,14 +37,19 @@ def main() -> None:
     DIST.mkdir(exist_ok=True)
     output = DIST / f"MORIZON_Reloaded_QGIS344_v{version}.zip"
 
-    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+    with zipfile.ZipFile(
+        output, "w", compression=zipfile.ZIP_DEFLATED
+    ) as archive:
         for path in sorted(PLUGIN.rglob("*")):
             if path.is_dir():
                 continue
             relative = path.relative_to(ROOT)
             if relative.parts[0] in EXCLUDED_TOP_LEVEL:
                 continue
-            if EXCLUDED_PARTS.intersection(relative.parts) or path.suffix in EXCLUDED_SUFFIXES:
+            if (
+                EXCLUDED_PARTS.intersection(relative.parts)
+                or path.suffix in EXCLUDED_SUFFIXES
+            ):
                 continue
             archive_path = Path(PLUGIN_ZIP_ROOT) / relative
             archive.write(path, archive_path.as_posix())

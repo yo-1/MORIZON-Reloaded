@@ -5,16 +5,14 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import json
-import xml.etree.ElementTree as ET  # nosec B405 - only parses QGIS's own in-process layer metadata, never external/network XML
-import tempfile
+
+# nosec B405 - only parses QGIS's own in-process layer metadata, never
+# external/network XML
+import xml.etree.ElementTree as ET  # nosec B405 - local XML
 import os
 import re
 
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.core import QgsCoordinateReferenceSystem, QgsRasterLayer
 import processing
 
 from ..processes import raster_styler
@@ -68,15 +66,20 @@ def get_raster_stats(rlayer: QgsRasterLayer) -> dict:
             + rlayer.dataProvider().htmlMetadata().replace("\n", "")
             + "</root>"
         )
-    except ET.ParseError as e:
+    except ET.ParseError:
         # xyzタイルはhtmlMetadataが適切なXMLとしてパース出来ないので例外をキャッチ
         print(f"failed to parse htmlMetada of {rlayer.name()}, skipping...")
-        root = ET.fromstring("<root></root>")  # nosec B314 - hardcoded literal, not external data
+        root = ET.fromstring("<root></root>")  # nosec B314 - literal XML
 
     for item in root.iter():
         if item.text == "MBTiles":  # GDAL-DriverがMBTilesの場合
             # MBTilesは処理対象外＋計算コストが非常に大きいので、計算せず不正な値を返す（ラスタータイルと同じ値）
-            return {"MIN": 1000000, "MAX": -10000, "MEAN": 1000000, "STD_DEV": 1}
+            return {
+                "MIN": 1000000,
+                "MAX": -10000,
+                "MEAN": 1000000,
+                "STD_DEV": 1,
+            }
 
         if item.text is None:
             continue
@@ -93,18 +96,26 @@ def get_raster_stats(rlayer: QgsRasterLayer) -> dict:
     # 遅かった場合だけ記録する（UIイベントから頻繁に呼ばれるため）。処理内容は変更しない。
     with timed(f"ラスター統計の取得 layer={rlayer.name()}", min_seconds=0.3):
         stats = {
-            "MAX": metadata_stats["STATISTICS_MAXIMUM"]
-            if metadata_stats["STATISTICS_MAXIMUM"] is not None
-            else rlayer.dataProvider().bandStatistics(1).maximumValue,
-            "MIN": metadata_stats["STATISTICS_MINIMUM"]
-            if metadata_stats["STATISTICS_MINIMUM"] is not None
-            else rlayer.dataProvider().bandStatistics(1).minimumValue,
-            "MEAN": metadata_stats["STATISTICS_MEAN"]
-            if metadata_stats["STATISTICS_MEAN"] is not None
-            else rlayer.dataProvider().bandStatistics(1).mean,
-            "STD_DEV": metadata_stats["STATISTICS_STDDEV"]
-            if metadata_stats["STATISTICS_STDDEV"] is not None
-            else rlayer.dataProvider().bandStatistics(1).stdDev,
+            "MAX": (
+                metadata_stats["STATISTICS_MAXIMUM"]
+                if metadata_stats["STATISTICS_MAXIMUM"] is not None
+                else rlayer.dataProvider().bandStatistics(1).maximumValue
+            ),
+            "MIN": (
+                metadata_stats["STATISTICS_MINIMUM"]
+                if metadata_stats["STATISTICS_MINIMUM"] is not None
+                else rlayer.dataProvider().bandStatistics(1).minimumValue
+            ),
+            "MEAN": (
+                metadata_stats["STATISTICS_MEAN"]
+                if metadata_stats["STATISTICS_MEAN"] is not None
+                else rlayer.dataProvider().bandStatistics(1).mean
+            ),
+            "STD_DEV": (
+                metadata_stats["STATISTICS_STDDEV"]
+                if metadata_stats["STATISTICS_STDDEV"] is not None
+                else rlayer.dataProvider().bandStatistics(1).stdDev
+            ),
         }
 
     return stats
@@ -148,8 +159,12 @@ def get_initial_thresholds(rlayer: QgsRasterLayer, classes_count=3) -> list:
 
     try:
         shader = renderer.shader()
-        shader_func = shader.rasterShaderFunction() if shader is not None else None
-        items = shader_func.colorRampItemList() if shader_func is not None else []
+        shader_func = (
+            shader.rasterShaderFunction() if shader is not None else None
+        )
+        items = (
+            shader_func.colorRampItemList() if shader_func is not None else []
+        )
     except Exception:
         items = []
 
@@ -164,20 +179,20 @@ def get_initial_thresholds(rlayer: QgsRasterLayer, classes_count=3) -> list:
     return thresholds
 
 
-def find(l: list, x) -> int:
+def find(items: list, x) -> int:
     """
     https://note.nkmk.me/python-list-index/
     配列から要素を検索し、存在すればそのインデックスを返す
     存在しなければ-1を返す
 
     Args:
-        l ([type]): 検索対象の配列
+        items ([type]): 検索対象の配列
         x ([type]): 検索する値
 
     Returns:
         int: 見つかった最初の要素のインデックス
     """
-    return l.index(x) if x in l else -1
+    return items.index(x) if x in items else -1
 
 
 def get_tiff_info(tiff_filepath: str) -> dict:
@@ -192,14 +207,20 @@ def get_tiff_info(tiff_filepath: str) -> dict:
     """
     gdalinfo_html = processing.run(
         "gdal:gdalinfo",
-        {"EXTRA": "-json", "INPUT": tiff_filepath, "OUTPUT": "TEMPORARY_OUTPUT"},
+        {
+            "EXTRA": "-json",
+            "INPUT": tiff_filepath,
+            "OUTPUT": "TEMPORARY_OUTPUT",
+        },
     )["OUTPUT"]
 
     with open(gdalinfo_html) as f:
         gdalinfo_json = "".join(f.readlines())[5:-6]
         gdalinfo = json.loads(gdalinfo_json)
 
-    crs = QgsCoordinateReferenceSystem.fromWkt(gdalinfo["coordinateSystem"]["wkt"])
+    crs = QgsCoordinateReferenceSystem.fromWkt(
+        gdalinfo["coordinateSystem"]["wkt"]
+    )
 
     extent = [
         gdalinfo["cornerCoordinates"]["upperLeft"][0],
@@ -232,7 +253,9 @@ def is_valid_scoring_layer(rlayer: QgsRasterLayer) -> bool:
     stats = get_raster_stats(rlayer)
     is_tile = stats["MIN"] >= stats["MAX"]
     has_negative = stats["MIN"] < 0
-    not_integer = stats["MIN"] != int(stats["MIN"]) or stats["MAX"] != int(stats["MAX"])
+    not_integer = stats["MIN"] != int(stats["MIN"]) or stats["MAX"] != int(
+        stats["MAX"]
+    )
 
     is_invalid = is_tile or has_negative or not_integer
     return not is_invalid
@@ -243,8 +266,8 @@ def is_tmpdir_valid():
     システムtempディレクトリーに全角文字がある場合はSAGA/GRASSエラーになるので、不正だと判断する
     """
     return (
-        re.search("[^\x01-\x7E]", os.environ["TMP"]) is None
-        and re.search("[^\x01-\x7E]", os.environ["TEMP"]) is None
+        re.search("[^\x01-\x7e]", os.environ["TMP"]) is None
+        and re.search("[^\x01-\x7e]", os.environ["TEMP"]) is None
     )
 
 

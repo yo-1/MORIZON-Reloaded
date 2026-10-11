@@ -6,11 +6,8 @@
 
 import os
 import traceback
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtCore import QThread, pyqtSignal
+from qgis.core import Qgis, QgsRasterLayer
 
 from . import raster_writer
 from . import raster_styler
@@ -59,9 +56,12 @@ class ProcessingThread(QThread):
             sum_of_processes = len(
                 list(filter(lambda val: val, self.target_scores_dict.values()))
             )
-            log("スコアリングを開始: "
-                f"targets={[k for k, v in self.target_scores_dict.items() if v]}, "
-                f"output_dir={self.output_dir}")
+            log(
+                "スコアリングを開始: "
+                f"targets={[k for k,
+                            v in self.target_scores_dict.items() if v]}, "
+                f"output_dir={self.output_dir}"
+            )
             self.processStarted.emit(sum_of_processes)
 
             if self.target_scores_dict["profit"]:
@@ -78,12 +78,17 @@ class ProcessingThread(QThread):
                         self.input_thresholds_dict["distance"],
                         self.output_dir,
                     )
-                if os.path.basename(profit_filepath) != OUTPUT_PROFIT["FILE_NAME"] + ".tif":
+                if (
+                    os.path.basename(profit_filepath)
+                    != OUTPUT_PROFIT["FILE_NAME"] + ".tif"
+                ):
                     self.postMessage.emit(
                         "既存の収益性ファイルがWindowsで使用中のため、"
                         f"{os.path.basename(profit_filepath)} として新規保存しました"
                     )
-                rlayer = QgsRasterLayer(profit_filepath, OUTPUT_PROFIT["DISPLAY_NAME"])
+                rlayer = QgsRasterLayer(
+                    profit_filepath, OUTPUT_PROFIT["DISPLAY_NAME"]
+                )
                 qml_filepath = raster_styler.profit.write_qml(
                     profit_filepath, self.output_dir
                 )
@@ -108,12 +113,17 @@ class ProcessingThread(QThread):
                         self.input_layers_dict["savearea"],
                         self.output_dir,
                     )
-                if os.path.basename(risk_filepath) != OUTPUT_RISK["FILE_NAME"] + ".tif":
+                if (
+                    os.path.basename(risk_filepath)
+                    != OUTPUT_RISK["FILE_NAME"] + ".tif"
+                ):
                     self.postMessage.emit(
                         "既存の災害リスクファイルがWindowsで使用中のため、"
                         f"{os.path.basename(risk_filepath)} として新規保存しました"
                     )
-                rlayer = QgsRasterLayer(risk_filepath, OUTPUT_RISK["DISPLAY_NAME"])
+                rlayer = QgsRasterLayer(
+                    risk_filepath, OUTPUT_RISK["DISPLAY_NAME"]
+                )
                 qml_filepath = raster_styler.risk.write_qml(
                     risk_filepath, self.output_dir
                 )
@@ -122,7 +132,10 @@ class ProcessingThread(QThread):
 
         except Exception as e:
             # エラーはまとめてキャッチして呼び出し元に報告・処理を中断
-            log(f"スコアリングが失敗: {e}\n{traceback.format_exc()}", Qgis.Warning)
+            log(
+                f"スコアリングが失敗: {e}\n{traceback.format_exc()}",
+                Qgis.MessageLevel.Warning,
+            )
             self.processFailed.emit(str(e))
             self.abort_flag = True
             self.processFinished.emit(output_rlayers_dict)

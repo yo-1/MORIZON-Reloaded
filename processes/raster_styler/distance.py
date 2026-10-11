@@ -7,29 +7,31 @@
 import os
 import tempfile
 
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtGui import QPainter
+from qgis.core import (
+    QgsContrastEnhancement,
+    QgsRasterLayer,
+    QgsRasterMinMaxOrigin,
+)
 
 from ...constants import (
     OUTPUT_DISTANCE,
     SCORING_COLORS_DISTANCE,
-    RAWDATA_COLORS_DISTANCE
+    RAWDATA_COLORS_DISTANCE,
 )
 from .utils import (
     get_quantile_renderer,
     hex_to_rgb,
     replace_colorramp_labels,
     get_colorramp_label_prefixes,
-    round_label_precision
+    round_label_precision,
 )
 
 
 def write_rawdata_qml(output_dir: str) -> str:
-    output_filepath = os.path.join(output_dir,
-                                   OUTPUT_DISTANCE["FILE_NAME"] + "_raw.qml")
+    output_filepath = os.path.join(
+        output_dir, OUTPUT_DISTANCE["FILE_NAME"] + "_raw.qml"
+    )
     with open(output_filepath, mode="w") as f:
         f.write(f"""
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
@@ -94,24 +96,31 @@ def write_rawdata_qml(output_dir: str) -> str:
 
 
 def write_scoring_qml(distance_filepath: str, output_dir: str) -> str:
-    rlayer = QgsRasterLayer(distance_filepath, '')
+    rlayer = QgsRasterLayer(distance_filepath, "")
     colors = list(map(hex_to_rgb, SCORING_COLORS_DISTANCE))
     renderer = get_quantile_renderer(rlayer, colors)
     renderer.setOpacity(0.8)
     rlayer.setRenderer(renderer)
-    rlayer.setBlendMode(QPainter.CompositionMode_Multiply)
-    rlayer.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum,
-                                  QgsRasterMinMaxOrigin.MinMax)
+    rlayer.setBlendMode(QPainter.CompositionMode.CompositionMode_Multiply)
+    rlayer.setContrastEnhancement(
+        QgsContrastEnhancement.ContrastEnhancementAlgorithm.StretchToMinimumMaximum,
+        QgsRasterMinMaxOrigin.Limits.MinMax,
+    )
 
     # 等量区分QML -> ラベル置換 -> 桁丸目 -> 出力
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.qml') as temp_qml:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".qml") as temp_qml:
         rlayer.saveNamedStyle(temp_qml.name)
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.qml') as temp_qml_value_rounded:
-            round_label_precision(temp_qml.name,
-                                  temp_qml_value_rounded.name,
-                                  precision=4)
-            output_filepath = replace_colorramp_labels(temp_qml_value_rounded.name,
-                                                       os.path.join(
-                                                           output_dir, OUTPUT_DISTANCE["FILE_NAME"] + '_score.qml'),
-                                                       labels=get_colorramp_label_prefixes("distance"))
+        with tempfile.NamedTemporaryFile(
+            delete=False, suffix=".qml"
+        ) as temp_qml_value_rounded:
+            round_label_precision(
+                temp_qml.name, temp_qml_value_rounded.name, precision=4
+            )
+            output_filepath = replace_colorramp_labels(
+                temp_qml_value_rounded.name,
+                os.path.join(
+                    output_dir, OUTPUT_DISTANCE["FILE_NAME"] + "_score.qml"
+                ),
+                labels=get_colorramp_label_prefixes("distance"),
+            )
     return output_filepath

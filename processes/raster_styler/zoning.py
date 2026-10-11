@@ -6,15 +6,13 @@
 
 import os
 
-from ...constants import (
-    OUTPUT_ZONING,
-    ZONING_COLORS
-)
+from ...constants import OUTPUT_ZONING, ZONING_COLORS
 
 
 def write_qml(output_dir: str) -> str:
-    output_filepath = os.path.join(output_dir,
-                                   OUTPUT_ZONING["FILE_NAME"] + ".qml")
+    output_filepath = os.path.join(
+        output_dir, OUTPUT_ZONING["FILE_NAME"] + ".qml"
+    )
     with open(output_filepath, mode="w") as f:
         f.write(f"""
     <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>

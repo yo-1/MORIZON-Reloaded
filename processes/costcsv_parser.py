@@ -71,7 +71,11 @@ class CostcsvParser:
         with open(csv_filepath, "rb") as fb:
             head = fb.read(3)
 
-        encodings = ["utf-8-sig", "cp932"] if head == b"\xef\xbb\xbf" else ["cp932", "utf-8-sig"]
+        encodings = (
+            ["utf-8-sig", "cp932"]
+            if head == b"\xef\xbb\xbf"
+            else ["cp932", "utf-8-sig"]
+        )
 
         last_error = None
         for enc in encodings:
@@ -86,9 +90,7 @@ class CostcsvParser:
                                 cleaned.append("")
                             else:
                                 cleaned.append(
-                                    str(cell)
-                                    .replace("\ufeff", "")
-                                    .strip()
+                                    str(cell).replace("\ufeff", "").strip()
                                 )
                         rows.append(cleaned)
                 break
@@ -110,8 +112,7 @@ class CostcsvParser:
         upper_rows = rows[0:11]
         lower_rows = rows[15:26]
 
-        self._thresholds_ruggedness = list(
-            map(lambda row: row[0], upper_rows))
+        self._thresholds_ruggedness = list(map(lambda row: row[0], upper_rows))
         self._thresholds_ruggedness.reverse()
 
         self._thresholds_slope = upper_rows[0][1:]
@@ -127,17 +128,19 @@ class CostcsvParser:
         score_tuples = []
         for i in range(len(self._thresholds_ruggedness) - 1):
             for j in range(len(self._thresholds_slope) - 1):
-                score_tuple = (self._thresholds_ruggedness[i],
-                               self._thresholds_ruggedness[i + 1],
-                               self._thresholds_slope[j],
-                               self._thresholds_slope[j + 1],
-                               self._scores[i][j])
+                score_tuple = (
+                    self._thresholds_ruggedness[i],
+                    self._thresholds_ruggedness[i + 1],
+                    self._thresholds_slope[j],
+                    self._thresholds_slope[j + 1],
+                    self._scores[i][j],
+                )
                 score_tuples.append(score_tuple)
         return score_tuples
 
-    def generate_expression_for_raster_calculator(self,
-                                                  ruggedness_entry_name: str,
-                                                  slope_entry_name: str) -> str:
+    def generate_expression_for_raster_calculator(
+        self, ruggedness_entry_name: str, slope_entry_name: str
+    ) -> str:
         """
         CSVをパースした結果をもとにラスター計算機のExpressionを生成する
 
@@ -152,10 +155,15 @@ class CostcsvParser:
         expressions = []
 
         for score_tuple in self._get_score_tuples():
-            expression = f'{score_tuple[4]} * ({score_tuple[0]} <= "{ruggedness_entry_name}" and "{ruggedness_entry_name}" < {score_tuple[1]} and {score_tuple[2]} <= "{slope_entry_name}" and "{slope_entry_name}" < {score_tuple[3]})'
+            expression = f'{
+                score_tuple[4]} * ({
+                score_tuple[0]} <= "{ruggedness_entry_name}" and "{ruggedness_entry_name}" < {
+                score_tuple[1]} and {
+                score_tuple[2]} <= "{slope_entry_name}" and "{slope_entry_name}" < {
+                    score_tuple[3]})'
             expressions.append(expression)
 
-        return ' + '.join(expressions)
+        return " + ".join(expressions)
 
     def get_score_names(self) -> list:
         """
@@ -164,6 +172,7 @@ class CostcsvParser:
         Returns:
             [str]: スコアに対応する文字列の配列, インデックス=スコア
         """
-        sorted_by_key = sorted(self._score_dict.items(),
-                               key=lambda kv: int(kv[0]))
+        sorted_by_key = sorted(
+            self._score_dict.items(), key=lambda kv: int(kv[0])
+        )
         return list(map(lambda row: row[1], sorted_by_key))

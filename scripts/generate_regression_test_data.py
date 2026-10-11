@@ -38,12 +38,20 @@ EPSG = 6677
 
 OUT_ROOT = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "test_data", "ZoningKit_SYNTH", "DATA"
+    "test_data",
+    "ZoningKit_SYNTH",
+    "DATA",
 )
 
-WIDTH, HEIGHT = 80, 60  # セル数（10m解像度で800m x 600m相当、Zoningkit_SAMPLEの1/10スケール）
+WIDTH, HEIGHT = (
+    80,
+    60,
+)  # セル数（10m解像度で800m x 600m相当、Zoningkit_SAMPLEの1/10スケール）
 CELL = 10.0
-ORIGIN_X, ORIGIN_Y_TOP = 0.0, HEIGHT * CELL  # 左上原点（北がY+、GDAL標準のnorth-up）
+ORIGIN_X, ORIGIN_Y_TOP = (
+    0.0,
+    HEIGHT * CELL,
+)  # 左上原点（北がY+、GDAL標準のnorth-up）
 
 
 def _srs():
@@ -56,7 +64,9 @@ def _write_raster(path, array, nodata=None):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     driver = gdal.GetDriverByName("GTiff")
     h, w = array.shape
-    ds = driver.Create(path, w, h, 1, gdal.GDT_Float32, options=["COMPRESS=LZW"])
+    ds = driver.Create(
+        path, w, h, 1, gdal.GDT_Float32, options=["COMPRESS=LZW"]
+    )
     ds.SetGeoTransform([ORIGIN_X, CELL, 0.0, ORIGIN_Y_TOP, 0.0, -CELL])
     ds.SetProjection(_srs().ExportToWkt())
     band = ds.GetRasterBand(1)
@@ -65,7 +75,10 @@ def _write_raster(path, array, nodata=None):
     band.WriteArray(array.astype(np.float32))
     band.FlushCache()
     ds = None
-    print(f"  wrote {path}  shape={array.shape}  min={array.min():.3f} max={array.max():.3f}")
+    print(f"  wrote {path}  shape={
+        array.shape}  min={
+            array.min():.3f} max={
+                array.max():.3f}")
 
 
 def generate_dem():
@@ -90,9 +103,13 @@ def generate_siteidx_inputs():
     x = (np.arange(WIDTH) + 0.5) * CELL
     y = (np.arange(HEIGHT) + 0.5) * CELL
     X, Y = np.meshgrid(x, y)
-    npp = (1200.0 + 150.0 * np.sin(X / 180.0) + 80.0 * np.cos(Y / 140.0)).astype(np.float32)
+    npp = (
+        1200.0 + 150.0 * np.sin(X / 180.0) + 80.0 * np.cos(Y / 140.0)
+    ).astype(np.float32)
     srad = (4200.0 + 300.0 * np.cos(X / 220.0 + Y / 260.0)).astype(np.float32)
-    vtex = (18.0 + 6.0 * np.sin(X / 150.0) * np.sin(Y / 130.0)).astype(np.float32)
+    vtex = (18.0 + 6.0 * np.sin(X / 150.0) * np.sin(Y / 130.0)).astype(
+        np.float32
+    )
     return npp[::-1, :], srad[::-1, :], vtex[::-1, :]
 
 
@@ -117,7 +134,11 @@ def generate_building_polygons(path):
         poly.AddGeometry(ring)
         return poly
 
-    buildings = [(150.0, 450.0, 15.0), (420.0, 200.0, 12.0), (620.0, 480.0, 18.0)]
+    buildings = [
+        (150.0, 450.0, 15.0),
+        (420.0, 200.0, 12.0),
+        (620.0, 480.0, 18.0),
+    ]
     for i, (cx, cy, half) in enumerate(buildings):
         feat = ogr.Feature(layer.GetLayerDefn())
         feat.SetField("id", i + 1)
@@ -191,6 +212,7 @@ def generate_sagyo_system_csv(path):
         ["0", "該当なし"],
     ]
     import csv
+
     with open(path, "w", encoding="cp932", newline="") as f:
         writer = csv.writer(f)
         for row in rows:
@@ -208,12 +230,20 @@ def main():
 
     print("地位指数入力(NPP/SRAD/VTEX)...")
     npp, srad, vtex = generate_siteidx_inputs()
-    _write_raster(os.path.join(OUT_ROOT, "SiteIndex", "NPP", "NPP_SYNTH.tif"), npp)
-    _write_raster(os.path.join(OUT_ROOT, "SiteIndex", "SRAD", "SRAD_SYNTH.tif"), srad)
-    _write_raster(os.path.join(OUT_ROOT, "SiteIndex", "VTEX", "VTEX_SYNTH.tif"), vtex)
+    _write_raster(
+        os.path.join(OUT_ROOT, "SiteIndex", "NPP", "NPP_SYNTH.tif"), npp
+    )
+    _write_raster(
+        os.path.join(OUT_ROOT, "SiteIndex", "SRAD", "SRAD_SYNTH.tif"), srad
+    )
+    _write_raster(
+        os.path.join(OUT_ROOT, "SiteIndex", "VTEX", "VTEX_SYNTH.tif"), vtex
+    )
 
     print("建物ポリゴン...")
-    generate_building_polygons(os.path.join(OUT_ROOT, "TATEMONO", "tatemono_SYNTH.shp"))
+    generate_building_polygons(
+        os.path.join(OUT_ROOT, "TATEMONO", "tatemono_SYNTH.shp")
+    )
 
     print("既設路網ライン...")
     generate_road_lines(os.path.join(OUT_ROOT, "ROAD", "romou_SYNTH.shp"))

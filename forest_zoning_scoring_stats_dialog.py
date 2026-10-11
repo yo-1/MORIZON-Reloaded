@@ -13,11 +13,8 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 
 # QGIS-API
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtWidgets import QDialog, QSpinBox
+from qgis.core import QgsRasterLayer
 from .settings_manager import SettingsManager
 from .branding import apply_window_branding
 
@@ -33,7 +30,7 @@ class QSeperatorSpinbox(QSpinBox):
         # UIの共通設定
         self.setSuffix("px")
         self.setMaximum(9999999)
-        self.setButtonSymbols(QSpinBox.NoButtons)
+        self.setButtonSymbols(QSpinBox.ButtonSymbols.NoButtons)
         self.setMinimum(0)
         self.setReadOnly(True)
 
@@ -52,7 +49,8 @@ class ForestZoningScoringStatsDialog(QDialog):
         super().__init__()
         self.ui = uic.loadUi(
             os.path.join(
-                os.path.dirname(__file__), "forest_zoning_scoring_stats_dialog.ui"
+                os.path.dirname(__file__),
+                "forest_zoning_scoring_stats_dialog.ui",
             ),
             self,
         )
@@ -154,8 +152,12 @@ class ForestZoningScoringStatsDialog(QDialog):
         # しきい値入力時にグラフとピクセル数を再計算
         self.threshold1Spinbox.valueChanged.connect(self.redraw_graph)
         self.threshold2Spinbox.valueChanged.connect(self.redraw_graph)
-        self.threshold1Spinbox.valueChanged.connect(self.calculate_pixel_counts)
-        self.threshold2Spinbox.valueChanged.connect(self.calculate_pixel_counts)
+        self.threshold1Spinbox.valueChanged.connect(
+            self.calculate_pixel_counts
+        )
+        self.threshold2Spinbox.valueChanged.connect(
+            self.calculate_pixel_counts
+        )
 
         self.redraw_graph()
         self.calculate_pixel_counts()
