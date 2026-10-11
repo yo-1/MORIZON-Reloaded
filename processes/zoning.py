@@ -15,6 +15,7 @@ from . import raster_writer
 from . import raster_styler
 from ..diag_log import log, log_exception, timed
 from ..constants import OUTPUT_ZONING, OUTPUT_ZONING_THRESHOLDS_JSON
+from ..result_layers import result_layer_name
 
 
 class ProcessingThread(QThread):
@@ -79,7 +80,12 @@ class ProcessingThread(QThread):
 
             # ラスターレイヤーのインスタンスを生成しスタイル適用
             rlayer = QgsRasterLayer(
-                zoning_filepath, OUTPUT_ZONING["DISPLAY_NAME"]
+                zoning_filepath,
+                result_layer_name(
+                    OUTPUT_ZONING["DISPLAY_NAME"],
+                    zoning_filepath,
+                    OUTPUT_ZONING["FILE_NAME"],
+                ),
             )
             try:
                 # 診断用: 集計時の「入力ラスタは浮動小数点型」警告の原因確認

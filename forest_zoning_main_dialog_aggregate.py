@@ -17,6 +17,7 @@ from .constants import OUTPUT_ZONING, OUTPUT_AGGREGATE
 from .utils import is_tmpdir_valid
 from .diag_log import log, log_exception, processing_active
 from .progress_dialog import ProgressDialog
+from .result_layers import result_generation, result_layer_name
 
 
 class ForestZoningMainDialogAggregate:
@@ -434,6 +435,16 @@ class ForestZoningMainDialogAggregate:
         """
         処理結果をプロジェクトに追加
         """
+        # 更新前の集計結果も、実ファイル名から世代を表示する。
+        for layer in QgsProject.instance().mapLayers().values():
+            if (layer.name() == OUTPUT_AGGREGATE["DISPLAY_NAME"]
+                    and result_generation(
+                        layer.source(), OUTPUT_AGGREGATE["FILE_NAME"]
+                    ) is not None):
+                layer.setName(result_layer_name(
+                    OUTPUT_AGGREGATE["DISPLAY_NAME"], layer.source(),
+                    OUTPUT_AGGREGATE["FILE_NAME"],
+                ))
         for rlayer in rlayers_dict.values():
             # プロジェクトのレイヤー一覧の一番上にレイヤーを追加
             QgsProject.instance().addMapLayer(rlayer, False)
