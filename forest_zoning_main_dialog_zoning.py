@@ -25,7 +25,7 @@ from . import processes
 from . import utils
 from .diag_log import log, log_exception, log_if_slow, processing_active
 from .progress_dialog import ProgressDialog
-from .result_layers import generation_group, is_result_label, result_generation
+from .result_layers import is_result_label, result_generation, result_layer_name
 from .constants import (
     OUTPUT_PROFIT,
     OUTPUT_RISK,
@@ -472,10 +472,24 @@ class ForestZoningMainDialogZoning:
         current_source = os.path.normcase(os.path.abspath(
             valid_layers[0].source().split("|", 1)[0]
         ))
-        current_generation = result_generation(
-            valid_layers[0].source(), OUTPUT_ZONING["FILE_NAME"]
-        ) or 1
-        current_label = OUTPUT_ZONING["DISPLAY_NAME"]
+        current_label = result_layer_name(
+            OUTPUT_ZONING["DISPLAY_NAME"], valid_layers[0].source(),
+            OUTPUT_ZONING["FILE_NAME"],
+        )
+
+        # 更新前に追加された結果にも、実ファイル名から世代を表示する。
+        for layer in project.mapLayers().values():
+            try:
+                if (layer.name() == OUTPUT_ZONING["DISPLAY_NAME"]
+                        and result_generation(
+                            layer.source(), OUTPUT_ZONING["FILE_NAME"]
+                        ) is not None):
+                    layer.setName(result_layer_name(
+                        OUTPUT_ZONING["DISPLAY_NAME"], layer.source(),
+                        OUTPUT_ZONING["FILE_NAME"],
+                    ))
+            except Exception as exc:
+                log_exception("add_layers_to_project", exc)
 
         # 同じファイルを再利用した場合のみ、古いレイヤー参照を置き換える。
         for layer in list(project.mapLayers().values()):
@@ -493,48 +507,35 @@ class ForestZoningMainDialogZoning:
             except Exception as exc:
                 log_exception("add_layers_to_project", exc)
 
-        # 従来の最上位グループも、ファイル名に対応する世代へ移す。
-        for child in list(root.children()):
-            if (not isinstance(child, QgsLayerTreeGroup)
-                    or not is_result_label(
-                        child.name(), OUTPUT_ZONING["DISPLAY_NAME"]
-                    ) or not child.children()):
-                continue
-            first_layer = next(
-                (node.layer() for node in child.children()
-                 if hasattr(node, "layer") and node.layer() is not None), None,
-            )
-            generation = (result_generation(
-                first_layer.source(), OUTPUT_ZONING["FILE_NAME"]
-            ) if first_layer is not None else None)
-            if generation is not None and generation != current_generation:
-                child.setName(OUTPUT_ZONING["DISPLAY_NAME"])
-                generation_group(root, generation).addChildNode(child.clone())
-                root.removeChildNode(child)
-
-        parent = generation_group(root, current_generation)
-        # 今回と同じ世代のグループだけを整理する。
+        # 同じ出力世代のグループと、空になった旧形式グループだけを整理する。
         for child in list(root.children()):
             try:
+                if (isinstance(child, QgsLayerTreeGroup)
+                        and child.name() == OUTPUT_ZONING["DISPLAY_NAME"]
+                        and child.children()):
+                    first_layer = next(
+                        (node.layer() for node in child.children()
+                         if hasattr(node, "layer") and node.layer() is not None),
+                        None,
+                    )
+                    if first_layer is not None:
+                        child.setName(result_layer_name(
+                            OUTPUT_ZONING["DISPLAY_NAME"], first_layer.source(),
+                            OUTPUT_ZONING["FILE_NAME"],
+                        ))
                 if (
                     isinstance(child, QgsLayerTreeGroup)
-                    and (
+                    and (child.name() == current_label or (
                         is_result_label(
                             child.name(), OUTPUT_ZONING["DISPLAY_NAME"]
-                        ) and (not child.children() or child.name() == current_label)
-                    )
+                        ) and not child.children()
+                    ))
                 ):
                     root.removeChildNode(child)
             except Exception as exc:
                 log_exception("add_layers_to_project", exc)
 
-        for child in list(parent.children()):
-            if isinstance(child, QgsLayerTreeGroup) and is_result_label(
-                child.name(), current_label
-            ):
-                parent.removeChildNode(child)
-
-        group = parent.insertGroup(
+        group = root.insertGroup(
             0,
             current_label,
         )

@@ -14,6 +14,13 @@ def result_generation(source: str, stem: str):
     return int(match.group(1)) if match else None
 
 
+def result_layer_name(display_name: str, source: str, stem: str) -> str:
+    """Show the actual output generation in the QGIS layer panel."""
+    generation = result_generation(source, stem)
+    return (f"{display_name} (v{generation})"
+            if generation is not None else display_name)
+
+
 def is_result_label(name: str, display_name: str) -> bool:
     """Recognize both legacy labels and labels with a generation suffix."""
     return name == display_name or re.fullmatch(
@@ -31,12 +38,3 @@ def latest_result_layer(project, stem: str, layer_type):
         if generation is not None:
             candidates.append((generation, layer))
     return max(candidates, key=lambda item: item[0])[1] if candidates else None
-
-
-def generation_group(root, generation: int):
-    """Return the parent group shared by outputs of one iteration."""
-    name = f"検討 第{generation}世代"
-    for child in root.children():
-        if child.name() == name and hasattr(child, "addLayer"):
-            return child
-    return root.insertGroup(0, name)

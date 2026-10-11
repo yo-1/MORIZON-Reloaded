@@ -17,7 +17,7 @@ from .constants import OUTPUT_ZONING, OUTPUT_AGGREGATE
 from .utils import is_tmpdir_valid
 from .diag_log import log, log_exception, processing_active
 from .progress_dialog import ProgressDialog
-from .result_layers import generation_group, result_generation
+from .result_layers import result_generation, result_layer_name
 
 
 class ForestZoningMainDialogAggregate:
@@ -435,23 +435,18 @@ class ForestZoningMainDialogAggregate:
         """
         処理結果をプロジェクトに追加
         """
-        project = QgsProject.instance()
-        root = project.layerTreeRoot()
-        # 更新前の集計結果も、実ファイル名から世代を表示して移す。
-        for layer in project.mapLayers().values():
-            generation = result_generation(
-                layer.source(), OUTPUT_AGGREGATE["FILE_NAME"]
-            )
-            if generation is None:
-                continue
-            node = root.findLayer(layer.id())
-            if node is not None and node.parent() == root:
-                generation_group(root, generation).addChildNode(node.clone())
-                root.removeChildNode(node)
+        # 更新前の集計結果も、実ファイル名から世代を表示する。
+        for layer in QgsProject.instance().mapLayers().values():
+            if (layer.name() == OUTPUT_AGGREGATE["DISPLAY_NAME"]
+                    and result_generation(
+                        layer.source(), OUTPUT_AGGREGATE["FILE_NAME"]
+                    ) is not None):
+                layer.setName(result_layer_name(
+                    OUTPUT_AGGREGATE["DISPLAY_NAME"], layer.source(),
+                    OUTPUT_AGGREGATE["FILE_NAME"],
+                ))
         for rlayer in rlayers_dict.values():
             # プロジェクトのレイヤー一覧の一番上にレイヤーを追加
-            project.addMapLayer(rlayer, False)
-            generation = result_generation(
-                rlayer.source(), OUTPUT_AGGREGATE["FILE_NAME"]
-            ) or 1
-            generation_group(root, generation).insertLayer(0, rlayer)
+            QgsProject.instance().addMapLayer(rlayer, False)
+            root = QgsProject.instance().layerTreeRoot()
+            root.insertLayer(0, rlayer)
