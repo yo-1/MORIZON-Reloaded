@@ -1,12 +1,12 @@
 # QGIS 3.44 Windows 実機検証手順（MORIZON Reloaded）
 
-この手順はPR #12の修正版ZIPを検証するものです。**公開済みの2.3.1 ZIPとは内容が異なります。**
+この手順はPR #12のv2.3.2検証候補ZIPを検証するものです。公開済みの版はv2.3.1です。
 配布用ZIPと検証用ZIPを取り違えないよう、検証用ZIP内の`MANIFEST_SHA256.txt`と
 PowerShellの`Get-FileHash`でプラグインZIPのSHA-256を照合してください。
 
 ## 事前準備
 
-1. 検証用ZIPを展開します。QGISに指定するのは、その中の`plugin/MORIZON_Reloaded_QGIS344_v2.3.1.zip`です。検証用ZIP自体をQGISへ指定しないでください。
+1. 検証用ZIPを展開します。QGISに指定するのは、その中の`plugin/MORIZON_Reloaded_QGIS344_v2.3.2.zip`です。検証用ZIP自体をQGISへ指定しないでください。
 2. QGIS 3.44.xの**新しいユーザープロファイル**を作成し、そのプロファイルで起動します。既存のMORIZON 2.3.1と混在させないでください。
 3. QGISの「ヘルプ→QGISについて」で完全版番号を確認します。Processingツールボックスに`grass:r.watershed`または`grass7:r.watershed`があることを確認します。
 4. `synthetic/ZoningKit_SYNTH`を`C:\GIS_data\MORIZON_validate\ZoningKit_SYNTH`など、書込み可能なローカルフォルダにコピーします。`YOUSO`と`ZONING`は空の出力先です。
@@ -14,7 +14,7 @@ PowerShellの`Get-FileHash`でプラグインZIPのSHA-256を照合してくだ�
 PowerShellでのZIP確認例（実際の展開場所へ移動して実行）:
 
 ```powershell
-Get-FileHash .\plugin\MORIZON_Reloaded_QGIS344_v2.3.1.zip -Algorithm SHA256
+Get-FileHash .\plugin\MORIZON_Reloaded_QGIS344_v2.3.2.zip -Algorithm SHA256
 Get-Content .\MANIFEST_SHA256.txt
 ```
 

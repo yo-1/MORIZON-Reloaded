@@ -14,8 +14,8 @@ python scripts/build_plugin_zip.py
 その環境のPythonを使う。ZIPの版とパスを実際の候補に合わせる。
 
 ```bash
-python scripts/preflight_plugin_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip
-python scripts/check_qt6_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip
+python scripts/preflight_plugin_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.2.zip
+python scripts/check_qt6_zip.py dist/MORIZON_Reloaded_QGIS344_v2.3.2.zip
 ```
 
 ZIP構造・メタデータ・Python構文、Flake8、Banditの中高リスク、detect-secretsを確認する。
@@ -25,8 +25,8 @@ Qt6互換性チェックは公式サイトと同じ`ghcr.io/qgis/pyqgis4-checker
 Dockerで実行する。スクリプトはコンテナ内の走査対象48ファイルと指摘行数を確認する。
 公式サイトにアップロードした版の結果は別に確認する。
 2026-10-11時点のv2.3.1公開ZIPではFlake8が923件で、この検査は不合格となる。
-`codex/plugin-preflight`で再生成した同版名の試験ZIPはFlake8/Bandit/秘密情報が
-いずれも0件だが、公開済みZIPとは内容が異なる。Flake8は日本語文とQMLリテラルを
+`codex/plugin-preflight`のv2.3.2検証候補ZIPはFlake8/Bandit/秘密情報が
+いずれも0件。公開済みv2.3.1とは別バージョンである。Flake8は日本語文とQMLリテラルを
 保持するため行長上限160文字とし、3つのQMLテンプレートモジュールだけ行長規則を
 除外する。他の規則は維持する。正式な再公開には版更新とQGIS 3.44実機確認が必要。
 
