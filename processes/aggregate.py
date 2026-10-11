@@ -14,7 +14,6 @@ from ..utils import is_resampling_needed, get_tiff_info
 from . import raster_writer
 from . import raster_styler
 from ..constants import OUTPUT_AGGREGATE
-from ..result_layers import result_layer_name
 
 
 class ProcessingThread(QThread):
@@ -94,11 +93,7 @@ class ProcessingThread(QThread):
             # スタイルを適用する
             vlayer = QgsVectorLayer(
                 aggregate_filepath,
-                result_layer_name(
-                    OUTPUT_AGGREGATE["DISPLAY_NAME"],
-                    aggregate_filepath,
-                    OUTPUT_AGGREGATE["FILE_NAME"],
-                ),
+                OUTPUT_AGGREGATE["DISPLAY_NAME"],
             )
             qml_filepath = raster_styler.aggregate.write_qml(
                 self.output_path, self.style_threshold
