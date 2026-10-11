@@ -7,7 +7,7 @@
 - Windows QGIS 3.44でのv2.3.2実機確認: ユーザー提供画面でプラグイン管理画面のインストール版`2.3.2`とダイアログの`v2.3.2`表示を確認。保存済みプロジェクトからゾーニング図レイアウトを上書き作成し、レイアウト画面を閉じた後もMORIZON印刷タブが残ることを確認。続けてゾーン統計量レイアウトの上書き確認と表示を確認し、その間もMORIZON画面は表示された。したがって印刷タブを再起動せず2件を操作できるUI改善は合格。背景欄は`DEM_SYNTH`で、レイアウトの灰色の背景はそのラスター表示。v2.3.2での全計算工程と画素比較は未実施。
 - ローカル検査: `static_check.py`で48ファイルの構文と版番号2.3.2を確認。生成したv2.3.2プラグインZIPのpreflightはFlake8 0、Bandit 0、detect-secrets 0。Qt6公式互換検査器は48ファイル走査で指摘0。QGIS 3.40.6（Linux、オフスクリーン）で48モジュールを読み込み、30種類のQt/QGIS列挙値参照を解決した。これらはWindows実機確認の代替ではない。
 - QGIS公式サイトの検査（ユーザー提供画面、2026-10-11 15:08 JST）: v2.3.2ページでSecurity Scanが`All security checks passed!`、合格率100.0%、Passed 5、Info items 0、Warnings 0、Critical 0、Files scanned 228と表示された。Qt6 Check・Flake8・人による審査結果はこの画像では未確認。
-- 続く公式サイト画面ではプラグインID 6577のVersion 2.3.2ページにSecurity ScanとQt6 Checkの緑のチェックが表示された。セキュリティ詳細画面ではTotal Issues 0、Bandit 48ファイル・指摘0、Secrets Detection指摘0、Flake8 48ファイル・指摘0、File Permissions指摘0、Suspicious Files指摘0を確認。Qt6タブ内の指摘件数、公開・人による審査状態はこれらの画像だけでは未確認。
+- 続く公式サイト画面ではプラグインID 6577のVersion 2.3.2ページにSecurity ScanとQt6 Checkの緑のチェックが表示された。セキュリティ詳細画面ではTotal Issues 0、Bandit 48ファイル・指摘0、Secrets Detection指摘0、Flake8 48ファイル・指摘0、File Permissions指摘0、Suspicious Files指摘0を確認。Qt6 Checkタブには`This version is Qt6 compatible`および`No issues found.`と表示された（2026-10-11 15:08 JST）。公開・人による審査状態はこれらの画像だけでは未確認。
 
 ## 2026-10-11 JST / PR #12 修正版ZIPのQGIS 3.44 Windows実機検証（進行中）
 
