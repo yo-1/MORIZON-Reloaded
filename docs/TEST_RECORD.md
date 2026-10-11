@@ -1,5 +1,14 @@
 # 試験記録
 
+## 2026-10-11 JST / PR #12 修正版ZIPのQGIS 3.44 Windows実機検証（進行中）
+
+- 環境: ユーザーのQGIS 3.44 Windows、TestFlightプロファイル。ZIPは`codex/plugin-preflight`の修正版v2.3.1。完全版番号・GDAL版は未収集。
+- 入力: 同梱の`ZoningKit_SYNTH`、DEM 80×60、EPSG:6677。出力は新規の`MORIZON_test_20261011`。ユーザー提供のQGIS画面・MORIZONログで確認。
+- 完了: ZIPから起動、6要素計算（GRASS `r.neighbors`・`r.watershed`を含む）、スコアリング、ゾーニング（profit=6、risk=5、`zoning.tif` Float32 80×60）、流域集計（1ポリゴン、`count_1`～`count_4`）、ゾーニング図とゾーン統計量の印刷レイアウト作成。2件のレイアウトがQGISレイアウトマネージャーに登録された。
+- 再実行: 同名の要素グループがある状態では要素計算の実行ボタンが無効。該当グループをQGISから削除後、SHCの単独再計算が完了し、Windowsロック警告とスコアリング入力の自動修正を確認。要素グループをすべて削除した後の6要素再計算も完了し、使用中の保全対象流域を`Y_13_hozen_v2.tif`に保存。スコアリング再実行、`zoning_v2.tif`へのゾーニング再実行、`aggregate_v2.shp`への集計再実行が完了した。
+- 観測事項: 合成データの保全対象流域は全画素が1で、Quantile分類ができずQML出力失敗の可能性を警告した。計算自体は完了。集計タブのゾーニング入力が一度`OpenStreetMap`を指したため、実行前にユーザーが`ゾーニング図`へ修正した。原因は未確認。
+- 未確認: 出力のスナップショット、旧出力との画素比較、`Zoningkit_SAMPLE`の記録済み数値基準との比較、日本語パス拒否・半角スペースパスの今回の版での再試験、QGIS/GDAL/GRASSの完全版番号。
+
 ## 2026-10-11 JST / 公式Qt6検査器のローカル再現
 
 - 環境: QGIS Plugins Websiteの`qt6-validator`が使用する`ghcr.io/qgis/pyqgis4-checker:main-ubuntu`（digest `sha256:c96df111845eb0c86ad56364fb792d35fa6931e01d3d629d2b1bc6388ed43ece`）。サイト側コード参照コミット`2e73cac`。
