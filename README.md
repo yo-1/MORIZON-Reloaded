@@ -108,9 +108,9 @@ ZIP内部のプラグインフォルダ名は、原版との互換性維持の�
 
 ## 関連情報
 
-- 林野庁「もりぞん」公式配布ページ: https://www.geospatial.jp/ckan/dataset/rinya-morizon-dateset
-- 森林ゾーニング支援ツール「もりぞん」操作マニュアル: https://www.rinya.maff.go.jp/j/seibi/sagyoudo/attach/pdf/romou-19.pdf
-- G空間情報センター 森林ゾーニング支援ツール「もりぞん」: https://www.geospatial.jp/ckan/dataset/rinya-morizon-dateset
+- 林野庁「もりぞん」紹介ページ: https://www.rinya.maff.go.jp/j/seibi/sagyoudo/romou.html
+- 森林ゾーニング支援ツール「もりぞん」操作マニュアル「森林ゾーニングの手引き」（R8.3改訂版）: https://www.geospatial.jp/ckan/dataset/rinya-morizon-dateset/resource/a4d0ae9c-36e8-48c6-8474-3d1d4312e061
+- 公式配布ページ G空間情報センター 森林ゾーニング支援ツール「もりぞん」: https://www.geospatial.jp/ckan/dataset/rinya-morizon-dateset
 - MORIZON Reloadedリポジトリ: https://github.com/yo-1/MORIZON-Reloaded
 - 不具合報告: https://github.com/yo-1/MORIZON-Reloaded/issues
 - 変更履歴: `CHANGELOG.md`
