@@ -84,6 +84,9 @@ ZIP内部のプラグインフォルダ名は、原版との互換性維持の�
 
 これらは実装基盤の互換性対応であり、森林ゾーニング手法を新たに設計するものではありません。
 
+操作方法は「森林ゾーニング支援ツール「もりぞん」操作マニュアル」に準拠しています。
+https://www.rinya.maff.go.jp/j/seibi/sagyoudo/attach/pdf/romou-19.pdf
+
 ## ライセンス
 
 本ソフトウェアはGNU General Public License version 3（GPL v3）の条件で利用、改変および再頒布できます。詳細は`LICENSE`を参照してください。
