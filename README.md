@@ -58,7 +58,8 @@ MORIZON Reloadedは、原版を基礎として和田陽一が個人的な技術�
 1. 配布ZIPを展開しないで保存します。
 2. QGISを起動します。
 3. **プラグイン → プラグインの管理とインストール → ZIPからインストール**を開きます。
-4. 配布ZIPを指定してインストールします。
+4. 配布ZIPを指定してインストールします
+5. サンプルデータ・座標系毎データは、G空間情報センターよりダウンロードしてください。
 
 ZIP内部のプラグインフォルダ名は、原版との互換性維持のため`MORIZON`です。
 
@@ -84,8 +85,7 @@ ZIP内部のプラグインフォルダ名は、原版との互換性維持の�
 
 これらは実装基盤の互換性対応であり、森林ゾーニング手法を新たに設計するものではありません。
 
-操作方法は「森林ゾーニング支援ツール「もりぞん」操作マニュアル」に準拠しています。
-https://www.rinya.maff.go.jp/j/seibi/sagyoudo/attach/pdf/romou-19.pdf
+操作方法は、林野庁が公開する「もりぞん」操作マニュアルに準拠しています。
 
 ## ライセンス
 
@@ -110,6 +110,7 @@ https://www.rinya.maff.go.jp/j/seibi/sagyoudo/attach/pdf/romou-19.pdf
 
 - 林野庁「もりぞん」公式配布ページ: https://www.geospatial.jp/ckan/dataset/rinya-morizon-dateset
 - 森林ゾーニング支援ツール「もりぞん」操作マニュアル: https://www.rinya.maff.go.jp/j/seibi/sagyoudo/attach/pdf/romou-19.pdf
+- G空間情報センター 森林ゾーニング支援ツール「もりぞん」: https://www.geospatial.jp/ckan/dataset/rinya-morizon-dateset
 - MORIZON Reloadedリポジトリ: https://github.com/yo-1/MORIZON-Reloaded
 - 不具合報告: https://github.com/yo-1/MORIZON-Reloaded/issues
 - 変更履歴: `CHANGELOG.md`
