@@ -109,6 +109,7 @@ https://www.rinya.maff.go.jp/j/seibi/sagyoudo/attach/pdf/romou-19.pdf
 ## 関連情報
 
 - 林野庁「もりぞん」公式配布ページ: https://www.geospatial.jp/ckan/dataset/rinya-morizon-dateset
+- 森林ゾーニング支援ツール「もりぞん」操作マニュアル: https://www.rinya.maff.go.jp/j/seibi/sagyoudo/attach/pdf/romou-19.pdf
 - MORIZON Reloadedリポジトリ: https://github.com/yo-1/MORIZON-Reloaded
 - 不具合報告: https://github.com/yo-1/MORIZON-Reloaded/issues
 - 変更履歴: `CHANGELOG.md`
