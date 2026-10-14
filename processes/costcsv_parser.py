@@ -106,6 +106,27 @@ class CostcsvParser:
                 f"必要26行以上、実際={len(rows)}"
             )
 
+        # 元の固定行・列の解釈を変えず、不完全な表を行番号付きで拒否する。
+        # 列不足を後段のIndexErrorにせず、利用者がCSVを直せるようにする。
+        expected_columns = len(rows[0])
+        if expected_columns < 3:
+            raise RuntimeError(
+                "作業システムCSVの1行目に必要な列がありません。"
+                "カンマ区切りのCSVを指定してください。"
+            )
+        for row_number, row in enumerate(rows[:11], start=1):
+            if len(row) < expected_columns:
+                raise RuntimeError(
+                    f"作業システムCSVの{row_number}行目の列数が不足しています。"
+                    f"必要{expected_columns}列以上、実際={len(row)}"
+                )
+        for row_number, row in enumerate(rows[15:26], start=16):
+            if len(row) < 2:
+                raise RuntimeError(
+                    f"作業システムCSVの{row_number}行目の列数が不足しています。"
+                    "コードと名称の2列が必要です。"
+                )
+
         # 上表と下表を取り出す（元MORIZON仕様）
         upper_rows = rows[0:11]
         lower_rows = rows[15:26]
