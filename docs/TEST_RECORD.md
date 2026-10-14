@@ -492,3 +492,7 @@ CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted ref
 - 実diag_log.pyをQGIS/Qt stubで実行: idle→Infoと累計、可視→Warning、非可視かつ処理中→Warning、計測区間重複→Warning、processing_activeネスト中の例外でカウンタ復帰、計5ケース成功。
 - forest_zoning_main_dialog_scoring.pyから実init_scoring_rlayer_statsメソッドをAST抽出しQt側依存のみmock化: 同一レイヤーで手入力保持、force=Trueで初期化、レイヤー変更で再初期化、計3ケース成功。
 - 判定: 静的検査・ZIP検査・疑似環境ロジック8ケース合格。Windows実機のテストFや処理中Warning分岐の未確認を解消する証拠ではない。
+
+### CSV回帰試験（2026-10-14）
+
+Linux/Python 3.12.14でscripts/test_costcsv_parser.pyの6試験合格。CP932、UTF-8 BOM正常CSVは60個のスコア条件・11名称。両encodingのExpressionと名称一致。行不足、セミコロン区切り、上表列不足、下表名称不足をRuntimeErrorで拒否。追加前後の正常CSVのExpressionと名称も一致確認済み。静的検査48ファイル・ZIP再生成成功。Windows CIにも試験を接続。QGIS画面上での拒否案内と公開2.3.2に対する検証は未実施。
