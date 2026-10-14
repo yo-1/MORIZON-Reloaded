@@ -480,3 +480,15 @@ CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted ref
 - 判定: 合格 / 不合格 / 保留
 - ログ・画像・比較表:
 - 備考:
+
+## Codex独立静的・疑似環境監査（2026-10-14）
+
+- 対象: main `c266d73ec736d9d56d8d9d519fc338f60a24171c`、metadata 2.3.1。公開2.3.2のZIPは未取得。
+- 環境: Linux / Python 3.12.14、QGIS実機なし。
+- 取得: Gitツリー96 blobをSHA-1で一致確認。CP932の作業システムCSVは取得時の文字コード変換を逆変換し、元blob SHA一致を確認した。
+- `python scripts/static_check.py`: 成功、48 plugin Python files compiled。
+- `python scripts/build_plugin_zip.py`: 成功、66ファイル、MORIZON単独root、CRC異常なし。test_data/docs/cache混入なし。
+- ローカル監査ZIP SHA256: `712ebae0921de65b6b1115798d8cea3656b7d26e17edfcbd1e70cda399e64065`。再ビルドの時刻等でZIPハッシュは変化し得る。公開ZIPとの同一性は主張しない。
+- 実diag_log.pyをQGIS/Qt stubで実行: idle→Infoと累計、可視→Warning、非可視かつ処理中→Warning、計測区間重複→Warning、processing_activeネスト中の例外でカウンタ復帰、計5ケース成功。
+- forest_zoning_main_dialog_scoring.pyから実init_scoring_rlayer_statsメソッドをAST抽出しQt側依存のみmock化: 同一レイヤーで手入力保持、force=Trueで初期化、レイヤー変更で再初期化、計3ケース成功。
+- 判定: 静的検査・ZIP検査・疑似環境ロジック8ケース合格。Windows実機のテストFや処理中Warning分岐の未確認を解消する証拠ではない。
