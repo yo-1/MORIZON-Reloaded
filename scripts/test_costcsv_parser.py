@@ -3,6 +3,8 @@
 import importlib.util
 from pathlib import Path
 import tempfile
+import sys
+sys.dont_write_bytecode = True
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
