@@ -27,6 +27,8 @@ jobs:
           "Runner: $env:ImageOS / $env:ImageVersion" >> $env:GITHUB_STEP_SUMMARY
       - name: Static checks
         run: python scripts/static_check.py
+      - name: CSV regression tests
+        run: python scripts/test_costcsv_parser.py
       - name: Build install ZIP
         run: python scripts/build_plugin_zip.py
       - name: Verify ZIP and record SHA256
