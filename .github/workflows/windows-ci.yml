@@ -1,0 +1,47 @@
+name: Windows plugin validation
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: windows-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate-and-package:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Record source and environment
+        shell: pwsh
+        run: |
+          git rev-parse HEAD
+          python --version
+          "Source: $env:GITHUB_SHA" >> $env:GITHUB_STEP_SUMMARY
+          "Runner: $env:ImageOS / $env:ImageVersion" >> $env:GITHUB_STEP_SUMMARY
+      - name: Static checks
+        run: python scripts/static_check.py
+      - name: Build install ZIP
+        run: python scripts/build_plugin_zip.py
+      - name: Verify ZIP and record SHA256
+        shell: pwsh
+        run: |
+          python -c "from pathlib import Path; from zipfile import ZipFile; p=list(Path('dist').glob('*.zip')); assert len(p)==1; z=ZipFile(p[0]); assert z.testzip() is None; n=z.namelist(); assert {s.split('/')[0] for s in n}=={'MORIZON'}; assert not any('/test_data/' in s or '/__pycache__/' in s or '/docs/' in s for s in n); print('ZIP validation passed:',len(n),'entries')"
+          Get-FileHash dist/*.zip -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $([IO.Path]::GetFileName($_.Path))" } | Set-Content dist/SHA256SUMS.txt
+          Get-Content dist/SHA256SUMS.txt >> $env:GITHUB_STEP_SUMMARY
+          $env:GITHUB_SHA | Set-Content dist/SOURCE_SHA.txt
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: MORIZON-Windows-package-${{ github.run_number }}
+          path: |
+            dist/*.zip
+            dist/SHA256SUMS.txt
+            dist/SOURCE_SHA.txt
+          if-no-files-found: error
+          retention-days: 14
