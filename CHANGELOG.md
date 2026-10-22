@@ -8,6 +8,44 @@ entry are the internal diagnostic-build history that led up to the
 none of those builds were released independently; `2.3.0` supersedes all
 of them.
 
+## 2.3.3 — integration candidate (version number not yet finalized, not released anywhere)
+
+Merges the `2.3.2` validation-candidate line with changes made on `main`
+after `2.3.2` branched off. The official QGIS plugin repository's latest
+published version remains `2.3.2`; this entry documents a candidate for
+the next release, pending a version-number decision and on-device
+verification.
+
+From `2.3.2` (Qt6/quality line, see below for details):
+- Qt6 enum compatibility (PyQt5-style abbreviated enum references
+  replaced with fully-qualified forms across the plugin, plus an
+  `exec_()` → `exec()` rename).
+- Flake8 and Bandit findings resolved in the candidate ZIP.
+- Print-layout dialog fix (MORIZON dialog stays available after creating
+  one layout, so a second layout can be created without reopening the
+  plugin).
+- ZIP preflight/validation scripts and a GitHub Actions workflow
+  (`plugin-preflight.yml`) added for pre-upload checks.
+
+From `main` (work-system CSV robustness, made independently after `2.3.2`
+branched off):
+- Work-system CSV validation rejects incomplete tables (missing rows or
+  columns) with row-numbered error messages, instead of surfacing a
+  generic `IndexError` later in processing.
+- Six CSV regression tests added; Windows CI restored.
+
+No analysis formulas, thresholds, NoData rules, CRS treatment, or output
+names were changed by this merge itself — see the `2.3.2` and `main`-side
+entries above for what each contributing change actually does.
+
+Known gaps at merge time (see `docs/OPEN_ISSUES.md` O-06/O-26 for detail):
+- The 2.3.2-side Qt6/Flake8/Bandit "all clear" results come from the
+  `codex/plugin-preflight` branch's own records; the official QGIS
+  repository's Qt6 Check / security scan pass for `2.3.2` has not been
+  independently re-verified against this merged tree.
+- No QGIS 3.44 Windows on-device run of the merged tree has been
+  performed yet.
+
 ## 2.3.2 — validation candidate (not yet published)
 
 - Applied QGIS 3.44 compatibility and stability fixes validated on the
