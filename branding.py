@@ -13,7 +13,6 @@ from qgis.PyQt.QtCore import Qt
 from qgis.PyQt.QtGui import QIcon, QPixmap
 from qgis.PyQt.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
 
-
 DISPLAY_NAME = "MORIZON Reloaded"
 TAGLINE = "FOREST ZONING."
 
@@ -36,7 +35,8 @@ def _read_version_from_metadata() -> str:
         return "unknown"
 
 
-BUILD_LABEL = f"UNOFFICIAL REVIVAL BUILD  /  QGIS 3.44  /  v{_read_version_from_metadata()}"
+BUILD_LABEL = f"UNOFFICIAL REVIVAL BUILD  /  QGIS 3.44  /  v{
+    _read_version_from_metadata()}"
 
 
 def asset_path(filename):
@@ -73,7 +73,10 @@ def _insert_header(dialog):
     logo.setFixedSize(58, 58)
     logo.setPixmap(
         QPixmap(asset_path("icon.png")).scaled(
-            58, 58, Qt.KeepAspectRatio, Qt.SmoothTransformation
+            58,
+            58,
+            Qt.AspectRatioMode.KeepAspectRatio,
+            Qt.TransformationMode.SmoothTransformation,
         )
     )
     layout.addWidget(logo)
@@ -94,7 +97,7 @@ def _insert_header(dialog):
 
     status = QLabel("SYSTEM\nRELOADED", header)
     status.setObjectName("reloadedStatus")
-    status.setAlignment(Qt.AlignCenter)
+    status.setAlignment(Qt.AlignmentFlag.AlignCenter)
     layout.addWidget(status)
     root_layout.insertWidget(0, header)
 

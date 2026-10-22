@@ -4,6 +4,8 @@
 # Licensed under the GNU General Public License version 3.
 # SPDX-License-Identifier: GPL-3.0-only
 
+
 def classFactory(iface):
     from .forest_zoning import ForestZoning
+
     return ForestZoning(iface)

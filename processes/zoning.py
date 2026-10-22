@@ -8,15 +8,12 @@ import os
 import json
 import traceback
 
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtCore import QThread, pyqtSignal
+from qgis.core import Qgis, QgsRasterLayer
 
 from . import raster_writer
 from . import raster_styler
-from ..diag_log import log, timed
+from ..diag_log import log, log_exception, timed
 from ..constants import OUTPUT_ZONING, OUTPUT_ZONING_THRESHOLDS_JSON
 
 
@@ -58,8 +55,10 @@ class ProcessingThread(QThread):
 
             self.addProgress.emit(1)
             self.postMessage.emit("ゾーニングを計算中")
-            log("ゾーニングを開始: "
-                f"thresholds={self.input_thresholds_dict}, output_dir={self.output_dir}")
+            log(
+                "ゾーニングを開始: "
+                f"thresholds={self.input_thresholds_dict}, output_dir={self.output_dir}"
+            )
 
             with timed("ゾーニングラスターの生成（QgsRasterCalculator）"):
                 zoning_filepath = raster_writer.zoning.generate(
@@ -79,14 +78,18 @@ class ProcessingThread(QThread):
                 )
 
             # ラスターレイヤーのインスタンスを生成しスタイル適用
-            rlayer = QgsRasterLayer(zoning_filepath, OUTPUT_ZONING["DISPLAY_NAME"])
+            rlayer = QgsRasterLayer(
+                zoning_filepath, OUTPUT_ZONING["DISPLAY_NAME"]
+            )
             try:
                 # 診断用: 集計時の「入力ラスタは浮動小数点型」警告の原因確認
-                log(f"ゾーニング出力: {os.path.basename(zoning_filepath)}, "
+                log(
+                    f"ゾーニング出力: {os.path.basename(zoning_filepath)}, "
                     f"dataType={rlayer.dataProvider().dataType(1)}, "
-                    f"size={rlayer.width()}x{rlayer.height()}")
-            except Exception:
-                pass
+                    f"size={rlayer.width()}x{rlayer.height()}"
+                )
+            except Exception as exc:
+                log_exception("run", exc)
             qml_filepath = raster_styler.zoning.write_qml(self.output_dir)
             rlayer.loadNamedStyle(qml_filepath)
 
@@ -94,7 +97,10 @@ class ProcessingThread(QThread):
 
         except Exception as e:
             # エラーはまとめてキャッチして呼び出し元に報告・処理を中断
-            log(f"ゾーニングが失敗: {e}\n{traceback.format_exc()}", Qgis.Warning)
+            log(
+                f"ゾーニングが失敗: {e}\n{traceback.format_exc()}",
+                Qgis.MessageLevel.Warning,
+            )
             self.processFailed.emit(str(e))
             self.abort_flag = True
             self.processFinished.emit(output_rlayers_dict)
@@ -102,7 +108,7 @@ class ProcessingThread(QThread):
 
         # zoning_vN.tif の場合、対応する thresholds_vN.json を保存する。
         zoning_stem = os.path.splitext(os.path.basename(zoning_filepath))[0]
-        suffix = zoning_stem[len(OUTPUT_ZONING["FILE_NAME"]):]
+        suffix = zoning_stem[len(OUTPUT_ZONING["FILE_NAME"]) :]
         thresholds_name = (
             OUTPUT_ZONING_THRESHOLDS_JSON["FILE_NAME"]
             + suffix
@@ -113,7 +119,9 @@ class ProcessingThread(QThread):
             os.path.join(self.output_dir, thresholds_name),
             mode="wt",
         ) as f:
-            json.dump(self.input_thresholds_dict, f, ensure_ascii=False, indent=2)
+            json.dump(
+                self.input_thresholds_dict, f, ensure_ascii=False, indent=2
+            )
 
         log("ゾーニングの計算が完了")
         self.postMessage.emit("終了処理中")

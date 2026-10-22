@@ -8,6 +8,16 @@ entry are the internal diagnostic-build history that led up to the
 none of those builds were released independently; `2.3.0` supersedes all
 of them.
 
+## 2.3.2 — validation candidate (not yet published)
+
+- Applied QGIS 3.44 compatibility and stability fixes validated on the
+  synthetic Windows workflow; see `docs/TEST_RECORD.md` for observed scope.
+- Resolved preflight Flake8, Bandit, and Qt6 findings in the candidate ZIP.
+- Kept the MORIZON dialog available after opening a print layout so the
+  second layout can be created without reopening the plugin. This UI change
+  still requires a Windows QGIS check.
+- Preserved the original analysis formulas, thresholds, and zone meanings.
+
 ## 2.3.1 — 2026-10-09 (packaging fix)
 
 No processing code changed. Fixed two issues found while submitting

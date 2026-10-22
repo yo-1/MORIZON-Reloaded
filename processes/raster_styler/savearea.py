@@ -9,15 +9,16 @@ import os
 from ...constants import (
     OUTPUT_SAVEAREA,
     RAWDATA_COLORS_SAVEAREA,
-    SCORING_COLORS_SAVEAREA
+    SCORING_COLORS_SAVEAREA,
 )
 
 from ...settings_manager import SettingsManager
 
 
 def write_rawdata_qml(output_dir: str) -> str:
-    output_filepath = os.path.join(output_dir,
-                                   OUTPUT_SAVEAREA["FILE_NAME"] + "_raw.qml")
+    output_filepath = os.path.join(
+        output_dir, OUTPUT_SAVEAREA["FILE_NAME"] + "_raw.qml"
+    )
     with open(output_filepath, mode="w") as f:
         f.write(f"""
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
@@ -73,8 +74,9 @@ def write_scoring_qml(output_dir: str) -> str:
     settings_manager = SettingsManager()
     scores_savearea = settings_manager.get_setting("scores_savearea")
 
-    output_filepath = os.path.join(output_dir,
-                                   OUTPUT_SAVEAREA["FILE_NAME"] + "_score.qml")
+    output_filepath = os.path.join(
+        output_dir, OUTPUT_SAVEAREA["FILE_NAME"] + "_score.qml"
+    )
     with open(output_filepath, mode="w") as f:
         f.write(f"""
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>

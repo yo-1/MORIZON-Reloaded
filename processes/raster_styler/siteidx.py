@@ -6,17 +6,18 @@
 
 import tempfile
 
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.PyQt.QtGui import QPainter
+from qgis.core import (
+    QgsContrastEnhancement,
+    QgsRasterLayer,
+    QgsRasterMinMaxOrigin,
+)
 
 from ...constants import (
     SCORING_COLORS_SITEIDX,
     RAWDATA_COLORS_SITEIDX_SUGI,
     RAWDATA_COLORS_SITEIDX_HINOKI,
-    RAWDATA_COLORS_SITEIDX_KARAMATSU
+    RAWDATA_COLORS_SITEIDX_KARAMATSU,
 )
 
 from .utils import (
@@ -24,7 +25,7 @@ from .utils import (
     hex_to_rgb,
     replace_colorramp_labels,
     get_colorramp_label_prefixes,
-    round_label_precision
+    round_label_precision,
 )
 
 
@@ -45,47 +46,54 @@ def write_rawdata_qml(siteidx_filepath: str, wood_type="sugi") -> str:
     colors_dict = {
         "sugi": RAWDATA_COLORS_SITEIDX_SUGI,
         "hinoki": RAWDATA_COLORS_SITEIDX_HINOKI,
-        "karamatsu": RAWDATA_COLORS_SITEIDX_KARAMATSU
+        "karamatsu": RAWDATA_COLORS_SITEIDX_KARAMATSU,
     }
     if colors_dict.get(wood_type) is None:
         raise ValueError
 
     colors = list(map(hex_to_rgb, colors_dict[wood_type]))
 
-    rlayer = QgsRasterLayer(siteidx_filepath, '')
+    rlayer = QgsRasterLayer(siteidx_filepath, "")
     renderer = get_quantile_renderer(rlayer, colors)
     renderer.setOpacity(0.8)
     rlayer.setRenderer(renderer)
-    rlayer.setBlendMode(QPainter.CompositionMode_Multiply)
-    rlayer.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum,
-                                  QgsRasterMinMaxOrigin.MinMax)
+    rlayer.setBlendMode(QPainter.CompositionMode.CompositionMode_Multiply)
+    rlayer.setContrastEnhancement(
+        QgsContrastEnhancement.ContrastEnhancementAlgorithm.StretchToMinimumMaximum,
+        QgsRasterMinMaxOrigin.Limits.MinMax,
+    )
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.qml') as temp_qml:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".qml") as temp_qml:
         rlayer.saveNamedStyle(temp_qml.name)
-        output_filepath = round_label_precision(temp_qml.name,
-                                                siteidx_filepath.replace('.tif', '_raw.qml'))
+        output_filepath = round_label_precision(
+            temp_qml.name, siteidx_filepath.replace(".tif", "_raw.qml")
+        )
     return output_filepath
 
 
 def write_scoring_qml(siteidx_filepath: str) -> str:
-    rlayer = QgsRasterLayer(siteidx_filepath, '')
+    rlayer = QgsRasterLayer(siteidx_filepath, "")
     colors = list(map(hex_to_rgb, SCORING_COLORS_SITEIDX))
     renderer = get_quantile_renderer(rlayer, colors)
     renderer.setOpacity(0.8)
     rlayer.setRenderer(renderer)
-    rlayer.setBlendMode(QPainter.CompositionMode_Multiply)
-    rlayer.setContrastEnhancement(QgsContrastEnhancement.StretchToMinimumMaximum,
-                                  QgsRasterMinMaxOrigin.MinMax)
+    rlayer.setBlendMode(QPainter.CompositionMode.CompositionMode_Multiply)
+    rlayer.setContrastEnhancement(
+        QgsContrastEnhancement.ContrastEnhancementAlgorithm.StretchToMinimumMaximum,
+        QgsRasterMinMaxOrigin.Limits.MinMax,
+    )
 
     # 等量区分QML -> ラベル置換 -> 桁丸目 -> 出力
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.qml') as temp_qml:
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".qml") as temp_qml:
         rlayer.saveNamedStyle(temp_qml.name)
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.qml') as temp_qml_value_rounded:
-            round_label_precision(temp_qml.name,
-                                  temp_qml_value_rounded.name)
-            output_filepath = replace_colorramp_labels(temp_qml_value_rounded.name,
-                                                       siteidx_filepath.replace(
-                                                           '.tif', '_score.qml'),
-                                                       labels=get_colorramp_label_prefixes("siteidx"))
+        with tempfile.NamedTemporaryFile(
+            delete=False, suffix=".qml"
+        ) as temp_qml_value_rounded:
+            round_label_precision(temp_qml.name, temp_qml_value_rounded.name)
+            output_filepath = replace_colorramp_labels(
+                temp_qml_value_rounded.name,
+                siteidx_filepath.replace(".tif", "_score.qml"),
+                labels=get_colorramp_label_prefixes("siteidx"),
+            )
 
     return output_filepath

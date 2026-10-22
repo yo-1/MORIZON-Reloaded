@@ -83,17 +83,15 @@ def _gaussian_smooth(arr, valid, sigma=3.0, radius=12):
         xs = np.arange(-rx, rx + 1, dtype=np.float64)
 
         # 2D Gaussian exp(-(x^2+y^2)/(2*sigma^2))
-        kernel_x = np.exp(
-            -(xs * xs + float(dy * dy)) / (2.0 * sigma * sigma)
-        )
+        kernel_x = np.exp(-(xs * xs + float(dy * dy)) / (2.0 * sigma * sigma))
 
         row_num = _conv_axis_same(base_data, kernel_x, axis=1)
         row_den = _conv_axis_same(base_weight, kernel_x, axis=1)
 
         if dy < 0:
             # source y -> destination y-dy
-            numerator[-dy:, :] += row_num[:h + dy, :]
-            denominator[-dy:, :] += row_den[:h + dy, :]
+            numerator[-dy:, :] += row_num[: h + dy, :]
+            denominator[-dy:, :] += row_den[: h + dy, :]
         elif dy > 0:
             numerator[:-dy, :] += row_num[dy:, :]
             denominator[:-dy, :] += row_den[dy:, :]
@@ -120,22 +118,26 @@ def _plan_curvature_zevenbergen(smoothed, valid, cellsize):
     z = smoothed
     out = np.full(z.shape, np.nan, dtype=np.float64)
 
-    c  = z[1:-1, 1:-1]
-    n  = z[:-2,  1:-1]
-    s_ = z[2:,   1:-1]
-    w  = z[1:-1, :-2]
-    e  = z[1:-1, 2:]
-    nw = z[:-2,  :-2]
-    ne = z[:-2,  2:]
-    sw = z[2:,   :-2]
-    se = z[2:,   2:]
+    c = z[1:-1, 1:-1]
+    n = z[:-2, 1:-1]
+    s_ = z[2:, 1:-1]
+    w = z[1:-1, :-2]
+    e = z[1:-1, 2:]
+    nw = z[:-2, :-2]
+    ne = z[:-2, 2:]
+    sw = z[2:, :-2]
+    se = z[2:, 2:]
 
     v = (
-        valid[1:-1, 1:-1] &
-        valid[:-2, 1:-1] & valid[2:, 1:-1] &
-        valid[1:-1, :-2] & valid[1:-1, 2:] &
-        valid[:-2, :-2] & valid[:-2, 2:] &
-        valid[2:, :-2] & valid[2:, 2:]
+        valid[1:-1, 1:-1]
+        & valid[:-2, 1:-1]
+        & valid[2:, 1:-1]
+        & valid[1:-1, :-2]
+        & valid[1:-1, 2:]
+        & valid[:-2, :-2]
+        & valid[:-2, 2:]
+        & valid[2:, :-2]
+        & valid[2:, 2:]
     )
 
     cellarea = cellsize * cellsize
@@ -172,7 +174,7 @@ def _horizontal_sum(arr, radius):
     cs = np.cumsum(padded, axis=1, dtype=np.float64)
     cs = np.pad(cs, ((0, 0), (1, 0)), mode="constant")
     width = arr.shape[1]
-    return cs[:, 2 * radius + 1:2 * radius + 1 + width] - cs[:, :width]
+    return cs[:, 2 * radius + 1 : 2 * radius + 1 + width] - cs[:, :width]
 
 
 def _circular_std(arr, valid, size):
@@ -184,7 +186,9 @@ def _circular_std(arr, valid, size):
     size=49なら半径24セル。
     """
     if size < 3 or size % 2 == 0:
-        raise RuntimeError(f"SHC計算範囲は3以上の奇数である必要があります: {size}")
+        raise RuntimeError(
+            f"SHC計算範囲は3以上の奇数である必要があります: {size}"
+        )
 
     radius = (size - 1) // 2
     values = np.where(valid, arr, 0.0)
@@ -203,9 +207,9 @@ def _circular_std(arr, valid, size):
         hc = _horizontal_sum(weights, rx)
 
         if dy < 0:
-            total[-dy:, :] += hs[:arr.shape[0] + dy, :]
-            total2[-dy:, :] += hs2[:arr.shape[0] + dy, :]
-            count[-dy:, :] += hc[:arr.shape[0] + dy, :]
+            total[-dy:, :] += hs[: arr.shape[0] + dy, :]
+            total2[-dy:, :] += hs2[: arr.shape[0] + dy, :]
+            count[-dy:, :] += hc[: arr.shape[0] + dy, :]
         elif dy > 0:
             total[:-dy, :] += hs[dy:, :]
             total2[:-dy, :] += hs2[dy:, :]
@@ -237,7 +241,6 @@ def _write_like(reference_path, output_path, arr, valid):
     # 同名ファイルを削除・上書きできない場合がある。
     # 解析を中断させず、ロック時だけ _v2, _v3 ... の世代ファイルへ退避する。
     # スコアリング側の自動選択は世代サフィックスを認識し、最新版を優先する。
-    requested_output_path = output_path
     if os.path.exists(output_path):
         try:
             os.remove(output_path)
@@ -262,11 +265,17 @@ def _write_like(reference_path, output_path, arr, valid):
 
     drv = gdal.GetDriverByName("GTiff")
     out = drv.Create(
-        output_path, ref.RasterXSize, ref.RasterYSize, 1, gdal.GDT_Float32,
-        options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"]
+        output_path,
+        ref.RasterXSize,
+        ref.RasterYSize,
+        1,
+        gdal.GDT_Float32,
+        options=["TILED=YES", "COMPRESS=LZW", "BIGTIFF=IF_SAFER"],
     )
     if out is None:
-        raise RuntimeError(f"地形の複雑さラスターを作成できません: {output_path}")
+        raise RuntimeError(
+            f"地形の複雑さラスターを作成できません: {output_path}"
+        )
 
     out.SetGeoTransform(ref.GetGeoTransform())
     out.SetProjection(ref.GetProjection())
@@ -285,7 +294,9 @@ def _write_like(reference_path, output_path, arr, valid):
 
     check = gdal.Open(output_path, gdal.GA_ReadOnly)
     if check is None:
-        raise RuntimeError(f"地形の複雑さラスターを再度開けません: {output_path}")
+        raise RuntimeError(
+            f"地形の複雑さラスターを再度開けません: {output_path}"
+        )
     stats = check.GetRasterBand(1).GetStatistics(False, True)
     check = None
     if stats is None or not all(np.isfinite(float(v)) for v in stats[:3]):
@@ -314,7 +325,12 @@ def generate(dem_filepath: str, output_dir: str) -> str:
     gt = ds.GetGeoTransform()
     cell_x = abs(float(gt[1]))
     cell_y = abs(float(gt[5]))
-    if not np.isfinite(cell_x) or not np.isfinite(cell_y) or cell_x <= 0 or cell_y <= 0:
+    if (
+        not np.isfinite(cell_x)
+        or not np.isfinite(cell_y)
+        or cell_x <= 0
+        or cell_y <= 0
+    ):
         ds = None
         raise RuntimeError("解析DEMのピクセルサイズを取得できません。")
     if abs(cell_x - cell_y) > max(cell_x, cell_y) * 1.0e-6:
@@ -333,7 +349,8 @@ def generate(dem_filepath: str, output_dir: str) -> str:
         smoothed, smooth_valid, cell_x
     )
 
-    # 3) ±3σ outlier removal; original plugin rounds stddev to 4 decimals first.
+    # 3) ±3σ outlier removal; original plugin rounds stddev to 4 decimals
+    # first.
     vals = curvature[curvature_valid]
     if vals.size == 0:
         ds = None
@@ -345,9 +362,9 @@ def generate(dem_filepath: str, output_dir: str) -> str:
         raise RuntimeError("平面曲率の標準偏差を計算できません。")
 
     normalized_valid = (
-        curvature_valid &
-        (curvature >= -3.0 * curvature_stddev) &
-        (curvature <=  3.0 * curvature_stddev)
+        curvature_valid
+        & (curvature >= -3.0 * curvature_stddev)
+        & (curvature <= 3.0 * curvature_stddev)
     )
 
     # 4) Circular neighborhood STD
@@ -357,8 +374,6 @@ def generate(dem_filepath: str, output_dir: str) -> str:
     # Final NoData follows the original DEM coverage.
     shc_valid &= dem_valid
 
-    output_path = os.path.join(
-        output_dir, OUTPUT_SHC["FILE_NAME"] + ".tif"
-    )
+    output_path = os.path.join(output_dir, OUTPUT_SHC["FILE_NAME"] + ".tif")
     ds = None
     return _write_like(dem_filepath, output_path, shc, shc_valid)
