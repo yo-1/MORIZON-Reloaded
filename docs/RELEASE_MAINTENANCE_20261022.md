@@ -1,4 +1,4 @@
-# 配布物・Release・ブランチ整理記録 v1.2
+# 配布物・Release・ブランチ整理記録 v1.3
 
 確認日：2026-10-22（JST）
 
@@ -38,17 +38,17 @@ GitHubのasset digestとダウンロード実測値が一致。ZIP CRC正常。Z
 | ブランチ | 調査時HEAD | 役割・判断 | 処置 |
 | --- | --- | --- | --- |
 | main | 61acd2cb70477054f07734c789c73233d899c0cb | 現行保守の基準 | 維持 |
-| claude/morizon-reloaded-dev-xs6ig8 | bac1db5fdc7993d8c1740bc368b4bac7d0ae504a | v2.3.0～2.3.1移行時の開発履歴。mainとはコミット履歴が分岐。過去のsquash統合もあり、ahead件数だけで未統合機能と判定しない | 開発用途は終了候補。削除前にarchiveタグ等でHEADを恒久保存 |
-| codex/windows-ci-stage-1 | cd5548abf364183752a961770263d414568b8294 | 初期Windows CI。現行mainには別途復旧・更新済みのWindows CIが存在。旧ブランチ独自の2コミットあり | 新規統合しない。保存後の削除候補 |
-| codex/windows-validation-download | 5ab600cab90f3fbdf6f24ec4f3e7ac04e4325c77 | 旧2.3.1/2.3.2検証用ZIPをdistに保持。現行Release配布には使用しない | 検証履歴として保存後の削除候補 |
+| claude/morizon-reloaded-dev-xs6ig8 | bac1db5fdc7993d8c1740bc368b4bac7d0ae504a | v2.3.0～2.3.1移行時の開発履歴。mainとはコミット履歴が分岐。過去のsquash統合もあり、ahead件数だけで未統合機能と判定しない | 開発用途は終了。archive/dev-20261022でHEADを保全し、ブランチ削除済み |
+| codex/windows-ci-stage-1 | cd5548abf364183752a961770263d414568b8294 | 初期Windows CI。現行mainには別途復旧・更新済みのWindows CIが存在。旧ブランチ独自の2コミットあり | archive/windows-ci-20261022でHEADを保全し、ブランチ削除済み |
+| codex/windows-validation-download | 5ab600cab90f3fbdf6f24ec4f3e7ac04e4325c77 | 旧2.3.1/2.3.2検証用ZIPをdistに保持。現行Release配布には使用しない | archive/validation-20261022でHEADを保全し、ブランチ削除済み |
 
-上記3ブランチは単純なmainの祖先ではないため、保全せず一括削除していない。現行mainへ旧ZIPや旧CIをマージする必要はない。
+上記3ブランチは単純なmainの祖先ではないため、各HEADを保全タグに保存してから削除した。2026-10-22、ユーザーがGitHub画面で3本の保全用Pre-release・タグを作成。APIでタグとブランチHEADの完全一致、未完了PRが0件であることを確認した後、ユーザーが旧3ブランチを削除した。削除後のAPI照合でブランチはmainのみ、3本の保全タグと保存コミットは上表のとおり保持されていることを確認済み。現行mainへ旧ZIPや旧CIをマージする必要はない。
 この記録作成前の確認時点で未完了PRは0件。履歴は消さず、今後の実装はmainを起点に作業ごとの短期ブランチとし、マージ後に整理する。
 
-## 実施上の残り
+## 実施結果
 
 1. 完了：照合依頼に対してユーザーが提供したv2.3.3提出ZIPとGitHub assetの実測ハッシュ・バイト列が一致。QGIS承認は別工程。
 2. 完了：ユーザーによるv2.3.2 Release本文更新をGitHub APIで確認。
-3. 旧3ブランチHEADをarchiveタグ等で保全し、旧ブランチ名を削除する。直前にHEAD・進行中PRの変動を再確認する。
+3. 完了：旧3ブランチHEADを上表のarchiveタグで保全し、旧ブランチを削除。APIでmainのみになったことと保全タグ保持を確認。
 
-今回利用できたGitHub接続にはRelease本文編集・タグ作成・ブランチ削除の機能がない。ブラウザー接続も利用できず、3は実行未了（2はユーザーが画面で更新し、APIで確認済み）。ツールの制約を理由に未実行操作を完了扱いにしない。
+Release本文編集・タグ作成・ブランチ削除はユーザーが手動で実施し、保存後の状態をAPIで確認した。文書更新前のmain HEADは4247e752bb66f4c99ecb6e1d5c5f5a8dc7583de1。今回の更新は整理記録のみであり、配布ソースタグv2.3.3と提出ZIPは変更しない。
