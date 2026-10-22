@@ -46,7 +46,7 @@ Known gaps at merge time (see `docs/OPEN_ISSUES.md` O-06/O-26 for detail):
 - No QGIS 3.44 Windows on-device run of the merged tree has been
   performed yet.
 
-## 2.3.2 — validation candidate (not yet published)
+## 2.3.2 — published on the official QGIS plugin repository (GitHub Release: Pre-release `v2.3.2`)
 
 - Applied QGIS 3.44 compatibility and stability fixes validated on the
   synthetic Windows workflow; see `docs/TEST_RECORD.md` for observed scope.
