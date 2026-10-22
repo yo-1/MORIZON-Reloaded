@@ -5,12 +5,9 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 import os
-from qgis.core import QgsRasterLayer
 
 from ...constants import OUTPUT_PROFIT, SCORING_COLORS_PROFIT
 from .utils import (
-    get_quantile_renderer,
-    hex_to_rgb,
     write_qml_deviding_by_threshold,
     get_two_class_quantile_threshold_from_file,
 )

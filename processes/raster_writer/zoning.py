@@ -6,21 +6,19 @@
 
 import os
 
-from qgis.PyQt.QtCore import *
-from qgis.PyQt.QtGui import *
-from qgis.PyQt.QtWidgets import *
-from qgis.core import *
-from qgis.gui import *
+from qgis.core import QgsRasterLayer
 from qgis.analysis import QgsRasterCalculator, QgsRasterCalculatorEntry
 
 from ...constants import OUTPUT_ZONING
 
 
-def generate(profit_rlayer: QgsRasterLayer,
-             profit_threshold: int,
-             risk_rlayer: QgsRasterLayer,
-             risk_threshold: int,
-             output_dir: str) -> str:
+def generate(
+    profit_rlayer: QgsRasterLayer,
+    profit_threshold: int,
+    risk_rlayer: QgsRasterLayer,
+    risk_threshold: int,
+    output_dir: str,
+) -> str:
     """
     ゾーニング図を生成する
 
@@ -49,7 +47,7 @@ def generate(profit_rlayer: QgsRasterLayer,
 
     base_filepath = os.path.join(
         output_dir,
-        OUTPUT_ZONING["FILE_NAME"] + "." + OUTPUT_ZONING["EXTENSION"]
+        OUTPUT_ZONING["FILE_NAME"] + "." + OUTPUT_ZONING["EXTENSION"],
     )
 
     # 既存成果は削除・上書きしない。QGIS/Windowsが参照中でも安全に再実行できるよう
@@ -61,30 +59,37 @@ def generate(profit_rlayer: QgsRasterLayer,
         while True:
             candidate = os.path.join(
                 output_dir,
-                f"{OUTPUT_ZONING['FILE_NAME']}_v{version}.{OUTPUT_ZONING['EXTENSION']}"
+                f"{OUTPUT_ZONING['FILE_NAME']}_v{version}.{OUTPUT_ZONING['EXTENSION']}",
             )
             if not os.path.exists(candidate):
                 output_filepath = candidate
                 break
             version += 1
 
-    expression = _make_expression(profit_entry.ref, profit_threshold,
-                                  risk_entry.ref, risk_threshold)
+    expression = _make_expression(
+        profit_entry.ref, profit_threshold, risk_entry.ref, risk_threshold
+    )
 
-    calc = QgsRasterCalculator(expression,
-                               output_filepath,
-                               "GTiff",
-                               profit_rlayer.extent(),
-                               profit_rlayer.width(),
-                               profit_rlayer.height(),
-                               (profit_entry, risk_entry))
+    calc = QgsRasterCalculator(
+        expression,
+        output_filepath,
+        "GTiff",
+        profit_rlayer.extent(),
+        profit_rlayer.width(),
+        profit_rlayer.height(),
+        (profit_entry, risk_entry),
+    )
     calc.processCalculation()
 
     return output_filepath
 
 
-def _make_expression(profit_name: str, profit_threshold: int,
-                     risk_name: str, risk_threshold: int) -> str:
+def _make_expression(
+    profit_name: str,
+    profit_threshold: int,
+    risk_name: str,
+    risk_threshold: int,
+) -> str:
     """
     ゾーニングを計算するためのExpression式を生成する
 

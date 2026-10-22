@@ -1,5 +1,44 @@
 # 試験記録
 
+## v2.3.2 検証候補（2026-10-11 JST）
+
+- v2.3.1として検証していたPR #12の修正を、QGIS公式リポジトリで区別できるv2.3.2へ版上げした。過去のv2.3.1実機記録は下記に保持する。
+- 変更範囲: `metadata.txt`の版と変更履歴、配布ZIP名、検証手順、印刷レイアウト後にMORIZON画面を隠さないUI改善。計算式・出力ファイル名は変更していない。
+- Windows QGIS 3.44でのv2.3.2実機確認: ユーザー提供画面でプラグイン管理画面のインストール版`2.3.2`とダイアログの`v2.3.2`表示を確認。保存済みプロジェクトからゾーニング図レイアウトを上書き作成し、レイアウト画面を閉じた後もMORIZON印刷タブが残ることを確認。続けてゾーン統計量レイアウトの上書き確認と表示を確認し、その間もMORIZON画面は表示された。したがって印刷タブを再起動せず2件を操作できるUI改善は合格。背景欄は`DEM_SYNTH`で、レイアウトの灰色の背景はそのラスター表示。v2.3.2での全計算工程と画素比較は未実施。
+- ローカル検査: `static_check.py`で48ファイルの構文と版番号2.3.2を確認。生成したv2.3.2プラグインZIPのpreflightはFlake8 0、Bandit 0、detect-secrets 0。Qt6公式互換検査器は48ファイル走査で指摘0。QGIS 3.40.6（Linux、オフスクリーン）で48モジュールを読み込み、30種類のQt/QGIS列挙値参照を解決した。これらはWindows実機確認の代替ではない。
+- QGIS公式サイトの検査（ユーザー提供画面、2026-10-11 15:08 JST）: v2.3.2ページでSecurity Scanが`All security checks passed!`、合格率100.0%、Passed 5、Info items 0、Warnings 0、Critical 0、Files scanned 228と表示された。Qt6 Check・Flake8・人による審査結果はこの画像では未確認。
+- 続く公式サイト画面ではプラグインID 6577のVersion 2.3.2ページにSecurity ScanとQt6 Checkの緑のチェックが表示された。セキュリティ詳細画面ではTotal Issues 0、Bandit 48ファイル・指摘0、Secrets Detection指摘0、Flake8 48ファイル・指摘0、File Permissions指摘0、Suspicious Files指摘0を確認。Qt6 Checkタブには`This version is Qt6 compatible`および`No issues found.`と表示された（2026-10-11 15:08 JST）。Detailsタブには`Approved: no`、アップロード日時2026-10-11 15:08 JST、最小QGIS版3.44.0、最大3.99.0、Experimental `no`と表示された。人による承認はまだ確認されていない。
+
+## 2026-10-11 JST / PR #12 修正版ZIPのQGIS 3.44 Windows実機検証（進行中）
+
+- 環境: ユーザーのQGIS 3.44 Windows、TestFlightプロファイル。ZIPは`codex/plugin-preflight`の修正版v2.3.1。完全版番号・GDAL版は未収集。
+- 入力: 同梱の`ZoningKit_SYNTH`、DEM 80×60、EPSG:6677。出力は新規の`MORIZON_test_20261011`。ユーザー提供のQGIS画面・MORIZONログで確認。
+- 完了: ZIPから起動、6要素計算（GRASS `r.neighbors`・`r.watershed`を含む）、スコアリング、ゾーニング（profit=6、risk=5、`zoning.tif` Float32 80×60）、流域集計（1ポリゴン、`count_1`～`count_4`）、ゾーニング図とゾーン統計量の印刷レイアウト作成。2件のレイアウトがQGISレイアウトマネージャーに登録された。
+- 再実行: 同名の要素グループがある状態では要素計算の実行ボタンが無効。該当グループをQGISから削除後、SHCの単独再計算が完了し、Windowsロック警告とスコアリング入力の自動修正を確認。要素グループをすべて削除した後の6要素再計算も完了し、使用中の保全対象流域を`Y_13_hozen_v2.tif`に保存。スコアリング再実行、`zoning_v2.tif`へのゾーニング再実行、`aggregate_v2.shp`への集計再実行が完了した。
+- 観測事項: 合成データの保全対象流域は全画素が1で、Quantile分類ができずQML出力失敗の可能性を警告した。計算自体は完了。集計タブのゾーニング入力が一度`OpenStreetMap`を指したため、実行前にユーザーが`ゾーニング図`へ修正した。原因は未確認。
+- 原版との照合（ユーザー提供`morizon.zip`、metadata version 2.1、2023-06-12、および`もりぞんマニュアル.pdf`）: 原版の`forest_zoning_main_dialog_aggregate.py`の`add_layers_to_project()`は、結果レイヤーを`QgsProject.instance().addMapLayer(rlayer, False)`と`root.insertLayer(0, rlayer)`で追加し、既存の「ゾーン統計量」レイヤーは削除しない。Reloadedでもこの追加処理は継承されている。マニュアル§3.6.6（p.57–59）は`aggregate.shp`を出力し、QGISマップに「ゾーン統計量」レイヤーを追加すると説明する。§4.1（p.78–79）はスコアリングの再計算結果を残す場合にグループ名と出力先を変える手順を示すが、集計レイヤーの再実行時の表示を明記していない。したがって、再集計後も旧・新の「ゾーン統計量」レイヤーが並ぶ挙動は原版コードから継承されたもので、現時点で欠陥とは判定しない。一方、使用中の`aggregate.shp`を`aggregate_v2.shp`へ世代保存する処理はReloadedのWindowsロック対応であり、原版は使用中なら上書きを拒否する。
+- 未確認: 出力のスナップショット、旧出力との画素比較、`Zoningkit_SAMPLE`の記録済み数値基準との比較、日本語パス拒否・半角スペースパスの今回の版での再試験、QGIS/GDAL/GRASSの完全版番号。
+
+## 2026-10-11 JST / 公式Qt6検査器のローカル再現
+
+- 環境: QGIS Plugins Websiteの`qt6-validator`が使用する`ghcr.io/qgis/pyqgis4-checker:main-ubuntu`（digest `sha256:c96df111845eb0c86ad56364fb792d35fa6931e01d3d629d2b1bc6388ed43ece`）。サイト側コード参照コミット`2e73cac`。
+- 確定: 添付された公開版v2.3.1 ZIPは48 Pythonファイルを走査して104件の指摘を再現。`scripts/check_qt6_zip.py`は終了コード1。
+- 確定: `codex/plugin-preflight`の再生成ZIPは48 Pythonファイルを走査して指摘0件。スクリプトは終了コード0。
+- 注意: 元の`pyqt5_to_pyqt6.py --dry_run`は指摘があっても終了コード0を返す。ラッパーはログ件数を判定し、コンテナから48ファイルが読めることを確認する。
+- 未確認: 公式サイトへ修正版をアップロードした際の表示、QGIS 3.44 Windowsの機能試験。
+
+
+## 2026-10-10 UTC / `codex/plugin-preflight` 試験ZIP
+
+- 環境: Debian 13、QGIS 3.40.6、Python 3.13 (`/usr/bin/python3`)、GUIなし。
+- 対象: `dist/MORIZON_Reloaded_QGIS344_v2.3.1.zip`（同版名の公開済みZIPとは内容が異なる）。
+- 確定: `scripts/static_check.py`が48ファイルの構文検査に成功。`scripts/preflight_plugin_zip.py`はZIP構造・メタデータを検査し、Flake8 0件、Bandit 0件、detect-secrets 0件で終了コード0。
+- 確定: `scripts/qgis_import_smoke.py`でZIP内の48 PythonモジュールをQGIS 3.40.6へ読み込んだ。
+- 確定: Qt6互換の列挙型参照へ置き換えた前後のPython AST定数を比較し、計算用の数値定数とQML文字列に変更がないことを確認した。
+- 確定: PR #12の`7ee509e`でGitHub ActionsのFlake8/構文、ZIP/セキュリティ、QGIS 3.40モジュール読み込みの3ジョブが成功した（GitHub PRのChecks画面、2026-10-10 UTC）。QGISジョブは30種類の列挙値参照の解決も確認した。
+- 未確認: QGIS 3.44 WindowsでのUI、六要素計算、スコアリング、ゾーニング、集計、印刷、再実行、採用済み画像との画素比較。Qt6公式チェック結果。
+
+
 ## accepted reference run（v2.3.0 受入済み基準実行）
 
 CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted reference run」
@@ -464,6 +503,22 @@ CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted ref
 - 判定: **合格**。v2.3.0正式リリースZIPのクリーンインストール・有効化／無効化／再有効化／再起動という一連の動作に問題は見られなかった。
 - ログ・画像・比較表: ユーザー提供のスクリーンショット7枚（プラグイン一覧×2（有効時・無効時）、MORIZONダイアログ×3、QGIS再起動後の全体画面×2）。
 - 備考: 本テストはパッケージング（ZIP・metadata.txt・experimentalフラグ）の確認が目的であり、六要素の処理実行自体はdev17で実機確認済み（本ファイル上記「dev17 全工程完走確認」等）のため本テストでは実施していない。これでCLAUDE.md「Definition of done」の`Clean installation from ZIP in a clean QGIS 3.44.x Windows profile`も実機確認済みとなった。
+
+## 2026-10-11 配布ZIPの公開前検査スクリプト確認
+
+- 環境: クラウド Linux / Python 3.12.14。QGISは使わず、配布ZIPの静的検査のみ。
+- 対象: ユーザー提供の `MORIZON_Reloaded_QGIS344_v2.3.1.zip`（内部版2.3.1、Python 48ファイル）。
+- 手順: `scripts/preflight_plugin_zip.py` に対象ZIPを指定。Flake8 7.4.1、Bandit 1.9.4、detect-secrets 1.5.0を使用。
+- 結果: ZIP構造とPython構文は合格。Banditの中高リスク0件、低リスク42件。detect-secrets 0件。Flake8 923件（E501 392、F405 305、F403 115、F401 62、ほか49）で終了コード1。
+- 判定: 公開前の品質ゲートとしては不合格。QGIS公式サイトの423件とはツール設定が異なるため、件数は一致しない。QGIS機能、画像全画素一致、GitHubチェックはこの試験では未実行。
+- ユーザー提供のQGIS公式サイト画面（v2.3.1、2026-10-09の表示）: Security Scanは4件通過・情報項目1件、警告0件、Critical 0件、合格率80%。Bandit・Secrets・File Permissions・Suspicious Filesは各0件、Flake8は423件。開発者がB110とB112をスキップ。別タブのQt6 Checkは104件の互換性指摘。これはサイト側の観測値であり、上記ローカル検査の件数とは別に記録する。
+
+## 2026-10-11 B110/B112のローカル修正確認
+
+- 対象: v2.3.1ソースから生成したローカル試験ZIP。公開済みZIPとは内容が異なるため、同じ版名でも公開物の検証結果として扱わない。
+- 修正: B110の40箇所とB112の2箇所。例外時に診断を残し、従来の継続・スキップ動作を保つ。不要な例外捕捉1箇所は削除。
+- 確認: `scripts/static_check.py`合格、Python 48ファイルの構文合格、Bandit全件0、detect-secrets 0。ログ出力失敗を模擬しPython loggingへの代替出力を確認。Linux/QGIS 3.40.6のオフスクリーン環境で関連モジュールのimportに成功。Flake8は923件で、修正前の公開ZIPと同数。公開前ゲート全体は不合格。
+- 未確認: QGIS 3.44 Windows実機での例外経路・フルワークフロー。今回の環境のQGISは3.40.6のため、実機合格とは判定しない。
 
 ## QGIS試験テンプレート
 
