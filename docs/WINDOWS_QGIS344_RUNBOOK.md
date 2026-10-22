@@ -1,6 +1,6 @@
 # QGIS 3.44 Windows 実機検証手順（MORIZON Reloaded）
 
-この手順はPR #14のv2.3.3検証候補ZIPを検証するものです。公開済みの版はv2.3.2（QGIS公式プラグインリポジトリ）、GitHub最新Releaseはv2.3.1です。
+この手順はv2.3.3のZIPを検証するものです。公開済みの版はv2.3.2（QGIS公式プラグインリポジトリ）、GitHub最新Releaseはv2.3.1です。
 配布用ZIPと検証用ZIPを取り違えないよう、検証用ZIP内の`MANIFEST_SHA256.txt`と
 PowerShellの`Get-FileHash`でプラグインZIPのSHA-256を照合してください。
 

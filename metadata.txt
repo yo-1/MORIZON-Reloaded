@@ -26,15 +26,17 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.3 (candidate -- integrates 2.3.2 and main; version number not yet finalized)
+changelog=Version 2.3.3 (QGIS 3.44; verified on Windows 11 / QGIS 3.44, Python 3.12)
     Merges the 2.3.2 validation-candidate line (Qt6 enum compatibility,
     Flake8/Bandit cleanup, print-layout dialog fix, ZIP preflight
     scripts) with changes made on main after 2.3.2 branched off (CSV
     work-system-table validation with row-numbered error messages, CSV
     regression tests, Windows CI restoration). No analysis formulas,
     thresholds, NoData rules, or output names were changed by this
-    merge itself. Not yet released anywhere; the official QGIS plugin
-    repository's latest published version remains 2.3.2.
+    merge itself.
+
+    Requires Python 3.12 or later (the code uses PEP 701 syntax); tested
+    only on QGIS 3.44 / Python 3.12 on Windows.
 
     Version 2.3.2 (QGIS 3.44 validation candidate)
     Compatibility and stability fixes for the forest-zoning workflow,
