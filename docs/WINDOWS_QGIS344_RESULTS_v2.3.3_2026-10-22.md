@@ -54,4 +54,4 @@
 ## 制約（確定、本実機確認で判明）
 
 - 本結果が確認した動作環境は、Windows + QGIS 3.44（Python 3.12.15）のみである。
-- v2.3.2／v2.3.3のプラグインコードは、Python 3.12で追加された構文（PEP 701、f-string内の同種引用符・複数行にわたる式）を含むファイルがあり、**Python 3.11以下では構文エラーになる**。実機でPython 3.12であることを確認した上で、Code側で`scripts/static_check.py`をPython 3.12と3.11の両方で実行し、3.11側で失敗する8ファイルを特定した（詳細は`docs/OPEN_ISSUES.md` O-29）。QGIS 3.40 LTR系（Python 3.11系）は、この構文エラーにより**動作しない**。`metadata.txt`にPython最低版の明記はない。
+- v2.3.2／v2.3.3のプラグインコードは、Python 3.12で追加された構文（PEP 701、f-string内の同種引用符・複数行にわたる式）を含むファイルがあり、**Python 3.11以下では構文エラーになる**（確定）。実機でPython 3.12であることを確認した上で、Code側で`scripts/static_check.py`をPython 3.12と3.11の両方で実行し、3.11側で失敗する8ファイルを特定した（詳細は`docs/OPEN_ISSUES.md` O-37）。`metadata.txt`にPython最低版の明記はない。**QGISが実際に使用するPythonの版はOS・配布形態によって異なり、「QGIS 3.40系だから非対応」とは確定していない**（CI「QGIS 3.40 module imports」ジョブはDebian trixie上のQGIS 3.40.6・Python 3.13で本プラグインのimportに成功している。詳細はO-37）。
