@@ -10,7 +10,10 @@ import time
 
 from qgis.core import (
     QgsCoordinateReferenceSystem,
+    QgsCoordinateTransform,
     QgsProcessingException,
+    QgsProject,
+    QgsRectangle,
     QgsVectorLayer,
     QgsMessageLog,
     Qgis,
@@ -449,6 +452,79 @@ def _select_basins_with_buildings(
     return selected_layer
 
 
+def _preflight_building_check(
+    building_filepath,
+    building_crs_override_authid=None,
+    basis_dem_filepath=None,
+):
+    """流域作成（GRASS）に入る前に、保全対象データのCRSと範囲を検証する。
+
+    CRS不明のまま重なり判定へ進むと、座標が解釈できず選択が全域0に
+    なり得る（2026-08-27 の ZoningKit_09 実行結果で実際に発生した）。
+    時間のかかる r.watershed の前に停止し、原因をその場で示す。
+    CRSが有効でも、DEM範囲と全く重ならない場合は座標解釈の誤り
+    （例: 緯度経度のデータを平面直角と解釈）を疑い停止する。
+    検証のみを行い、選択処理（_select_basins_with_buildings）は変更しない。
+    """
+    building_layer = _as_vector_layer(building_filepath)
+    if building_layer.featureCount() <= 0:
+        raise QgsProcessingException("保全対象データに地物がありません。")
+
+    crs = building_layer.crs()
+    if not crs.isValid():
+        if not building_crs_override_authid:
+            raise QgsProcessingException(
+                "保全対象データのCRSが不明です。\n"
+                "要素計算画面で「基盤地図情報（EPSG:6668）」または「CRSを指定」を選択してください。"
+            )
+        override_crs = QgsCoordinateReferenceSystem(
+            str(building_crs_override_authid)
+        )
+        if not override_crs.isValid():
+            override_crs = QgsCoordinateReferenceSystem()
+            try:
+                override_crs.createFromWkt(str(building_crs_override_authid))
+            except Exception:
+                pass
+        if not override_crs.isValid():
+            raise QgsProcessingException(
+                f"指定された保全対象データの座標参照系を読み込めませんでした: {building_crs_override_authid}"
+            )
+        building_layer.setCrs(override_crs)
+        crs = override_crs
+
+    if basis_dem_filepath:
+        dem_ds = gdal.Open(str(basis_dem_filepath), gdal.GA_ReadOnly)
+        if dem_ds is not None:
+            dem_crs = QgsCoordinateReferenceSystem(dem_ds.GetProjection())
+            gt = dem_ds.GetGeoTransform()
+            dem_extent = QgsRectangle(
+                gt[0],
+                gt[3] + gt[5] * dem_ds.RasterYSize,
+                gt[0] + gt[1] * dem_ds.RasterXSize,
+                gt[3],
+            )
+            dem_ds = None
+            if dem_crs.isValid():
+                if crs != dem_crs:
+                    transform = QgsCoordinateTransform(
+                        crs, dem_crs, QgsProject.instance()
+                    )
+                    b_extent = transform.transformBoundingBox(
+                        building_layer.extent()
+                    )
+                else:
+                    b_extent = building_layer.extent()
+                if not b_extent.intersects(dem_extent):
+                    raise QgsProcessingException(
+                        "保全対象データの範囲が解析DEMの範囲と重なっていません。\n"
+                        f"保全対象CRS: {_layer_crs_text(building_layer)}\n"
+                        f"保全対象の範囲: {_extent_text(building_layer)}\n"
+                        "座標系の解釈が誤っている可能性があります。基盤地図情報の建物データ（緯度経度）の場合は、要素計算画面で「基盤地図情報（EPSG:6668）」を選択するか、DEMと同じ平面直角座標系へ変換したデータを用意してください。"
+                    )
+    return building_layer
+
+
 def _rasterize_to_reference(vector_layer, reference_dem, output_path):
     """参照DEMと完全一致するグリッドへ1を焼き込む。"""
     ds = gdal.Open(reference_dem, gdal.GA_ReadOnly)
@@ -549,6 +625,10 @@ def generate(
         pass
 
     _log("開始")
+    _preflight_building_check(
+        building_filepath, building_crs_override_authid, basis_dem_filepath
+    )
+    _log("保全対象データの事前検証 完了")
     basin_layer = create_basin_polygon(basis_dem_filepath)
     _log("保全対象との重複判定 開始")
     selected_layer = _select_basins_with_buildings(

@@ -89,6 +89,15 @@ def generate(
         dem_ds = None
         raise RuntimeError("既設路網ラインに地物がありません。")
 
+    # CRS不明（.prjなし等）のままでは座標を解釈できず、誤った距離を
+    # 黙って出力してしまうため、ここで停止する（saveareaの保全対象と同方針）。
+    if not vector_layer.crs().isValid():
+        dem_ds = None
+        raise RuntimeError(
+            "既設路網ラインの座標参照系（CRS）が不明です。"
+            "DEMと同じ平面直角座標系で、座標系が定義されたデータを用意してください。"
+        )
+
     # MORIZON標準データはDEMとROADが同一CRS。
     # 誤った距離計算を防ぐため、異なる場合は明示的に停止する。
     dem_wkt = dem_ds.GetProjection()
