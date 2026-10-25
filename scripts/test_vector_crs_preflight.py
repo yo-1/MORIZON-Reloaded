@@ -48,7 +48,6 @@ def main() -> None:
     )
 
     from osgeo import gdal, ogr, osr
-    from qgis.core import QgsProcessingException
 
     gdal.UseExceptions()
     tmp = Path(tempfile.mkdtemp(prefix="morizon-crs-test-"))
@@ -68,8 +67,10 @@ def main() -> None:
     ds = None
 
     # lon/lat of the DEM centre (1000 m, 1000 m in EPSG:6677)
-    src = osr.SpatialReference(); src.ImportFromEPSG(6677)
-    dst = osr.SpatialReference(); dst.ImportFromEPSG(6668)
+    src = osr.SpatialReference()
+    src.ImportFromEPSG(6677)
+    dst = osr.SpatialReference()
+    dst.ImportFromEPSG(6668)
     src.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
     dst.SetAxisMappingStrategy(osr.OAMS_TRADITIONAL_GIS_ORDER)
     ct = osr.CoordinateTransformation(src, dst)
@@ -145,7 +146,8 @@ def main() -> None:
     ds2 = drv2.CreateDataSource(str(r_nocrs))
     layer = ds2.CreateLayer("x", None, ogr.wkbLineString)
     line = ogr.Geometry(ogr.wkbLineString)
-    line.AddPoint(-99900, 99900); line.AddPoint(-98100, 98100)
+    line.AddPoint(-99900, 99900)
+    line.AddPoint(-98100, 98100)
     feat = ogr.Feature(layer.GetLayerDefn())
     feat.SetGeometry(line)
     layer.CreateFeature(feat)
