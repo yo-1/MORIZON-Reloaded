@@ -8,7 +8,7 @@ PR #19のJSON解析修正はWindows実機で成功しました。6要素は166.4
 
 検証コードHEAD: caf74c3b7cb5166e7b389873a2d6c548abee7f0e
 
-記録用ローカルブランチ: codex/pr19-windows-validation-20261104。記録をPR #19のfix/gdalinfo-json-robustnessへfast-forward pushする予定。記録commit IDと最終リモート照合結果はローカル証跡のgithub-final.jsonと最終回答に記載する。
+記録用ローカルブランチ: codex/pr19-windows-validation-20261104。検証記録commit e8540212598dde9ff531e4543f651756e20501efをPR #19のfix/gdalinfo-json-robustnessへpush済み。GitHubのPR HEADとリモートSHAの一致、draft/open、mergedAt=nullを確認した。mainは34e9592072eb91925ca2f341616ab31c57a8475bのまま。最終照合の生データはローカル証跡github-final.jsonに保存。
 
 報告書・証跡・TEST_RECORD・O-38のみ更新し、プラグインソース・計算式・評価方法・版番号は変更していません。SetupCheckには修正版を配置した状態で、バックアップからの復元はしていません。
 
