@@ -1,0 +1,2 @@
+# Preserve the exact GDAL HTML bytes, including its original line endings.
+gdalinfo.html -text -diff

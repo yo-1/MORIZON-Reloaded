@@ -1,0 +1,269 @@
+{
+  "files": [
+    {
+      "file": "MORIZON/__init__.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/branding.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/CHANGELOG.md",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/constants.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/diag_log.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_main_dialog.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_main_dialog.ui",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_main_dialog_aggregate.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_main_dialog_elements.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_main_dialog_printlayout.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_main_dialog_scoring.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_main_dialog_zoning.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_scoring_stats_dialog.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_scoring_stats_dialog.ui",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_settings_dialog.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/forest_zoning_settings_dialog.ui",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/imgs/aggregate.png",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/imgs/icon.png",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/imgs/icon.svg",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/imgs/mActionArrowLeft.svg",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/imgs/mActionFirst.svg",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/imgs/mActionRefresh.svg",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/imgs/mActionUndo.svg",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/LICENSE",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/metadata.txt",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/NOTICE",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/__init__.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/aggregate.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/costcsv_parser.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/elements.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/printlayout/__init__.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/printlayout/create_printlayout.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/printlayout/template/aggregate_template.qpt",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/printlayout/template/zoning_template.qpt",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/__init__.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/aggregate.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/cost.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/distance.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/profit.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/risk.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/savearea.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/shc.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/siteidx.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/slope.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/utils.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_styler/zoning.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/__init__.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/aggregate.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/cost.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/distance.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/profit.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/risk.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/savearea.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/shc.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/siteidx.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/slope.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/utils.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/raster_writer/zoning.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/scoring.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/processes/zoning.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/progress_dialog.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/progress_dialog.ui",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/README.md",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/settings_manager.py",
+      "matches": true
+    },
+    {
+      "file": "MORIZON/utils/__init__.py",
+      "matches": true
+    }
+  ],
+  "all_match": true
+}

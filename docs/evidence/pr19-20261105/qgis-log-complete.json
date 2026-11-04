@@ -1,0 +1,2227 @@
+{
+  "result": {
+    "entries": [
+      {
+        "id": 1,
+        "ts": 1793806616.8745713,
+        "level": "info",
+        "tag": "プラグイン",
+        "message": "QGIS Dev Probe（開発用・AI実機検証ブリッジ）を読み込みました（パッケージ: qgis_dev_probe）"
+      },
+      {
+        "id": 2,
+        "ts": 1793806616.8986933,
+        "level": "info",
+        "tag": "プラグイン",
+        "message": "DB Managerを読み込みました（パッケージ: db_manager）"
+      },
+      {
+        "id": 3,
+        "ts": 1793806617.9684772,
+        "level": "info",
+        "tag": "プラグイン",
+        "message": "GRASS Processing Providerを読み込みました（パッケージ: grassprovider）"
+      },
+      {
+        "id": 4,
+        "ts": 1793806618.735111,
+        "level": "info",
+        "tag": "プラグイン",
+        "message": "MetaSearch Catalog Clientを読み込みました（パッケージ: MetaSearch）"
+      },
+      {
+        "id": 5,
+        "ts": 1793806619.8124893,
+        "level": "info",
+        "tag": "プラグイン",
+        "message": "Processingを読み込みました（パッケージ: processing）"
+      },
+      {
+        "id": 6,
+        "ts": 1793806620.2332158,
+        "level": "warning",
+        "tag": "MORIZON",
+        "message": "[00:37:00] UIスレッドが約3.2秒応答していませんでした。重なった計測区間: プラグイン初期化: モジュールimport(forest_zoning_main_dialog等)(2.7s), プラグイン初期化: __init__(0.0s), プラグイン初期化: initGui(0.0s)"
+      },
+      {
+        "id": 7,
+        "ts": 1793806620.3048213,
+        "level": "info",
+        "tag": "",
+        "message": "QgsApplicationの状態:\n- QGIS_PREFIX_PATH 環境変数: C:/PROGRA~1/QGIS34~1.13/apps/qgis-ltr\n- プレフィクス: C:/PROGRA~1/QGIS34~1.13/apps/qgis-ltr\n- プラグインパス: C:/PROGRA~1/QGIS34~1.13/apps/qgis-ltr/plugins\n- パッケージデータパス: C:/PROGRA~1/QGIS34~1.13/apps/qgis-ltr/.\n- アクティブテーマ名: default\n- アクティブテーマパス: C:/PROGRA~1/QGIS34~1.13/apps/qgis-ltr/./resources/themes\\default\\icons/\n- デフォルトテーマパス: :/images/themes/default/\n- SVG 検索パス: C:/PROGRA~1/QGIS34~1.13/apps/qgis-ltr/./svg/\n                               C:/Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/svg/\n- ユーザDBパス: C:/PROGRA~1/QGIS34~1.13/apps/qgis-ltr/./resources/qgis.db\n- ユーザ認証DBパス: QSQLITE://C:/Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/qgis-auth.db\n"
+      },
+      {
+        "id": 8,
+        "ts": 1793807173.403602,
+        "level": "info",
+        "tag": "QgisDevProbe",
+        "message": "server started on 127.0.0.1:51012 mode=interactive"
+      },
+      {
+        "id": 9,
+        "ts": 1793807213.0145736,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdalinfo -json C:/Users/Yoichi_Wada/Documents/Github/MORIZON-Reloaded/.validation/pr19-evidence/ZoningKit/DATA/DEM/DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 10,
+        "ts": 1793807213.017573,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 11,
+        "ts": 1793807213.0195725,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdalinfo -json C:/Users/Yoichi_Wada/Documents/Github/MORIZON-Reloaded/.validation/pr19-evidence/ZoningKit/DATA/DEM/DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 12,
+        "ts": 1793807213.0205724,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 13,
+        "ts": 1793807213.3374643,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 14,
+        "ts": 1793807213.3399556,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/Documents/Github/MORIZON-Reloaded/.validation/pr19-evidence/gdalinfo.html'}"
+      },
+      {
+        "id": 15,
+        "ts": 1793807213.3429544,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: DEM5m_Shimanto_clip_buffer100m.tif: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 16,
+        "ts": 1793807213.3434536,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 17,
+        "ts": 1793807213.3519557,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "{\r\n  \"description\":\"C:/Users/Yoichi_Wada/Documents/Github/MORIZON-Reloaded/.validation/pr19-evidence/ZoningKit/DATA/DEM/DEM5m_Shimanto_clip_buffer100m.tif\",\r\n  \"driverShortName\":\"GTiff\",\r\n  \"driverLongName\":\"GeoTIFF\",\r\n  \"files\":[\r\n    \"C:/Users/Yoichi_Wada/Documents/Github/MORIZON-Reloaded/.validation/pr19-evidence/ZoningKit/DATA/DEM/DEM5m_Shimanto_clip_buffer100m.tif\"\r\n  ],\r\n  \"size\":[\r\n    8815,\r\n    5333\r\n  ],\r\n  \"coordinateSystem\":{\r\n    \"wkt\":\"PROJCRS[\\\"JGD2011 / Japan Plane Rectangular CS IV\\\",\\n    BASEGEOGCRS[\\\"JGD2011\\\",\\n        DATUM[\\\"Japanese Geodetic Datum 2011\\\",\\n            ELLIPSOID[\\\"GRS 1980\\\",6378137,298.257222101,\\n                LENGTHUNIT[\\\"metre\\\",1]]],\\n        PRIMEM[\\\"Greenwich\\\",0,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433]],\\n        ID[\\\"EPSG\\\",6668]],\\n    CONVERSION[\\\"Japan Plane Rectangular CS zone IV\\\",\\n        METHOD[\\\"Transverse Mercator\\\",\\n            ID[\\\"EPSG\\\",9807]],\\n        PARAMETER[\\\"Latitude of natural origin\\\",33,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8801]],\\n        PARAMETER[\\\"Longitude of natural origin\\\",133.5,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8802]],\\n        PARAMETER[\\\"Scale factor at natural origin\\\",0.9999,\\n            SCALEUNIT[\\\"unity\\\",1],\\n            ID[\\\"EPSG\\\",8805]],\\n        PARAMETER[\\\"False easting\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8806]],\\n        PARAMETER[\\\"False northing\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8807]]],\\n    CS[Cartesian,2],\\n        AXIS[\\\"northing (X)\\\",north,\\n            ORDER[1],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n        AXIS[\\\"easting (Y)\\\",east,\\n            ORDER[2],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n    USAGE[\\n        SCOPE[\\\"Cadastre, engineering survey, topographic mapping (large and medium scale).\\\"],\\n        AREA[\\\"Japan - onshore - Shikoku - Kagawa-ken; Ehime-ken; Tokushima-ken; Kochi-ken.\\\"],\\n        BBOX[32.69,131.95,34.45,134.81]],\\n    ID[\\\"EPSG\\\",6672]]\",\r\n    \"dataAxisToSRSAxisMapping\":[\r\n      2,\r\n      1\r\n    ]\r\n  },\r\n  \"geoTransform\":[\r\n    -66540.0,\r\n    5.0,\r\n    0.0,\r\n    39715.0,\r\n    0.0,\r\n    -5.0\r\n  ],\r\n  \"metadata\":{\r\n    \"\":{\r\n      \"TIFFTAG_IMAGEDESCRIPTION\":\"Shimanto-cho DEM5 clipped by N03-2026 boundary + 100 m\",\r\n      \"TIFFTAG_SOFTWARE\":\"tifffile.py\",\r\n      \"TIFFTAG_XRESOLUTION\":\"1\",\r\n      \"TIFFTAG_YRESOLUTION\":\"1\",\r\n      \"TIFFTAG_RESOLUTIONUNIT\":\"1 (unitless)\",\r\n      \"AREA_OR_POINT\":\"Area\"\r\n    },\r\n    \"IMAGE_STRUCTURE\":{\r\n      \"COMPRESSION\":\"DEFLATE\",\r\n      \"INTERLEAVE\":\"BAND\"\r\n    }\r\n  },\r\n  \"cornerCoordinates\":{\r\n    \"upperLeft\":[\r\n      -66540.0,\r\n      39715.0\r\n    ],\r\n    \"lowerLeft\":[\r\n      -66540.0,\r\n      13050.0\r\n    ],\r\n    \"lowerRight\":[\r\n      -22465.0,\r\n      13050.0\r\n    ],\r\n    \"upperRight\":[\r\n      -22465.0,\r\n      39715.0\r\n    ],\r\n    \"center\":[\r\n      -44502.5,\r\n      26382.5\r\n    ]\r\n  },\r\n  \"wgs84Extent\":{\r\n    \"type\":\"Polygon\",\r\n    \"coordinates\":[\r\n      [\r\n        [\r\n          132.7850365,\r\n          33.3560681\r\n        ],\r\n        [\r\n          132.7869906,\r\n          33.1156397\r\n        ],\r\n        [\r\n          133.2592691,\r\n          33.117447\r\n        ],\r\n        [\r\n          133.2586093,\r\n          33.3578919\r\n        ],\r\n        [\r\n          132.7850365,\r\n          33.3560681\r\n        ]\r\n      ]\r\n    ]\r\n  },\r\n  \"bands\":[\r\n    {\r\n      \"band\":1,\r\n      \"block\":[\r\n        256,\r\n        256\r\n      ],\r\n      \"type\":\"Float32\",\r\n      \"colorInterpretation\":\"Gray\",\r\n      \"noDataValue\":-9999.0,\r\n      \"metadata\":{\r\n      }\r\n    }\r\n  ],\r\n  \"stac\":{\r\n    \"proj:shape\":[\r\n      5333,\r\n      8815\r\n    ],\r\n    \"proj:wkt2\":\"PROJCRS[\\\"JGD2011 / Japan Plane Rectangular CS IV\\\",\\n    BASEGEOGCRS[\\\"JGD2011\\\",\\n        DATUM[\\\"Japanese Geodetic Datum 2011\\\",\\n            ELLIPSOID[\\\"GRS 1980\\\",6378137,298.257222101,\\n                LENGTHUNIT[\\\"metre\\\",1]]],\\n        PRIMEM[\\\"Greenwich\\\",0,\\n            ANG...[truncated]"
+      },
+      {
+        "id": 18,
+        "ts": 1793807223.8015351,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 19,
+        "ts": 1793807223.8069966,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 20,
+        "ts": 1793807223.8080313,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 21,
+        "ts": 1793807223.8085253,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 22,
+        "ts": 1793807223.962406,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 23,
+        "ts": 1793807223.9663439,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/c0a4d702573445f99cb14797bc86a5e6/OUTPUT.html'}"
+      },
+      {
+        "id": 24,
+        "ts": 1793807223.9878962,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: DEM5m_Shimanto_clip_buffer100m.tif: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 25,
+        "ts": 1793807223.9883807,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 26,
+        "ts": 1793807223.99639,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "{\r\n  \"description\":\"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif\",\r\n  \"driverShortName\":\"GTiff\",\r\n  \"driverLongName\":\"GeoTIFF\",\r\n  \"files\":[\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif\",\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif.aux.xml\"\r\n  ],\r\n  \"size\":[\r\n    8815,\r\n    5333\r\n  ],\r\n  \"coordinateSystem\":{\r\n    \"wkt\":\"PROJCRS[\\\"JGD2011 / Japan Plane Rectangular CS IV\\\",\\n    BASEGEOGCRS[\\\"JGD2011\\\",\\n        DATUM[\\\"Japanese Geodetic Datum 2011\\\",\\n            ELLIPSOID[\\\"GRS 1980\\\",6378137,298.257222101,\\n                LENGTHUNIT[\\\"metre\\\",1]]],\\n        PRIMEM[\\\"Greenwich\\\",0,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433]],\\n        ID[\\\"EPSG\\\",6668]],\\n    CONVERSION[\\\"Japan Plane Rectangular CS zone IV\\\",\\n        METHOD[\\\"Transverse Mercator\\\",\\n            ID[\\\"EPSG\\\",9807]],\\n        PARAMETER[\\\"Latitude of natural origin\\\",33,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8801]],\\n        PARAMETER[\\\"Longitude of natural origin\\\",133.5,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8802]],\\n        PARAMETER[\\\"Scale factor at natural origin\\\",0.9999,\\n            SCALEUNIT[\\\"unity\\\",1],\\n            ID[\\\"EPSG\\\",8805]],\\n        PARAMETER[\\\"False easting\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8806]],\\n        PARAMETER[\\\"False northing\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8807]]],\\n    CS[Cartesian,2],\\n        AXIS[\\\"northing (X)\\\",north,\\n            ORDER[1],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n        AXIS[\\\"easting (Y)\\\",east,\\n            ORDER[2],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n    USAGE[\\n        SCOPE[\\\"Cadastre, engineering survey, topographic mapping (large and medium scale).\\\"],\\n        AREA[\\\"Japan - onshore - Shikoku - Kagawa-ken; Ehime-ken; Tokushima-ken; Kochi-ken.\\\"],\\n        BBOX[32.69,131.95,34.45,134.81]],\\n    ID[\\\"EPSG\\\",6672]]\",\r\n    \"dataAxisToSRSAxisMapping\":[\r\n      2,\r\n      1\r\n    ]\r\n  },\r\n  \"geoTransform\":[\r\n    -66540.0,\r\n    5.0,\r\n    0.0,\r\n    39715.0,\r\n    0.0,\r\n    -5.0\r\n  ],\r\n  \"metadata\":{\r\n    \"\":{\r\n      \"TIFFTAG_IMAGEDESCRIPTION\":\"Shimanto-cho DEM5 clipped by N03-2026 boundary + 100 m\",\r\n      \"TIFFTAG_SOFTWARE\":\"tifffile.py\",\r\n      \"TIFFTAG_XRESOLUTION\":\"1\",\r\n      \"TIFFTAG_YRESOLUTION\":\"1\",\r\n      \"TIFFTAG_RESOLUTIONUNIT\":\"1 (unitless)\",\r\n      \"AREA_OR_POINT\":\"Area\"\r\n    },\r\n    \"IMAGE_STRUCTURE\":{\r\n      \"COMPRESSION\":\"DEFLATE\",\r\n      \"INTERLEAVE\":\"BAND\"\r\n    }\r\n  },\r\n  \"cornerCoordinates\":{\r\n    \"upperLeft\":[\r\n      -66540.0,\r\n      39715.0\r\n    ],\r\n    \"lowerLeft\":[\r\n      -66540.0,\r\n      13050.0\r\n    ],\r\n    \"lowerRight\":[\r\n      -22465.0,\r\n      13050.0\r\n    ],\r\n    \"upperRight\":[\r\n      -22465.0,\r\n      39715.0\r\n    ],\r\n    \"center\":[\r\n      -44502.5,\r\n      26382.5\r\n    ]\r\n  },\r\n  \"wgs84Extent\":{\r\n    \"type\":\"Polygon\",\r\n    \"coordinates\":[\r\n      [\r\n        [\r\n          132.7850365,\r\n          33.3560681\r\n        ],\r\n        [\r\n          132.7869906,\r\n          33.1156397\r\n        ],\r\n        [\r\n          133.2592691,\r\n          33.117447\r\n        ],\r\n        [\r\n          133.2586093,\r\n          33.3578919\r\n        ],\r\n        [\r\n          132.7850365,\r\n          33.3560681\r\n        ]\r\n      ]\r\n    ]\r\n  },\r\n  \"bands\":[\r\n    {\r\n      \"band\":1,\r\n      \"block\":[\r\n        256,\r\n        256\r\n      ],\r\n      \"type\":\"Float32\",\r\n      \"colorInterpretation\":\"Gray\",\r\n      \"min\":61.74,\r\n      \"max\":788.945,\r\n      \"noDataValue\":-9999.0,\r\n      \"metadata\":{\r\n        \"\":{\r\n          \"STATISTICS_APPROXIMATE\":\"YES\",\r\n          \"STATISTICS_MAXIMUM\":\"788.94543457031\",\r\n          \"STATISTICS_MEAN\":\"364.36484627135\",\r\n      ...[truncated]"
+      },
+      {
+        "id": 27,
+        "ts": 1793807257.6361485,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:47:37] メイン画面の生成 開始"
+      },
+      {
+        "id": 28,
+        "ts": 1793807257.7188346,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:47:37] メイン画面の生成 完了 (0.1s)"
+      },
+      {
+        "id": 29,
+        "ts": 1793807262.9168417,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:47:42] 要素計算: 実行ボタン押下"
+      },
+      {
+        "id": 30,
+        "ts": 1793807262.985196,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 31,
+        "ts": 1793807263.0017073,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 32,
+        "ts": 1793807263.0032156,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 33,
+        "ts": 1793807263.0047219,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 34,
+        "ts": 1793807263.19287,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 35,
+        "ts": 1793807263.1953716,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/0aff33aebe2842b0bdf3ef4be513af70/OUTPUT.html'}"
+      },
+      {
+        "id": 36,
+        "ts": 1793807263.2454057,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\NPP\\NPP04.tif"
+      },
+      {
+        "id": 37,
+        "ts": 1793807263.2464063,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 38,
+        "ts": 1793807263.2474024,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\NPP\\NPP04.tif"
+      },
+      {
+        "id": 39,
+        "ts": 1793807263.2484045,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 40,
+        "ts": 1793807263.406202,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 41,
+        "ts": 1793807263.4091768,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/5925674244364eebac21e16d393771b6/OUTPUT.html'}"
+      },
+      {
+        "id": 42,
+        "ts": 1793807263.4462874,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\SRAD\\SRAD04.tif"
+      },
+      {
+        "id": 43,
+        "ts": 1793807263.4472878,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 44,
+        "ts": 1793807263.4482877,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\SRAD\\SRAD04.tif"
+      },
+      {
+        "id": 45,
+        "ts": 1793807263.4487875,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 46,
+        "ts": 1793807263.6229937,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 47,
+        "ts": 1793807263.6254919,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/94f45efddd1d46e2acb8161e60305d83/OUTPUT.html'}"
+      },
+      {
+        "id": 48,
+        "ts": 1793807263.646013,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\VTEX\\VTEX04.tif"
+      },
+      {
+        "id": 49,
+        "ts": 1793807263.6470132,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 50,
+        "ts": 1793807263.6475132,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\VTEX\\VTEX04.tif"
+      },
+      {
+        "id": 51,
+        "ts": 1793807263.6485128,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 52,
+        "ts": 1793807263.7941685,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 53,
+        "ts": 1793807263.79717,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/4a01cca8d4e44398af5cabc59943bbe2/OUTPUT.html'}"
+      },
+      {
+        "id": 54,
+        "ts": 1793807268.7078938,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: DEM5m_Shimanto_clip_buffer100m.tif: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 55,
+        "ts": 1793807268.7088943,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 56,
+        "ts": 1793807268.722897,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "{\r\n  \"description\":\"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif\",\r\n  \"driverShortName\":\"GTiff\",\r\n  \"driverLongName\":\"GeoTIFF\",\r\n  \"files\":[\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif\",\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif.aux.xml\"\r\n  ],\r\n  \"size\":[\r\n    8815,\r\n    5333\r\n  ],\r\n  \"coordinateSystem\":{\r\n    \"wkt\":\"PROJCRS[\\\"JGD2011 / Japan Plane Rectangular CS IV\\\",\\n    BASEGEOGCRS[\\\"JGD2011\\\",\\n        DATUM[\\\"Japanese Geodetic Datum 2011\\\",\\n            ELLIPSOID[\\\"GRS 1980\\\",6378137,298.257222101,\\n                LENGTHUNIT[\\\"metre\\\",1]]],\\n        PRIMEM[\\\"Greenwich\\\",0,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433]],\\n        ID[\\\"EPSG\\\",6668]],\\n    CONVERSION[\\\"Japan Plane Rectangular CS zone IV\\\",\\n        METHOD[\\\"Transverse Mercator\\\",\\n            ID[\\\"EPSG\\\",9807]],\\n        PARAMETER[\\\"Latitude of natural origin\\\",33,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8801]],\\n        PARAMETER[\\\"Longitude of natural origin\\\",133.5,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8802]],\\n        PARAMETER[\\\"Scale factor at natural origin\\\",0.9999,\\n            SCALEUNIT[\\\"unity\\\",1],\\n            ID[\\\"EPSG\\\",8805]],\\n        PARAMETER[\\\"False easting\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8806]],\\n        PARAMETER[\\\"False northing\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8807]]],\\n    CS[Cartesian,2],\\n        AXIS[\\\"northing (X)\\\",north,\\n            ORDER[1],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n        AXIS[\\\"easting (Y)\\\",east,\\n            ORDER[2],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n    USAGE[\\n        SCOPE[\\\"Cadastre, engineering survey, topographic mapping (large and medium scale).\\\"],\\n        AREA[\\\"Japan - onshore - Shikoku - Kagawa-ken; Ehime-ken; Tokushima-ken; Kochi-ken.\\\"],\\n        BBOX[32.69,131.95,34.45,134.81]],\\n    ID[\\\"EPSG\\\",6672]]\",\r\n    \"dataAxisToSRSAxisMapping\":[\r\n      2,\r\n      1\r\n    ]\r\n  },\r\n  \"geoTransform\":[\r\n    -66540.0,\r\n    5.0,\r\n    0.0,\r\n    39715.0,\r\n    0.0,\r\n    -5.0\r\n  ],\r\n  \"metadata\":{\r\n    \"\":{\r\n      \"TIFFTAG_IMAGEDESCRIPTION\":\"Shimanto-cho DEM5 clipped by N03-2026 boundary + 100 m\",\r\n      \"TIFFTAG_SOFTWARE\":\"tifffile.py\",\r\n      \"TIFFTAG_XRESOLUTION\":\"1\",\r\n      \"TIFFTAG_YRESOLUTION\":\"1\",\r\n      \"TIFFTAG_RESOLUTIONUNIT\":\"1 (unitless)\",\r\n      \"AREA_OR_POINT\":\"Area\"\r\n    },\r\n    \"IMAGE_STRUCTURE\":{\r\n      \"COMPRESSION\":\"DEFLATE\",\r\n      \"INTERLEAVE\":\"BAND\"\r\n    }\r\n  },\r\n  \"cornerCoordinates\":{\r\n    \"upperLeft\":[\r\n      -66540.0,\r\n      39715.0\r\n    ],\r\n    \"lowerLeft\":[\r\n      -66540.0,\r\n      13050.0\r\n    ],\r\n    \"lowerRight\":[\r\n      -22465.0,\r\n      13050.0\r\n    ],\r\n    \"upperRight\":[\r\n      -22465.0,\r\n      39715.0\r\n    ],\r\n    \"center\":[\r\n      -44502.5,\r\n      26382.5\r\n    ]\r\n  },\r\n  \"wgs84Extent\":{\r\n    \"type\":\"Polygon\",\r\n    \"coordinates\":[\r\n      [\r\n        [\r\n          132.7850365,\r\n          33.3560681\r\n        ],\r\n        [\r\n          132.7869906,\r\n          33.1156397\r\n        ],\r\n        [\r\n          133.2592691,\r\n          33.117447\r\n        ],\r\n        [\r\n          133.2586093,\r\n          33.3578919\r\n        ],\r\n        [\r\n          132.7850365,\r\n          33.3560681\r\n        ]\r\n      ]\r\n    ]\r\n  },\r\n  \"bands\":[\r\n    {\r\n      \"band\":1,\r\n      \"block\":[\r\n        256,\r\n        256\r\n      ],\r\n      \"type\":\"Float32\",\r\n      \"colorInterpretation\":\"Gray\",\r\n      \"min\":61.74,\r\n      \"max\":788.945,\r\n      \"noDataValue\":-9999.0,\r\n      \"metadata\":{\r\n        \"\":{\r\n          \"STATISTICS_APPROXIMATE\":\"YES\",\r\n          \"STATISTICS_MAXIMUM\":\"788.94543457031\",\r\n          \"STATISTICS_MEAN\":\"364.36484627135\",\r\n      ...[truncated]"
+      },
+      {
+        "id": 57,
+        "ts": 1793807268.8506768,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "{\r\n  \"description\":\"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\NPP\\\\NPP04.tif\",\r\n  \"driverShortName\":\"GTiff\",\r\n  \"driverLongName\":\"GeoTIFF\",\r\n  \"files\":[\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\NPP\\\\NPP04.tif\",\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\NPP\\\\NPP04.tif.aux.xml\"\r\n  ],\r\n  \"size\":[\r\n    5331,\r\n    4169\r\n  ],\r\n  \"coordinateSystem\":{\r\n    \"wkt\":\"PROJCRS[\\\"JGD2000 / Japan Plane Rectangular CS IV\\\",\\n    BASEGEOGCRS[\\\"JGD2000\\\",\\n        DATUM[\\\"Japanese Geodetic Datum 2000\\\",\\n            ELLIPSOID[\\\"GRS 1980\\\",6378137,298.257222101,\\n                LENGTHUNIT[\\\"metre\\\",1]]],\\n        PRIMEM[\\\"Greenwich\\\",0,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433]],\\n        ID[\\\"EPSG\\\",4612]],\\n    CONVERSION[\\\"Japan Plane Rectangular CS zone IV\\\",\\n        METHOD[\\\"Transverse Mercator\\\",\\n            ID[\\\"EPSG\\\",9807]],\\n        PARAMETER[\\\"Latitude of natural origin\\\",33,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8801]],\\n        PARAMETER[\\\"Longitude of natural origin\\\",133.5,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8802]],\\n        PARAMETER[\\\"Scale factor at natural origin\\\",0.9999,\\n            SCALEUNIT[\\\"unity\\\",1],\\n            ID[\\\"EPSG\\\",8805]],\\n        PARAMETER[\\\"False easting\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8806]],\\n        PARAMETER[\\\"False northing\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8807]]],\\n    CS[Cartesian,2],\\n        AXIS[\\\"northing (X)\\\",north,\\n            ORDER[1],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n        AXIS[\\\"easting (Y)\\\",east,\\n            ORDER[2],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n    USAGE[\\n        SCOPE[\\\"Cadastre, engineering survey, topographic mapping (large and medium scale).\\\"],\\n        AREA[\\\"Japan - onshore - Shikoku - Kagawa-ken; Ehime-ken; Tokushima-ken; Kochi-ken.\\\"],\\n        BBOX[32.69,131.95,34.45,134.81]],\\n    ID[\\\"EPSG\\\",2446]]\",\r\n    \"dataAxisToSRSAxisMapping\":[\r\n      2,\r\n      1\r\n    ]\r\n  },\r\n  \"geoTransform\":[\r\n    -141500.0,\r\n    50.0,\r\n    0.0,\r\n    174900.0,\r\n    0.0,\r\n    -50.0\r\n  ],\r\n  \"metadata\":{\r\n    \"\":{\r\n      \"TIFFTAG_SOFTWARE\":\"GRASS GIS 7.8.5 with GDAL 3.1.4\",\r\n      \"AREA_OR_POINT\":\"Area\"\r\n    },\r\n    \"IMAGE_STRUCTURE\":{\r\n      \"COMPRESSION\":\"LZW\",\r\n      \"INTERLEAVE\":\"BAND\"\r\n    }\r\n  },\r\n  \"cornerCoordinates\":{\r\n    \"upperLeft\":[\r\n      -141500.0,\r\n      174900.0\r\n    ],\r\n    \"lowerLeft\":[\r\n      -141500.0,\r\n      -33550.0\r\n    ],\r\n    \"lowerRight\":[\r\n      125050.0,\r\n      -33550.0\r\n    ],\r\n    \"upperRight\":[\r\n      125050.0,\r\n      174900.0\r\n    ],\r\n    \"center\":[\r\n      -8225.0,\r\n      70675.0\r\n    ]\r\n  },\r\n  \"wgs84Extent\":{\r\n    \"type\":\"Polygon\",\r\n    \"coordinates\":[\r\n      [\r\n        [\r\n          131.9579501,\r\n          34.5672484\r\n        ],\r\n        [\r\n          131.9910776,\r\n          32.6883737\r\n        ],\r\n        [\r\n          134.8335473,\r\n          32.6903609\r\n        ],\r\n        [\r\n          134.8628275,\r\n          34.5693813\r\n        ],\r\n        [\r\n          131.9579501,\r\n          34.5672484\r\n        ]\r\n      ]\r\n    ]\r\n  },\r\n  \"bands\":[\r\n    {\r\n      \"band\":1,\r\n      \"block\":[\r\n        5331,\r\n        1\r\n      ],\r\n      \"type\":\"Float64\",\r\n      \"colorInterpretation\":\"Gray\",\r\n      \"min\":0.0,\r\n      \"max\":17.975,\r\n      \"noDataValue\":\"NaN\",\r\n      \"metadata\":{\r\n        \"\":{\r\n          \"STATISTICS_APPROXIMATE\":\"YES\",\r\n          \"STATISTICS_MAXIMUM\":\"17.974899291992\",\r\n          \"STATISTICS_MEAN\":\"16.832304204364\",\r\n          \"STATISTICS_MINIMUM\":\"0\",\r\n          \"STATISTICS_STDDEV\":\"0.5923177315233\",\r\n          \"STATISTICS_VALID_PERCENT\":\"44.12\"\r\n        }\r\n      },\r\n      \"rat\":{\r\n        \"tableType\":\"thematic\",\r\n        \"fieldDefn\":[\r\n          {...[truncated]"
+      },
+      {
+        "id": 58,
+        "ts": 1793807269.0411706,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "{\r\n  \"description\":\"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\SRAD\\\\SRAD04.tif\",\r\n  \"driverShortName\":\"GTiff\",\r\n  \"driverLongName\":\"GeoTIFF\",\r\n  \"files\":[\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\SRAD\\\\SRAD04.tif\",\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\SRAD\\\\SRAD04.tif.aux.xml\"\r\n  ],\r\n  \"size\":[\r\n    5331,\r\n    4169\r\n  ],\r\n  \"coordinateSystem\":{\r\n    \"wkt\":\"PROJCRS[\\\"JGD2000 / Japan Plane Rectangular CS IV\\\",\\n    BASEGEOGCRS[\\\"JGD2000\\\",\\n        DATUM[\\\"Japanese Geodetic Datum 2000\\\",\\n            ELLIPSOID[\\\"GRS 1980\\\",6378137,298.257222101,\\n                LENGTHUNIT[\\\"metre\\\",1]]],\\n        PRIMEM[\\\"Greenwich\\\",0,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433]],\\n        ID[\\\"EPSG\\\",4612]],\\n    CONVERSION[\\\"Japan Plane Rectangular CS zone IV\\\",\\n        METHOD[\\\"Transverse Mercator\\\",\\n            ID[\\\"EPSG\\\",9807]],\\n        PARAMETER[\\\"Latitude of natural origin\\\",33,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8801]],\\n        PARAMETER[\\\"Longitude of natural origin\\\",133.5,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8802]],\\n        PARAMETER[\\\"Scale factor at natural origin\\\",0.9999,\\n            SCALEUNIT[\\\"unity\\\",1],\\n            ID[\\\"EPSG\\\",8805]],\\n        PARAMETER[\\\"False easting\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8806]],\\n        PARAMETER[\\\"False northing\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8807]]],\\n    CS[Cartesian,2],\\n        AXIS[\\\"northing (X)\\\",north,\\n            ORDER[1],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n        AXIS[\\\"easting (Y)\\\",east,\\n            ORDER[2],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n    USAGE[\\n        SCOPE[\\\"Cadastre, engineering survey, topographic mapping (large and medium scale).\\\"],\\n        AREA[\\\"Japan - onshore - Shikoku - Kagawa-ken; Ehime-ken; Tokushima-ken; Kochi-ken.\\\"],\\n        BBOX[32.69,131.95,34.45,134.81]],\\n    ID[\\\"EPSG\\\",2446]]\",\r\n    \"dataAxisToSRSAxisMapping\":[\r\n      2,\r\n      1\r\n    ]\r\n  },\r\n  \"geoTransform\":[\r\n    -141500.0,\r\n    50.0,\r\n    0.0,\r\n    174900.0,\r\n    0.0,\r\n    -50.0\r\n  ],\r\n  \"metadata\":{\r\n    \"\":{\r\n      \"TIFFTAG_SOFTWARE\":\"GRASS GIS 7.8.5 with GDAL 3.1.4\",\r\n      \"AREA_OR_POINT\":\"Area\"\r\n    },\r\n    \"IMAGE_STRUCTURE\":{\r\n      \"COMPRESSION\":\"LZW\",\r\n      \"INTERLEAVE\":\"BAND\"\r\n    }\r\n  },\r\n  \"cornerCoordinates\":{\r\n    \"upperLeft\":[\r\n      -141500.0,\r\n      174900.0\r\n    ],\r\n    \"lowerLeft\":[\r\n      -141500.0,\r\n      -33550.0\r\n    ],\r\n    \"lowerRight\":[\r\n      125050.0,\r\n      -33550.0\r\n    ],\r\n    \"upperRight\":[\r\n      125050.0,\r\n      174900.0\r\n    ],\r\n    \"center\":[\r\n      -8225.0,\r\n      70675.0\r\n    ]\r\n  },\r\n  \"wgs84Extent\":{\r\n    \"type\":\"Polygon\",\r\n    \"coordinates\":[\r\n      [\r\n        [\r\n          131.9579501,\r\n          34.5672484\r\n        ],\r\n        [\r\n          131.9910776,\r\n          32.6883737\r\n        ],\r\n        [\r\n          134.8335473,\r\n          32.6903609\r\n        ],\r\n        [\r\n          134.8628275,\r\n          34.5693813\r\n        ],\r\n        [\r\n          131.9579501,\r\n          34.5672484\r\n        ]\r\n      ]\r\n    ]\r\n  },\r\n  \"bands\":[\r\n    {\r\n      \"band\":1,\r\n      \"block\":[\r\n        5331,\r\n        1\r\n      ],\r\n      \"type\":\"Float64\",\r\n      \"colorInterpretation\":\"Gray\",\r\n      \"min\":348.117,\r\n      \"max\":1842.116,\r\n      \"noDataValue\":\"NaN\",\r\n      \"metadata\":{\r\n        \"\":{\r\n          \"STATISTICS_APPROXIMATE\":\"YES\",\r\n          \"STATISTICS_MAXIMUM\":\"1842.1163598276\",\r\n          \"STATISTICS_MEAN\":\"1395.878774536\",\r\n          \"STATISTICS_MINIMUM\":\"348.11743739337\",\r\n          \"STATISTICS_STDDEV\":\"247.96859196281\",\r\n          \"STATISTICS_VALID_PERCENT\":\"43.24\"\r\n        }\r\n      },\r\n      \"rat\":{\r\n        \"tableType\":\"thematic\",\r\n        \"...[truncated]"
+      },
+      {
+        "id": 59,
+        "ts": 1793807269.2361155,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "{\r\n  \"description\":\"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\VTEX\\\\VTEX04.tif\",\r\n  \"driverShortName\":\"GTiff\",\r\n  \"driverLongName\":\"GeoTIFF\",\r\n  \"files\":[\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\VTEX\\\\VTEX04.tif\",\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\SiteIndex\\\\VTEX\\\\VTEX04.tif.aux.xml\"\r\n  ],\r\n  \"size\":[\r\n    5331,\r\n    4169\r\n  ],\r\n  \"coordinateSystem\":{\r\n    \"wkt\":\"PROJCRS[\\\"JGD2000 / Japan Plane Rectangular CS IV\\\",\\n    BASEGEOGCRS[\\\"JGD2000\\\",\\n        DATUM[\\\"Japanese Geodetic Datum 2000\\\",\\n            ELLIPSOID[\\\"GRS 1980\\\",6378137,298.257222101,\\n                LENGTHUNIT[\\\"metre\\\",1]]],\\n        PRIMEM[\\\"Greenwich\\\",0,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433]],\\n        ID[\\\"EPSG\\\",4612]],\\n    CONVERSION[\\\"Japan Plane Rectangular CS zone IV\\\",\\n        METHOD[\\\"Transverse Mercator\\\",\\n            ID[\\\"EPSG\\\",9807]],\\n        PARAMETER[\\\"Latitude of natural origin\\\",33,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8801]],\\n        PARAMETER[\\\"Longitude of natural origin\\\",133.5,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8802]],\\n        PARAMETER[\\\"Scale factor at natural origin\\\",0.9999,\\n            SCALEUNIT[\\\"unity\\\",1],\\n            ID[\\\"EPSG\\\",8805]],\\n        PARAMETER[\\\"False easting\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8806]],\\n        PARAMETER[\\\"False northing\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8807]]],\\n    CS[Cartesian,2],\\n        AXIS[\\\"northing (X)\\\",north,\\n            ORDER[1],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n        AXIS[\\\"easting (Y)\\\",east,\\n            ORDER[2],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n    USAGE[\\n        SCOPE[\\\"Cadastre, engineering survey, topographic mapping (large and medium scale).\\\"],\\n        AREA[\\\"Japan - onshore - Shikoku - Kagawa-ken; Ehime-ken; Tokushima-ken; Kochi-ken.\\\"],\\n        BBOX[32.69,131.95,34.45,134.81]],\\n    ID[\\\"EPSG\\\",2446]]\",\r\n    \"dataAxisToSRSAxisMapping\":[\r\n      2,\r\n      1\r\n    ]\r\n  },\r\n  \"geoTransform\":[\r\n    -141500.0,\r\n    50.0,\r\n    0.0,\r\n    174900.0,\r\n    0.0,\r\n    -50.0\r\n  ],\r\n  \"metadata\":{\r\n    \"\":{\r\n      \"TIFFTAG_SOFTWARE\":\"GRASS GIS 7.8.5 with GDAL 3.1.4\",\r\n      \"AREA_OR_POINT\":\"Area\"\r\n    },\r\n    \"IMAGE_STRUCTURE\":{\r\n      \"COMPRESSION\":\"LZW\",\r\n      \"INTERLEAVE\":\"BAND\"\r\n    }\r\n  },\r\n  \"cornerCoordinates\":{\r\n    \"upperLeft\":[\r\n      -141500.0,\r\n      174900.0\r\n    ],\r\n    \"lowerLeft\":[\r\n      -141500.0,\r\n      -33550.0\r\n    ],\r\n    \"lowerRight\":[\r\n      125050.0,\r\n      -33550.0\r\n    ],\r\n    \"upperRight\":[\r\n      125050.0,\r\n      174900.0\r\n    ],\r\n    \"center\":[\r\n      -8225.0,\r\n      70675.0\r\n    ]\r\n  },\r\n  \"wgs84Extent\":{\r\n    \"type\":\"Polygon\",\r\n    \"coordinates\":[\r\n      [\r\n        [\r\n          131.9579501,\r\n          34.5672484\r\n        ],\r\n        [\r\n          131.9910776,\r\n          32.6883737\r\n        ],\r\n        [\r\n          134.8335473,\r\n          32.6903609\r\n        ],\r\n        [\r\n          134.8628275,\r\n          34.5693813\r\n        ],\r\n        [\r\n          131.9579501,\r\n          34.5672484\r\n        ]\r\n      ]\r\n    ]\r\n  },\r\n  \"bands\":[\r\n    {\r\n      \"band\":1,\r\n      \"block\":[\r\n        5331,\r\n        1\r\n      ],\r\n      \"type\":\"Float64\",\r\n      \"colorInterpretation\":\"Gray\",\r\n      \"min\":0.0,\r\n      \"max\":242.499,\r\n      \"noDataValue\":\"NaN\",\r\n      \"metadata\":{\r\n        \"\":{\r\n          \"STATISTICS_APPROXIMATE\":\"YES\",\r\n          \"STATISTICS_MAXIMUM\":\"242.49899291992\",\r\n          \"STATISTICS_MEAN\":\"59.433950452915\",\r\n          \"STATISTICS_MINIMUM\":\"0\",\r\n          \"STATISTICS_STDDEV\":\"43.728498281478\",\r\n          \"STATISTICS_VALID_PERCENT\":\"44.11\"\r\n        }\r\n      },\r\n      \"rat\":{\r\n        \"tableType\":\"thematic\",\r\n        \"fieldDefn\":[\r\n    ...[truncated]"
+      },
+      {
+        "id": 60,
+        "ts": 1793807269.4454067,
+        "level": "warning",
+        "tag": "MORIZON",
+        "message": "[00:47:49] UIスレッドが約6.3秒応答していませんでした。重なった計測区間: 未計測の処理（直近の完了区間: 要素計算: UI更新(refresh_elements_ui)、停止開始の5.0秒前に完了）"
+      },
+      {
+        "id": 61,
+        "ts": 1793807290.7711055,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:10] 要素計算: 処理スレッドを開始します"
+      },
+      {
+        "id": 62,
+        "ts": 1793807290.9043581,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+    0.0s] 要素計算を開始: targets=['siteidx', 'cost', 'distance', 'shc', 'slope', 'savearea'], dem=C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 63,
+        "ts": 1793807290.906858,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+    0.0s] DEM情報を取得中 (gdal:gdalinfo)"
+      },
+      {
+        "id": 64,
+        "ts": 1793807290.9083567,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 65,
+        "ts": 1793807291.0363278,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 66,
+        "ts": 1793807291.0383303,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdalinfo -json C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif"
+      },
+      {
+        "id": 67,
+        "ts": 1793807291.0458262,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 68,
+        "ts": 1793807291.0583258,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: DEM5m_Shimanto_clip_buffer100m.tif: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 69,
+        "ts": 1793807291.0603268,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 70,
+        "ts": 1793807291.0778491,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "{\r\n  \"description\":\"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif\",\r\n  \"driverShortName\":\"GTiff\",\r\n  \"driverLongName\":\"GeoTIFF\",\r\n  \"files\":[\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif\",\r\n    \"C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\DATA\\\\DEM\\\\DEM5m_Shimanto_clip_buffer100m.tif.aux.xml\"\r\n  ],\r\n  \"size\":[\r\n    8815,\r\n    5333\r\n  ],\r\n  \"coordinateSystem\":{\r\n    \"wkt\":\"PROJCRS[\\\"JGD2011 / Japan Plane Rectangular CS IV\\\",\\n    BASEGEOGCRS[\\\"JGD2011\\\",\\n        DATUM[\\\"Japanese Geodetic Datum 2011\\\",\\n            ELLIPSOID[\\\"GRS 1980\\\",6378137,298.257222101,\\n                LENGTHUNIT[\\\"metre\\\",1]]],\\n        PRIMEM[\\\"Greenwich\\\",0,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433]],\\n        ID[\\\"EPSG\\\",6668]],\\n    CONVERSION[\\\"Japan Plane Rectangular CS zone IV\\\",\\n        METHOD[\\\"Transverse Mercator\\\",\\n            ID[\\\"EPSG\\\",9807]],\\n        PARAMETER[\\\"Latitude of natural origin\\\",33,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8801]],\\n        PARAMETER[\\\"Longitude of natural origin\\\",133.5,\\n            ANGLEUNIT[\\\"degree\\\",0.0174532925199433],\\n            ID[\\\"EPSG\\\",8802]],\\n        PARAMETER[\\\"Scale factor at natural origin\\\",0.9999,\\n            SCALEUNIT[\\\"unity\\\",1],\\n            ID[\\\"EPSG\\\",8805]],\\n        PARAMETER[\\\"False easting\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8806]],\\n        PARAMETER[\\\"False northing\\\",0,\\n            LENGTHUNIT[\\\"metre\\\",1],\\n            ID[\\\"EPSG\\\",8807]]],\\n    CS[Cartesian,2],\\n        AXIS[\\\"northing (X)\\\",north,\\n            ORDER[1],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n        AXIS[\\\"easting (Y)\\\",east,\\n            ORDER[2],\\n            LENGTHUNIT[\\\"metre\\\",1]],\\n    USAGE[\\n        SCOPE[\\\"Cadastre, engineering survey, topographic mapping (large and medium scale).\\\"],\\n        AREA[\\\"Japan - onshore - Shikoku - Kagawa-ken; Ehime-ken; Tokushima-ken; Kochi-ken.\\\"],\\n        BBOX[32.69,131.95,34.45,134.81]],\\n    ID[\\\"EPSG\\\",6672]]\",\r\n    \"dataAxisToSRSAxisMapping\":[\r\n      2,\r\n      1\r\n    ]\r\n  },\r\n  \"geoTransform\":[\r\n    -66540.0,\r\n    5.0,\r\n    0.0,\r\n    39715.0,\r\n    0.0,\r\n    -5.0\r\n  ],\r\n  \"metadata\":{\r\n    \"\":{\r\n      \"TIFFTAG_IMAGEDESCRIPTION\":\"Shimanto-cho DEM5 clipped by N03-2026 boundary + 100 m\",\r\n      \"TIFFTAG_SOFTWARE\":\"tifffile.py\",\r\n      \"TIFFTAG_XRESOLUTION\":\"1\",\r\n      \"TIFFTAG_YRESOLUTION\":\"1\",\r\n      \"TIFFTAG_RESOLUTIONUNIT\":\"1 (unitless)\",\r\n      \"AREA_OR_POINT\":\"Area\"\r\n    },\r\n    \"IMAGE_STRUCTURE\":{\r\n      \"COMPRESSION\":\"DEFLATE\",\r\n      \"INTERLEAVE\":\"BAND\"\r\n    }\r\n  },\r\n  \"cornerCoordinates\":{\r\n    \"upperLeft\":[\r\n      -66540.0,\r\n      39715.0\r\n    ],\r\n    \"lowerLeft\":[\r\n      -66540.0,\r\n      13050.0\r\n    ],\r\n    \"lowerRight\":[\r\n      -22465.0,\r\n      13050.0\r\n    ],\r\n    \"upperRight\":[\r\n      -22465.0,\r\n      39715.0\r\n    ],\r\n    \"center\":[\r\n      -44502.5,\r\n      26382.5\r\n    ]\r\n  },\r\n  \"wgs84Extent\":{\r\n    \"type\":\"Polygon\",\r\n    \"coordinates\":[\r\n      [\r\n        [\r\n          132.7850365,\r\n          33.3560681\r\n        ],\r\n        [\r\n          132.7869906,\r\n          33.1156397\r\n        ],\r\n        [\r\n          133.2592691,\r\n          33.117447\r\n        ],\r\n        [\r\n          133.2586093,\r\n          33.3578919\r\n        ],\r\n        [\r\n          132.7850365,\r\n          33.3560681\r\n        ]\r\n      ]\r\n    ]\r\n  },\r\n  \"bands\":[\r\n    {\r\n      \"band\":1,\r\n      \"block\":[\r\n        256,\r\n        256\r\n      ],\r\n      \"type\":\"Float32\",\r\n      \"colorInterpretation\":\"Gray\",\r\n      \"min\":61.74,\r\n      \"max\":788.945,\r\n      \"noDataValue\":-9999.0,\r\n      \"metadata\":{\r\n        \"\":{\r\n          \"STATISTICS_APPROXIMATE\":\"YES\",\r\n          \"STATISTICS_MAXIMUM\":\"788.94543457031\",\r\n          \"STATISTICS_MEAN\":\"364.36484627135\",\r\n      ...[truncated]"
+      },
+      {
+        "id": 71,
+        "ts": 1793807291.100367,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 72,
+        "ts": 1793807291.102368,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/8c56efbee5b647bd8bd4c268a600134e/OUTPUT.html'}"
+      },
+      {
+        "id": 73,
+        "ts": 1793807291.104369,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+    0.3s] DEM情報を取得完了: resampling=True"
+      },
+      {
+        "id": 74,
+        "ts": 1793807291.1058671,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+    0.3s] START: DEMをリサンプリング中"
+      },
+      {
+        "id": 75,
+        "ts": 1793807291.2919989,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdal_translate -of GTiff -tr 10 10 -r cubicspline C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/04cafe5870724b508234d5023e7fdb2a/OUTPUT.tif"
+      },
+      {
+        "id": 76,
+        "ts": 1793807291.2934976,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 77,
+        "ts": 1793807291.2944973,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdal_translate -of GTiff -tr 10 10 -r cubicspline C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/04cafe5870724b508234d5023e7fdb2a/OUTPUT.tif"
+      },
+      {
+        "id": 78,
+        "ts": 1793807291.2959986,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 79,
+        "ts": 1793807291.5910654,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: DEM5m_Shimanto_clip_buffer100m.tif: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 80,
+        "ts": 1793807291.5975661,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "Warning 1: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order"
+      },
+      {
+        "id": 81,
+        "ts": 1793807292.9428504,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Input file size is 8815, 5333\r\n0...10...20...30...40...50...60...70...80...90...100 - done."
+      },
+      {
+        "id": 82,
+        "ts": 1793807292.953849,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 83,
+        "ts": 1793807292.9548523,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/04cafe5870724b508234d5023e7fdb2a/OUTPUT.tif'}"
+      },
+      {
+        "id": 84,
+        "ts": 1793807292.9563801,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+    2.2s] DONE: DEMをリサンプリング中 (1.9s)"
+      },
+      {
+        "id": 85,
+        "ts": 1793807292.9568803,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+    2.2s] START: 地位指数を計算中"
+      },
+      {
+        "id": 86,
+        "ts": 1793807300.7525275,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:20] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 87,
+        "ts": 1793807300.756526,
+        "level": "warning",
+        "tag": "Python警告",
+        "message": "warning:C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\MORIZON\\processes\\raster_styler\\utils.py:47: DeprecationWarning: QgsRasterInterface.bandStatistics() is deprecated\n  stats = provider.bandStatistics(\n\ntraceback:  File \"C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\MORIZON\\processes\\elements.py\", line 169, in run\n    raster_styler.siteidx.write_rawdata_qml(\n  File \"C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\MORIZON\\processes\\raster_styler\\siteidx.py\", line 57, in write_rawdata_qml\n    renderer = get_quantile_renderer(rlayer, colors)\n  File \"C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\MORIZON\\processes\\raster_styler\\utils.py\", line 47, in get_quantile_renderer\n    stats = provider.bandStatistics(\n"
+      },
+      {
+        "id": 88,
+        "ts": 1793807300.9107227,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:20] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.2s)"
+      },
+      {
+        "id": 89,
+        "ts": 1793807301.068471,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] Quantile分類(ラスタ): layer=, Min=15.91620922088623, Max=32.09346389770508, 生成された区分数=5"
+      },
+      {
+        "id": 90,
+        "ts": 1793807301.1705916,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 91,
+        "ts": 1793807301.1715903,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 92,
+        "ts": 1793807301.2849185,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] Quantile分類(ラスタ): layer=, Min=15.916209220886, Max=32.093463897705, 生成された区分数=3"
+      },
+      {
+        "id": 93,
+        "ts": 1793807301.3890858,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 94,
+        "ts": 1793807301.5698175,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.2s)"
+      },
+      {
+        "id": 95,
+        "ts": 1793807301.7515821,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] Quantile分類(ラスタ): layer=, Min=20.580074310302734, Max=24.04352378845215, 生成された区分数=5"
+      },
+      {
+        "id": 96,
+        "ts": 1793807301.839906,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 97,
+        "ts": 1793807301.840902,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 98,
+        "ts": 1793807301.9626956,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:21] Quantile分類(ラスタ): layer=, Min=20.580074310303, Max=24.043523788452, 生成された区分数=3"
+      },
+      {
+        "id": 99,
+        "ts": 1793807302.0769327,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:22] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 100,
+        "ts": 1793807302.2591586,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:22] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.2s)"
+      },
+      {
+        "id": 101,
+        "ts": 1793807302.4409869,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:22] Quantile分類(ラスタ): layer=, Min=19.806743621826172, Max=26.04641342163086, 生成された区分数=5"
+      },
+      {
+        "id": 102,
+        "ts": 1793807302.5341818,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:22] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 103,
+        "ts": 1793807302.5356877,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:22] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 104,
+        "ts": 1793807302.6573079,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:48:22] Quantile分類(ラスタ): layer=, Min=19.806743621826, Max=26.046413421631, 生成された区分数=3"
+      },
+      {
+        "id": 105,
+        "ts": 1793807302.7314196,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+   12.0s] DONE: 地位指数を計算中 (9.8s)"
+      },
+      {
+        "id": 106,
+        "ts": 1793807302.7324195,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+   12.0s] START: 収益性/集材作業効率を計算中"
+      },
+      {
+        "id": 107,
+        "ts": 1793807302.740497,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "grass:r.neighbors 実行開始 (初回のGRASS起動には時間がかかることがあります)"
+      },
+      {
+        "id": 108,
+        "ts": 1793807302.7614717,
+        "level": "info",
+        "tag": "Grass",
+        "message": "processInputs end. コマンド ['g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/02d8d30a89bf412d87c134d1ec7f6ad7/crs.prj\"', 'r.in.gdal input=\"C:\\\\Users\\\\Yoichi_Wada\\\\AppData\\\\Local\\\\Temp\\\\processing_MfiupA\\\\04cafe5870724b508234d5023e7fdb2a\\\\OUTPUT.tif\" band=1 output=\"rast_6aeb53c6b94d42\" --overwrite -o', 'g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0']"
+      },
+      {
+        "id": 109,
+        "ts": 1793807302.7629719,
+        "level": "info",
+        "tag": "Grass",
+        "message": "processCommands end. コマンド ['g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/02d8d30a89bf412d87c134d1ec7f6ad7/crs.prj\"', 'r.in.gdal input=\"C:\\\\Users\\\\Yoichi_Wada\\\\AppData\\\\Local\\\\Temp\\\\processing_MfiupA\\\\04cafe5870724b508234d5023e7fdb2a\\\\OUTPUT.tif\" band=1 output=\"rast_6aeb53c6b94d42\" --overwrite -o', 'g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0', 'r.neighbors  input=rast_6aeb53c6b94d42 method=\"minimum\" size=49 output=output8093b93a647c42d0a620a1161e2a7e1f --overwrite']"
+      },
+      {
+        "id": 110,
+        "ts": 1793807302.7639725,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/02d8d30a89bf412d87c134d1ec7f6ad7/crs.prj\""
+      },
+      {
+        "id": 111,
+        "ts": 1793807302.765477,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.in.gdal input=\"C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\04cafe5870724b508234d5023e7fdb2a\\OUTPUT.tif\" band=1 output=\"rast_6aeb53c6b94d42\" --overwrite -o"
+      },
+      {
+        "id": 112,
+        "ts": 1793807302.7664764,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0"
+      },
+      {
+        "id": 113,
+        "ts": 1793807302.7679715,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.neighbors  input=rast_6aeb53c6b94d42 method=\"minimum\" size=49 output=output8093b93a647c42d0a620a1161e2a7e1f --overwrite"
+      },
+      {
+        "id": 114,
+        "ts": 1793807302.7699711,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.region raster=output8093b93a647c42d0a620a1161e2a7e1f"
+      },
+      {
+        "id": 115,
+        "ts": 1793807302.7719712,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.out.gdal -t -m input=\"output8093b93a647c42d0a620a1161e2a7e1f\" output=\"C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_morizon_work\\ruggedness_min.tif\" format=\"GTiff\"  createopt=\"TFW=YES,COMPRESS=LZW\" --overwrite"
+      },
+      {
+        "id": 116,
+        "ts": 1793807304.2648852,
+        "level": "warning",
+        "tag": "プロセシング",
+        "message": "WARNING: Concurrent mapset locking is not supported on Windows"
+      },
+      {
+        "id": 117,
+        "ts": 1793807304.5443828,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>chcp 932 1>NUL"
+      },
+      {
+        "id": 118,
+        "ts": 1793807304.5783937,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/02d8d30a89bf412d87c134d1ec7f6ad7/crs.prj\""
+      },
+      {
+        "id": 119,
+        "ts": 1793807304.7026176,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Default region was updated to the new projection, but if you have multiple mapsets `g.region -d` should be run in each to update the region from the default"
+      },
+      {
+        "id": 120,
+        "ts": 1793807304.7031212,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Projection information updated"
+      },
+      {
+        "id": 121,
+        "ts": 1793807304.7201474,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.in.gdal input=\"C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\04cafe5870724b508234d5023e7fdb2a\\OUTPUT.tif\" band=1 output=\"rast_6aeb53c6b94d42\" --overwrite -o"
+      },
+      {
+        "id": 122,
+        "ts": 1793807304.8783953,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Over-riding projection check"
+      },
+      {
+        "id": 123,
+        "ts": 1793807304.8793952,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Importing raster map <rast_6aeb53c6b94d42>..."
+      },
+      {
+        "id": 124,
+        "ts": 1793807305.4126205,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0..3..6..9..12..15..18..21..24..27..30..33..36..39..42..45..48..51..54..57..60..63..66..69..72..75..78..81..84..87..90..93..96..99..100"
+      },
+      {
+        "id": 125,
+        "ts": 1793807305.451178,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0"
+      },
+      {
+        "id": 126,
+        "ts": 1793807305.5690606,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.neighbors  input=rast_6aeb53c6b94d42 method=\"minimum\" size=49 output=output8093b93a647c42d0a620a1161e2a7e1f --overwrite"
+      },
+      {
+        "id": 127,
+        "ts": 1793807333.913376,
+        "level": "warning",
+        "tag": "MORIZON",
+        "message": "[00:48:43] UIスレッドが約3.1秒応答していませんでした。重なった計測区間: 未計測の処理（直近の完了区間: 要素計算: UI更新(refresh_elements_ui)、停止開始の62.7秒前に完了）"
+      },
+      {
+        "id": 128,
+        "ts": 1793807334.832367,
+        "level": "warning",
+        "tag": "MORIZON",
+        "message": "[00:48:54] UIスレッドが約10.2秒応答していませんでした。重なった計測区間: 未計測の処理（直近の完了区間: 要素計算: UI更新(refresh_elements_ui)、停止開始の66.0秒前に完了）"
+      },
+      {
+        "id": 129,
+        "ts": 1793807344.144661,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0..0..0..0..0..0..0..0..0..0..0..0..0..0..0..3..6..9..12..15..18..21..24..27..30..33..36..39..42..45..48..51..54..57..60..63..66..69..72..75..78..81..84..87..90..93..96..99..100"
+      },
+      {
+        "id": 130,
+        "ts": 1793807344.1881804,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.region raster=output8093b93a647c42d0a620a1161e2a7e1f"
+      },
+      {
+        "id": 131,
+        "ts": 1793807344.2752483,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.out.gdal -t -m input=\"output8093b93a647c42d0a620a1161e2a7e1f\" output=\"C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_morizon_work\\ruggedness_min.tif\" format=\"GTiff\"  createopt=\"TFW=YES,COMPRESS=LZW\" --overwrite"
+      },
+      {
+        "id": 132,
+        "ts": 1793807344.3904388,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Checking GDAL data type and nodata value..."
+      },
+      {
+        "id": 133,
+        "ts": 1793807344.75991,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "2..5..8..11..14..17..20..23..26..29..32..35..38..41..44..47..50..53..56..59..62..65..68..71..74..77..80..83..86..89..92..95..98..100"
+      },
+      {
+        "id": 134,
+        "ts": 1793807344.760912,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Using GDAL data type <Float32>"
+      },
+      {
+        "id": 135,
+        "ts": 1793807344.7619193,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Input raster map contains cells with NULL-value (no-data). The value nan will be used to represent no-data values in the input map. You can specify a nodata value with the nodata option."
+      },
+      {
+        "id": 136,
+        "ts": 1793807344.7629564,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Exporting raster data to GTiff format..."
+      },
+      {
+        "id": 137,
+        "ts": 1793807344.771421,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "ERROR 6: ruggedness_min.tif, band 1: SetColorTable() only supported for Byte or UInt16 bands in TIFF format."
+      },
+      {
+        "id": 138,
+        "ts": 1793807345.475368,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "2..5..8..11..14..17..20..23..26..29..32..35..38..41..44..47..50..53..56..59..62..65..68..71..74..77..80..83..86..89..92..95..98..100"
+      },
+      {
+        "id": 139,
+        "ts": 1793807345.4783862,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.out.gdal complete. File <C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_morizon_work\\ruggedness_min.tif> created."
+      },
+      {
+        "id": 140,
+        "ts": 1793807345.5114033,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>exit"
+      },
+      {
+        "id": 141,
+        "ts": 1793807346.2053678,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'output': 'C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\YOUSO\\\\_morizon_work\\\\ruggedness_min.tif'}"
+      },
+      {
+        "id": 142,
+        "ts": 1793807346.2068667,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "grass:r.neighbors 実行完了"
+      },
+      {
+        "id": 143,
+        "ts": 1793807346.2078674,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "grass:r.neighbors 実行開始 (初回のGRASS起動には時間がかかることがあります)"
+      },
+      {
+        "id": 144,
+        "ts": 1793807346.2163718,
+        "level": "info",
+        "tag": "Grass",
+        "message": "processInputs end. コマンド ['g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/7300120d7c214d12b46c0c12e46d98e9/crs.prj\"', 'r.in.gdal input=\"C:\\\\Users\\\\Yoichi_Wada\\\\AppData\\\\Local\\\\Temp\\\\processing_MfiupA\\\\04cafe5870724b508234d5023e7fdb2a\\\\OUTPUT.tif\" band=1 output=\"rast_6aeb53f2345833\" --overwrite -o', 'g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0']"
+      },
+      {
+        "id": 145,
+        "ts": 1793807346.217872,
+        "level": "info",
+        "tag": "Grass",
+        "message": "processCommands end. コマンド ['g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/7300120d7c214d12b46c0c12e46d98e9/crs.prj\"', 'r.in.gdal input=\"C:\\\\Users\\\\Yoichi_Wada\\\\AppData\\\\Local\\\\Temp\\\\processing_MfiupA\\\\04cafe5870724b508234d5023e7fdb2a\\\\OUTPUT.tif\" band=1 output=\"rast_6aeb53f2345833\" --overwrite -o', 'g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0', 'r.neighbors  input=rast_6aeb53f2345833 method=\"maximum\" size=49 output=outputc939d45a766c4ffd9919d6e25fee8da8 --overwrite']"
+      },
+      {
+        "id": 146,
+        "ts": 1793807346.2188725,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/7300120d7c214d12b46c0c12e46d98e9/crs.prj\""
+      },
+      {
+        "id": 147,
+        "ts": 1793807346.2198758,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.in.gdal input=\"C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\04cafe5870724b508234d5023e7fdb2a\\OUTPUT.tif\" band=1 output=\"rast_6aeb53f2345833\" --overwrite -o"
+      },
+      {
+        "id": 148,
+        "ts": 1793807346.2208755,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0"
+      },
+      {
+        "id": 149,
+        "ts": 1793807346.2223728,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.neighbors  input=rast_6aeb53f2345833 method=\"maximum\" size=49 output=outputc939d45a766c4ffd9919d6e25fee8da8 --overwrite"
+      },
+      {
+        "id": 150,
+        "ts": 1793807346.223372,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.region raster=outputc939d45a766c4ffd9919d6e25fee8da8"
+      },
+      {
+        "id": 151,
+        "ts": 1793807346.225376,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.out.gdal -t -m input=\"outputc939d45a766c4ffd9919d6e25fee8da8\" output=\"C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_morizon_work\\ruggedness_max.tif\" format=\"GTiff\"  createopt=\"TFW=YES,COMPRESS=LZW\" --overwrite"
+      },
+      {
+        "id": 152,
+        "ts": 1793807347.523741,
+        "level": "warning",
+        "tag": "プロセシング",
+        "message": "WARNING: Concurrent mapset locking is not supported on Windows"
+      },
+      {
+        "id": 153,
+        "ts": 1793807347.808002,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>chcp 932 1>NUL"
+      },
+      {
+        "id": 154,
+        "ts": 1793807347.831088,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/7300120d7c214d12b46c0c12e46d98e9/crs.prj\""
+      },
+      {
+        "id": 155,
+        "ts": 1793807347.9522395,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Default region was updated to the new projection, but if you have multiple mapsets `g.region -d` should be run in each to update the region from the default"
+      },
+      {
+        "id": 156,
+        "ts": 1793807347.95324,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Projection information updated"
+      },
+      {
+        "id": 157,
+        "ts": 1793807347.9737728,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.in.gdal input=\"C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\04cafe5870724b508234d5023e7fdb2a\\OUTPUT.tif\" band=1 output=\"rast_6aeb53f2345833\" --overwrite -o"
+      },
+      {
+        "id": 158,
+        "ts": 1793807348.113991,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Over-riding projection check"
+      },
+      {
+        "id": 159,
+        "ts": 1793807348.114991,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Importing raster map <rast_6aeb53f2345833>..."
+      },
+      {
+        "id": 160,
+        "ts": 1793807348.6313088,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0..3..6..9..12..15..18..21..24..27..30..33..36..39..42..45..48..51..54..57..60..63..66..69..72..75..78..81..84..87..90..93..96..99..100"
+      },
+      {
+        "id": 161,
+        "ts": 1793807348.666425,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0"
+      },
+      {
+        "id": 162,
+        "ts": 1793807348.737666,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.neighbors  input=rast_6aeb53f2345833 method=\"maximum\" size=49 output=outputc939d45a766c4ffd9919d6e25fee8da8 --overwrite"
+      },
+      {
+        "id": 163,
+        "ts": 1793807383.1625333,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0..0..0..0..0..0..0..0..0..0..0..0..0..0..3..6..9..12..15..18..21..24..27..30..33..36..39..42..45..48..51..54..57..60..63..66..69..72..75..78..81..84..87..90..93..96..99..100"
+      },
+      {
+        "id": 164,
+        "ts": 1793807383.205586,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.region raster=outputc939d45a766c4ffd9919d6e25fee8da8"
+      },
+      {
+        "id": 165,
+        "ts": 1793807383.30816,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.out.gdal -t -m input=\"outputc939d45a766c4ffd9919d6e25fee8da8\" output=\"C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_morizon_work\\ruggedness_max.tif\" format=\"GTiff\"  createopt=\"TFW=YES,COMPRESS=LZW\" --overwrite"
+      },
+      {
+        "id": 166,
+        "ts": 1793807383.4207456,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Checking GDAL data type and nodata value..."
+      },
+      {
+        "id": 167,
+        "ts": 1793807383.83555,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "2..5..8..11..14..17..20..23..26..29..32..35..38..41..44..47..50..53..56..59..62..65..68..71..74..77..80..83..86..89..92..95..98..100"
+      },
+      {
+        "id": 168,
+        "ts": 1793807383.8360505,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Using GDAL data type <Float32>"
+      },
+      {
+        "id": 169,
+        "ts": 1793807383.8385656,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Input raster map contains cells with NULL-value (no-data). The value nan will be used to represent no-data values in the input map. You can specify a nodata value with the nodata option."
+      },
+      {
+        "id": 170,
+        "ts": 1793807383.84057,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Exporting raster data to GTiff format..."
+      },
+      {
+        "id": 171,
+        "ts": 1793807383.8470638,
+        "level": "critical",
+        "tag": "プロセシング",
+        "message": "ERROR 6: ruggedness_max.tif, band 1: SetColorTable() only supported for Byte or UInt16 bands in TIFF format."
+      },
+      {
+        "id": 172,
+        "ts": 1793807384.6765509,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "2..5..8..11..14..17..20..23..26..29..32..35..38..41..44..47..50..53..56..59..62..65..68..71..74..77..80..83..86..89..92..95..98..100"
+      },
+      {
+        "id": 173,
+        "ts": 1793807384.6791582,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.out.gdal complete. File <C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_morizon_work\\ruggedness_max.tif> created."
+      },
+      {
+        "id": 174,
+        "ts": 1793807384.7071695,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>exit"
+      },
+      {
+        "id": 175,
+        "ts": 1793807385.3942747,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'output': 'C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\YOUSO\\\\_morizon_work\\\\ruggedness_max.tif'}"
+      },
+      {
+        "id": 176,
+        "ts": 1793807385.3952773,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "grass:r.neighbors 実行完了"
+      },
+      {
+        "id": 177,
+        "ts": 1793807387.0145779,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\YOUSO\\\\_morizon_work\\\\cost_slope.tif'}"
+      },
+      {
+        "id": 178,
+        "ts": 1793807391.1064909,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:49:51] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 179,
+        "ts": 1793807391.2487977,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:49:51] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.1s)"
+      },
+      {
+        "id": 180,
+        "ts": 1793807391.3971899,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:49:51] Quantile分類(ラスタ): layer=, Min=0.0, Max=10.0, 生成された区分数=3"
+      },
+      {
+        "id": 181,
+        "ts": 1793807391.5123715,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  100.7s] DONE: 収益性/集材作業効率を計算中 (88.8s)"
+      },
+      {
+        "id": 182,
+        "ts": 1793807391.5133705,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  100.7s] START: 収益性/地利を計算中"
+      },
+      {
+        "id": 183,
+        "ts": 1793807395.291693,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:49:55] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 184,
+        "ts": 1793807395.292693,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:49:55] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 185,
+        "ts": 1793807395.451135,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:49:55] Quantile分類(ラスタ): layer=, Min=0.0, Max=2054.0935058594, 生成された区分数=3"
+      },
+      {
+        "id": 186,
+        "ts": 1793807395.5597482,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  104.8s] DONE: 収益性/地利を計算中 (4.0s)"
+      },
+      {
+        "id": 187,
+        "ts": 1793807395.56075,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  104.8s] START: 災害リスク/地形の複雑さを計算中"
+      },
+      {
+        "id": 188,
+        "ts": 1793807425.73461,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:25] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 189,
+        "ts": 1793807425.7356105,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:25] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 190,
+        "ts": 1793807425.877258,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:25] Quantile分類(ラスタ): layer=, Min=0.0032489506993443, Max=11540021248.0, 生成された区分数=5"
+      },
+      {
+        "id": 191,
+        "ts": 1793807425.9556475,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:25] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 192,
+        "ts": 1793807425.9566464,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:25] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 193,
+        "ts": 1793807426.0863233,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:26] Quantile分類(ラスタ): layer=, Min=0.0032489506993443, Max=11540021248.0, 生成された区分数=3"
+      },
+      {
+        "id": 194,
+        "ts": 1793807426.1821992,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  135.4s] DONE: 災害リスク/地形の複雑さを計算中 (30.6s)"
+      },
+      {
+        "id": 195,
+        "ts": 1793807426.183204,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  135.4s] START: 災害リスク/傾斜を計算中"
+      },
+      {
+        "id": 196,
+        "ts": 1793807426.721683,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\YOUSO\\\\Y_12_keisha.tif'}"
+      },
+      {
+        "id": 197,
+        "ts": 1793807426.776841,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  136.0s] DONE: 災害リスク/傾斜を計算中 (0.6s)"
+      },
+      {
+        "id": 198,
+        "ts": 1793807426.7788408,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  136.0s] START: 災害リスク/保全対象を含む流域を計算中"
+      },
+      {
+        "id": 199,
+        "ts": 1793807426.7823415,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:26] STEP7 開始"
+      },
+      {
+        "id": 200,
+        "ts": 1793807426.8690474,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:26] STEP7 保全対象データの事前検証 完了"
+      },
+      {
+        "id": 201,
+        "ts": 1793807426.8705492,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:26] STEP7 grass:r.watershed 実行開始 (初回のGRASS起動には時間がかかることがあります)"
+      },
+      {
+        "id": 202,
+        "ts": 1793807426.8921032,
+        "level": "info",
+        "tag": "Grass",
+        "message": "processInputs end. コマンド ['g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/92e7c2473bff44439f55c79451b80ae5/crs.prj\"', 'r.in.gdal input=\"C:\\\\Users\\\\Yoichi_Wada\\\\AppData\\\\Local\\\\Temp\\\\processing_MfiupA\\\\04cafe5870724b508234d5023e7fdb2a\\\\OUTPUT.tif\" band=1 output=\"rast_6aeb5442d96eb4\" --overwrite -o', 'g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0']"
+      },
+      {
+        "id": 203,
+        "ts": 1793807426.8941157,
+        "level": "info",
+        "tag": "Grass",
+        "message": "processCommands end. コマンド ['g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/92e7c2473bff44439f55c79451b80ae5/crs.prj\"', 'r.in.gdal input=\"C:\\\\Users\\\\Yoichi_Wada\\\\AppData\\\\Local\\\\Temp\\\\processing_MfiupA\\\\04cafe5870724b508234d5023e7fdb2a\\\\OUTPUT.tif\" band=1 output=\"rast_6aeb5442d96eb4\" --overwrite -o', 'g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0', 'r.watershed  elevation=rast_6aeb5442d96eb4 threshold=500 convergence=5 memory=300 basin=basinc7f3fcd0798448c79fb649bcc78051e2 --overwrite']"
+      },
+      {
+        "id": 204,
+        "ts": 1793807426.897122,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/92e7c2473bff44439f55c79451b80ae5/crs.prj\""
+      },
+      {
+        "id": 205,
+        "ts": 1793807426.8996224,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.in.gdal input=\"C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\04cafe5870724b508234d5023e7fdb2a\\OUTPUT.tif\" band=1 output=\"rast_6aeb5442d96eb4\" --overwrite -o"
+      },
+      {
+        "id": 206,
+        "ts": 1793807426.901622,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0"
+      },
+      {
+        "id": 207,
+        "ts": 1793807426.9031296,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.watershed  elevation=rast_6aeb5442d96eb4 threshold=500 convergence=5 memory=300 basin=basinc7f3fcd0798448c79fb649bcc78051e2 --overwrite"
+      },
+      {
+        "id": 208,
+        "ts": 1793807426.9051428,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "g.region raster=basinc7f3fcd0798448c79fb649bcc78051e2"
+      },
+      {
+        "id": 209,
+        "ts": 1793807426.9071424,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.out.gdal -t -m input=\"basinc7f3fcd0798448c79fb649bcc78051e2\" output=\"C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\e86d8b414c12498e882c7be904a4fbd4\\basin.tif\" format=\"GTiff\"  createopt=\"TFW=YES,COMPRESS=LZW\" --overwrite"
+      },
+      {
+        "id": 210,
+        "ts": 1793807429.1604247,
+        "level": "warning",
+        "tag": "プロセシング",
+        "message": "WARNING: Concurrent mapset locking is not supported on Windows"
+      },
+      {
+        "id": 211,
+        "ts": 1793807429.5124817,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>chcp 932 1>NUL"
+      },
+      {
+        "id": 212,
+        "ts": 1793807429.5475109,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.proj -c wkt=\"C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/92e7c2473bff44439f55c79451b80ae5/crs.prj\""
+      },
+      {
+        "id": 213,
+        "ts": 1793807429.7210863,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Default region was updated to the new projection, but if you have multiple mapsets `g.region -d` should be run in each to update the region from the default"
+      },
+      {
+        "id": 214,
+        "ts": 1793807429.723087,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Projection information updated"
+      },
+      {
+        "id": 215,
+        "ts": 1793807429.7502542,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.in.gdal input=\"C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\04cafe5870724b508234d5023e7fdb2a\\OUTPUT.tif\" band=1 output=\"rast_6aeb5442d96eb4\" --overwrite -o"
+      },
+      {
+        "id": 216,
+        "ts": 1793807429.9587858,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Over-riding projection check"
+      },
+      {
+        "id": 217,
+        "ts": 1793807429.9612896,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Importing raster map <rast_6aeb5442d96eb4>..."
+      },
+      {
+        "id": 218,
+        "ts": 1793807430.7866254,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0..3..6..9..12..15..18..21..24..27..30..33..36..39..42..45..48..51..54..57..60..63..66..69..72..75..78..81..84..87..90..93..96..99..100"
+      },
+      {
+        "id": 219,
+        "ts": 1793807430.8441932,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.region n=39715.0 s=13045.0 e=-22460.0 w=-66540.0 res=10.0"
+      },
+      {
+        "id": 220,
+        "ts": 1793807430.9508348,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.watershed  elevation=rast_6aeb5442d96eb4 threshold=500 convergence=5 memory=300 basin=basinc7f3fcd0798448c79fb649bcc78051e2 --overwrite"
+      },
+      {
+        "id": 221,
+        "ts": 1793807431.1783018,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "SECTION 1a (of 5): Initiating Memory."
+      },
+      {
+        "id": 222,
+        "ts": 1793807431.8894813,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "SECTION 1b (of 5): Determining Offmap Flow."
+      },
+      {
+        "id": 223,
+        "ts": 1793807432.0332162,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0..4..8..12..16..20..24..28..32..36..40..44..48..52..56..60..64..68..72..76..80..84..88..92..96..100"
+      },
+      {
+        "id": 224,
+        "ts": 1793807432.0347292,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "SECTION 2: A* Search."
+      },
+      {
+        "id": 225,
+        "ts": 1793807438.2128932,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0..2..4..6..8..10..12..14..16..18..20..22..24..26..28..30..32..34..36..38..40..42..44..46..48..50..52..54..56..58..60..62..64..66..68..70..72..74..76..78..80..82..84..86..88..90..92..94..96..98..100"
+      },
+      {
+        "id": 226,
+        "ts": 1793807438.2138917,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "SECTION 3a: Accumulating Surface Flow with MFD."
+      },
+      {
+        "id": 227,
+        "ts": 1793807441.2844946,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "1..3..5..7..9..11..13..15..17..19..21..23..25..27..29..31..33..35..37..39..41..43..45..47..49..51..53..55..57..59..61..63..65..67..69..71..73..75..77..79..81..83..85..87..89..91..93..95..97..99..100"
+      },
+      {
+        "id": 228,
+        "ts": 1793807441.285519,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "SECTION 3b: Adjusting drainage directions."
+      },
+      {
+        "id": 229,
+        "ts": 1793807444.0800223,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "1..3..5..7..9..11..13..15..17..19..21..23..25..27..29..31..33..35..37..39..41..43..45..47..49..51..53..55..57..59..61..63..65..67..69..71..73..75..77..79..81..83..85..87..89..91..93..95..97..99..100"
+      },
+      {
+        "id": 230,
+        "ts": 1793807444.0829918,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "SECTION 4: Watershed determination."
+      },
+      {
+        "id": 231,
+        "ts": 1793807444.5344512,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0..2..4..6..8..10..12..14..16..18..20..22..24..26..28..30..32..34..36..38..40..42..44..46..48..50..52..54..56..58..60..62..64..66..68..70..72..74..76..78..80..82..84..86..88..90..92..94..96..98..100"
+      },
+      {
+        "id": 232,
+        "ts": 1793807444.5349498,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "SECTION 5: Closing Maps."
+      },
+      {
+        "id": 233,
+        "ts": 1793807445.08219,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>g.region raster=basinc7f3fcd0798448c79fb649bcc78051e2"
+      },
+      {
+        "id": 234,
+        "ts": 1793807445.1603131,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>r.out.gdal -t -m input=\"basinc7f3fcd0798448c79fb649bcc78051e2\" output=\"C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\e86d8b414c12498e882c7be904a4fbd4\\basin.tif\" format=\"GTiff\"  createopt=\"TFW=YES,COMPRESS=LZW\" --overwrite"
+      },
+      {
+        "id": 235,
+        "ts": 1793807445.2499633,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Checking GDAL data type and nodata value..."
+      },
+      {
+        "id": 236,
+        "ts": 1793807445.4790432,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "2..5..8..11..14..17..20..23..26..29..32..35..38..41..44..47..50..53..56..59..62..65..68..71..74..77..80..83..86..89..92..95..98..100"
+      },
+      {
+        "id": 237,
+        "ts": 1793807445.479498,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Using GDAL data type <UInt16>"
+      },
+      {
+        "id": 238,
+        "ts": 1793807445.4804983,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Input raster map contains cells with NULL-value (no-data). The value 65535 will be used to represent no-data values in the input map. You can specify a nodata value with the nodata option."
+      },
+      {
+        "id": 239,
+        "ts": 1793807445.481528,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Exporting raster data to GTiff format..."
+      },
+      {
+        "id": 240,
+        "ts": 1793807445.8653865,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "2..5..8..11..14..17..20..23..26..29..32..35..38..41..44..47..50..53..56..59..62..65..68..71..74..77..80..83..86..89..92..95..98..100"
+      },
+      {
+        "id": 241,
+        "ts": 1793807445.8799994,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "r.out.gdal complete. File <C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\e86d8b414c12498e882c7be904a4fbd4\\basin.tif> created."
+      },
+      {
+        "id": 242,
+        "ts": 1793807445.9176557,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "C:\\Program Files\\QGIS 3.44.13\\bin>exit"
+      },
+      {
+        "id": 243,
+        "ts": 1793807446.5137403,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'accumulation': None, 'basin': 'C:\\\\Users\\\\Yoichi_Wada\\\\AppData\\\\Local\\\\Temp\\\\processing_MfiupA\\\\e86d8b414c12498e882c7be904a4fbd4\\\\basin.tif', 'drainage': None, 'half_basin': None, 'length_slope': None, 'slope_steepness': None, 'spi': None, 'stream': None, 'tci': None}"
+      },
+      {
+        "id": 244,
+        "ts": 1793807446.5152383,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:46] STEP7 grass:r.watershed 実行完了"
+      },
+      {
+        "id": 245,
+        "ts": 1793807446.5162392,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:46] STEP7 gdal:polygonize 開始"
+      },
+      {
+        "id": 246,
+        "ts": 1793807446.672016,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdal_polygonize.bat C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\e86d8b414c12498e882c7be904a4fbd4\\basin.tif -b 1 -f \"GPKG\" C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/991ade44ae984ac7be458a115e5daabd/OUTPUT.gpkg OUTPUT DN"
+      },
+      {
+        "id": 247,
+        "ts": 1793807446.6730168,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 248,
+        "ts": 1793807446.674047,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdal_polygonize.bat C:\\Users\\Yoichi_Wada\\AppData\\Local\\Temp\\processing_MfiupA\\e86d8b414c12498e882c7be904a4fbd4\\basin.tif -b 1 -f \"GPKG\" C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/991ade44ae984ac7be458a115e5daabd/OUTPUT.gpkg OUTPUT DN"
+      },
+      {
+        "id": 249,
+        "ts": 1793807446.6750188,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 250,
+        "ts": 1793807448.0314147,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "Creating output C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/991ade44ae984ac7be458a115e5daabd/OUTPUT.gpkg of format GPKG."
+      },
+      {
+        "id": 251,
+        "ts": 1793807448.6182559,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0...10...20...30...40...50...60...70...80...90...100 - done."
+      },
+      {
+        "id": 252,
+        "ts": 1793807448.7571478,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 253,
+        "ts": 1793807448.7581484,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/991ade44ae984ac7be458a115e5daabd/OUTPUT.gpkg'}"
+      },
+      {
+        "id": 254,
+        "ts": 1793807448.7716455,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:48] STEP7 native:fixgeometries(流域) 開始"
+      },
+      {
+        "id": 255,
+        "ts": 1793807449.744263,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': '______3821cc32_12d9_4b1b_83d7_135cca80837d'}"
+      },
+      {
+        "id": 256,
+        "ts": 1793807449.7462628,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:49] STEP7 流域ポリゴンの作成完了"
+      },
+      {
+        "id": 257,
+        "ts": 1793807449.746763,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:49] STEP7 保全対象との重複判定 開始"
+      },
+      {
+        "id": 258,
+        "ts": 1793807451.5684881,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': '______8ece9e38_e19f_4e1b_867b_c012104cb639'}"
+      },
+      {
+        "id": 259,
+        "ts": 1793807451.57499,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "出力レイヤ を準備中"
+      },
+      {
+        "id": 260,
+        "ts": 1793807455.593046,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': '____Overlap__5b2a9bcf_417e_4eaa_b5ff_d7b2652e3bb7'}"
+      },
+      {
+        "id": 261,
+        "ts": 1793807455.641141,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': '_______________20eeeec7_cd77_46fe_a098_32dcd076c218'}"
+      },
+      {
+        "id": 262,
+        "ts": 1793807455.686753,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:55] STEP7 保全対象との重複判定 完了"
+      },
+      {
+        "id": 263,
+        "ts": 1793807455.688254,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:55] STEP7 gdal:rasterize 開始"
+      },
+      {
+        "id": 264,
+        "ts": 1793807455.938194,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdal_rasterize -l INPUT -burn 1.0 -tr 10.0 10.0 -init 0.0 -a_nodata 0.0 -te -66540.0 13045.0 -22460.0 39715.0 -ot Byte -of GTiff -co COMPRESS=LZW C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/68c5d77768064ca7b68af2a0ac06da0d/INPUT.gpkg C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_MORIZON_work\\step7b_basin_mask.tif"
+      },
+      {
+        "id": 265,
+        "ts": 1793807455.9391973,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 266,
+        "ts": 1793807455.940694,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdal_rasterize -l INPUT -burn 1.0 -tr 10.0 10.0 -init 0.0 -a_nodata 0.0 -te -66540.0 13045.0 -22460.0 39715.0 -ot Byte -of GTiff -co COMPRESS=LZW C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/68c5d77768064ca7b68af2a0ac06da0d/INPUT.gpkg C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_MORIZON_work\\step7b_basin_mask.tif"
+      },
+      {
+        "id": 267,
+        "ts": 1793807455.941693,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 268,
+        "ts": 1793807456.3766947,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0...10...20...30...40...50...60...70...80...90...100 - done."
+      },
+      {
+        "id": 269,
+        "ts": 1793807456.3912,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 270,
+        "ts": 1793807456.3927016,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\YOUSO\\\\_MORIZON_work\\\\step7b_basin_mask.tif'}"
+      },
+      {
+        "id": 271,
+        "ts": 1793807456.49888,
+        "level": "info",
+        "tag": "Processing",
+        "message": "gdal_rasterize -l INPUT -burn 1.0 -tr 10.0 10.0 -init 0.0 -a_nodata 0.0 -te -66540.0 13045.0 -22460.0 39715.0 -ot Byte -of GTiff -co COMPRESS=LZW C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/6f9524a7ad194c2dbe7578207069f674/INPUT.gpkg C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_MORIZON_work\\step7b_selected_mask.tif"
+      },
+      {
+        "id": 272,
+        "ts": 1793807456.5003805,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド:"
+      },
+      {
+        "id": 273,
+        "ts": 1793807456.501877,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "gdal_rasterize -l INPUT -burn 1.0 -tr 10.0 10.0 -init 0.0 -a_nodata 0.0 -te -66540.0 13045.0 -22460.0 39715.0 -ot Byte -of GTiff -co COMPRESS=LZW C:/Users/Yoichi_Wada/AppData/Local/Temp/processing_MfiupA/6f9524a7ad194c2dbe7578207069f674/INPUT.gpkg C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\YOUSO\\_MORIZON_work\\step7b_selected_mask.tif"
+      },
+      {
+        "id": 274,
+        "ts": 1793807456.5028837,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "GDALコマンド出力:"
+      },
+      {
+        "id": 275,
+        "ts": 1793807456.7796538,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "0...10...20...30...40...50...60...70...80...90...100 - done."
+      },
+      {
+        "id": 276,
+        "ts": 1793807456.7926636,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "プロセスが完了しました"
+      },
+      {
+        "id": 277,
+        "ts": 1793807456.7936637,
+        "level": "info",
+        "tag": "プロセシング",
+        "message": "結果: {'OUTPUT': 'C:\\\\Users\\\\Yoichi_Wada\\\\Documents\\\\Github\\\\MORIZON-Reloaded\\\\.validation\\\\pr19-evidence\\\\ZoningKit\\\\YOUSO\\\\_MORIZON_work\\\\step7b_selected_mask.tif'}"
+      },
+      {
+        "id": 278,
+        "ts": 1793807456.7946634,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:56] STEP7 gdal:rasterize 完了"
+      },
+      {
+        "id": 279,
+        "ts": 1793807457.1563833,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] STEP7 最終ラスターの書き出し完了"
+      },
+      {
+        "id": 280,
+        "ts": 1793807457.2120805,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  166.4s] DONE: 災害リスク/保全対象を含む流域を計算中 (30.4s)"
+      },
+      {
+        "id": 281,
+        "ts": 1793807457.2135787,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  166.4s] 全要素の計算が完了"
+      },
+      {
+        "id": 282,
+        "ts": 1793807457.2205834,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[+  166.4s] START: 終了処理中"
+      },
+      {
+        "id": 283,
+        "ts": 1793807457.2596877,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] しきい値初期値の算出（Quantile分類） layer=災害リスク/保全対象を含む流域 開始"
+      },
+      {
+        "id": 284,
+        "ts": 1793807457.2611954,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 285,
+        "ts": 1793807457.4048762,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.1s)"
+      },
+      {
+        "id": 286,
+        "ts": 1793807457.5901914,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] Quantile分類(ラスタ): layer=, Min=0.0, Max=1.0, 生成された区分数=3"
+      },
+      {
+        "id": 287,
+        "ts": 1793807457.5921896,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] しきい値初期値の算出（Quantile分類） layer=災害リスク/保全対象を含む流域 完了 (0.3s)"
+      },
+      {
+        "id": 288,
+        "ts": 1793807457.6352065,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] イベント発火回数: しきい値初期値のキャッシュ再利用: 災害リスク/保全対象を含む流域 累計1回"
+      },
+      {
+        "id": 289,
+        "ts": 1793807457.678242,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] しきい値初期値の算出（Quantile分類） layer=災害リスク/保全対象を含む流域 開始"
+      },
+      {
+        "id": 290,
+        "ts": 1793807457.6792443,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 291,
+        "ts": 1793807457.6797426,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 292,
+        "ts": 1793807457.7874634,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] Quantile分類(ラスタ): layer=, Min=0.0, Max=1.0, 生成された区分数=2"
+      },
+      {
+        "id": 293,
+        "ts": 1793807457.7889805,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] しきい値初期値の算出（Quantile分類） layer=災害リスク/保全対象を含む流域 完了 (0.1s)"
+      },
+      {
+        "id": 294,
+        "ts": 1793807457.883088,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] しきい値初期値の算出（Quantile分類） layer=収益性/地位（スギ）[スコアリング] 開始"
+      },
+      {
+        "id": 295,
+        "ts": 1793807457.884087,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 296,
+        "ts": 1793807457.88506,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:57] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 297,
+        "ts": 1793807458.0055442,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] Quantile分類(ラスタ): layer=, Min=15.916209220886, Max=32.093463897705, 生成された区分数=3"
+      },
+      {
+        "id": 298,
+        "ts": 1793807458.0065472,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] しきい値初期値の算出（Quantile分類） layer=収益性/地位（スギ）[スコアリング] 完了 (0.1s)"
+      },
+      {
+        "id": 299,
+        "ts": 1793807458.0476952,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] しきい値初期値の算出（Quantile分類） layer=収益性/集材作業効率[スコアリング] 開始"
+      },
+      {
+        "id": 300,
+        "ts": 1793807458.049223,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 301,
+        "ts": 1793807458.0501947,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 302,
+        "ts": 1793807458.1769872,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] Quantile分類(ラスタ): layer=, Min=0.0, Max=10.0, 生成された区分数=3"
+      },
+      {
+        "id": 303,
+        "ts": 1793807458.1779873,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] しきい値初期値の算出（Quantile分類） layer=収益性/集材作業効率[スコアリング] 完了 (0.1s)"
+      },
+      {
+        "id": 304,
+        "ts": 1793807458.229613,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] しきい値初期値の算出（Quantile分類） layer=収益性/地利[スコアリング] 開始"
+      },
+      {
+        "id": 305,
+        "ts": 1793807458.2306154,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 306,
+        "ts": 1793807458.231613,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 307,
+        "ts": 1793807458.3523147,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] Quantile分類(ラスタ): layer=, Min=0.0, Max=2054.0935058594, 生成された区分数=3"
+      },
+      {
+        "id": 308,
+        "ts": 1793807458.353339,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] しきい値初期値の算出（Quantile分類） layer=収益性/地利[スコアリング] 完了 (0.1s)"
+      },
+      {
+        "id": 309,
+        "ts": 1793807458.3895004,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] しきい値初期値の算出（Quantile分類） layer=災害リスク/地形の複雑さ[スコアリング] 開始"
+      },
+      {
+        "id": 310,
+        "ts": 1793807458.390507,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 開始"
+      },
+      {
+        "id": 311,
+        "ts": 1793807458.3915067,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] ラスター統計(Min/Max)の取得 layer=, size=4408x2667 完了 (0.0s)"
+      },
+      {
+        "id": 312,
+        "ts": 1793807458.491856,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] Quantile分類(ラスタ): layer=, Min=0.0032489506993443, Max=11540021248.0, 生成された区分数=3"
+      },
+      {
+        "id": 313,
+        "ts": 1793807458.493356,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] しきい値初期値の算出（Quantile分類） layer=災害リスク/地形の複雑さ[スコアリング] 完了 (0.1s)"
+      },
+      {
+        "id": 314,
+        "ts": 1793807458.5103533,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:50:58] イベント発火回数: スコアリングのレイヤー紐付けを自動修正: siteidx,cost,distance,shc,slope 累計1回"
+      },
+      {
+        "id": 315,
+        "ts": 1793807479.06004,
+        "level": "warning",
+        "tag": "Python警告",
+        "message": "warning:<qgis_dev_probe.execute_code>:1: ResourceWarning: unclosed file <_io.TextIOWrapper name='C:/Users/Yoichi_Wada/Documents/Github/MORIZON-Reloaded/.validation/pr19-evidence/validate_outputs.py' mode='r' encoding='utf-8'>\n\ntraceback:  File \"C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\MORIZON\\forest_zoning_main_dialog_elements.py\", line 1160, in run_elements\n    QMessageBox.information(self.main, \"終了\", \"処理が終了しました。\")\n  File \"C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\qgis_dev_probe\\qgis_side\\mainthread.py\", line 38, in _on_timeout\n    self._queue.pump()\n  File \"C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\qgis_dev_probe\\core\\jobqueue.py\", line 96, in pump\n    job.result = job.fn()\n  File \"C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\qgis_dev_probe\\core\\dispatcher.py\", line 58, in <lambda>\n    result = self._queue.submit(lambda: handler(args), timeout_s)\n  File \"C:\\Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/python/plugins\\qgis_dev_probe\\qgis_side\\handlers.py\", line 543, in h_execute_code\n    exec(compile(code, \"<qgis_dev_probe.execute_code>\", \"exec\"), scope)  # noqa: S102 - 設計上の機能\n  File \"<qgis_dev_probe.execute_code>\", line 1, in <module>\n"
+      },
+      {
+        "id": 316,
+        "ts": 1793807481.1555119,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:51:21] QGISのUIスレッドが約2.1秒応答していませんでした（MORIZONの処理とは重なっていません。QGIS本体・他プラグイン等の可能性があります）"
+      },
+      {
+        "id": 317,
+        "ts": 1793807481.1565118,
+        "level": "info",
+        "tag": "MORIZON",
+        "message": "[00:51:21] 参考: 起動後、MORIZON外要因と判定したUI停止は累計1件、合計2.1秒です。"
+      }
+    ],
+    "last_id": 317,
+    "buffered": 317
+  }
+}

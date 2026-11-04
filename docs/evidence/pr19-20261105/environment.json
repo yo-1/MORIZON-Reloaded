@@ -1,0 +1,21 @@
+{
+  "qgis": "3.44.13-Solothurn",
+  "platform": "Windows-11-10.0.22631-SP0",
+  "gdal": "GDAL 3.13.2 \"Iowa City\", released 2026/07/20",
+  "profile": "C:/Users/Yoichi_Wada/AppData/Roaming/QGIS/QGIS3\\profiles\\SetupCheck/",
+  "plugin_loaded": true,
+  "utils_sha256": "0100360c3a1d5fe2f891da09d48bf0846f589c9d5cbbce2b13918c6a98d0746c",
+  "providers": [
+    "3d",
+    "cs_terrain_interpreter",
+    "csmapsheets",
+    "gdal",
+    "grass",
+    "model",
+    "native",
+    "pdal",
+    "project",
+    "qgis",
+    "script"
+  ]
+}

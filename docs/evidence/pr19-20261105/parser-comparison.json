@@ -1,0 +1,19 @@
+{
+  "raw_prefix": "<pre>Warning 1: DEM5m_Shimanto_clip_buffer100m.tif: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending orderWarning 1: TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order{\n\n  \"description\":\"C:/Users/Yoichi_Wada/Documents/Github/MORIZON-Reloaded/.validation/pr19-evidence/ZoningKit/DATA/DEM/DEM5m_Shimanto_clip_buffer100m.tif\",\n",
+  "legacy_parse": "Expecting value: line 1 column 1 (char 0)",
+  "fixed_parse": {
+    "crs": "EPSG:6672",
+    "resolution": 5.0,
+    "extent": [
+      -66540.0,
+      -22465.0,
+      13050.0,
+      39715.0
+    ],
+    "nodata_value": -9999.0,
+    "size": [
+      8815,
+      5333
+    ]
+  }
+}

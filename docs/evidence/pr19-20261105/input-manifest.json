@@ -1,0 +1,112 @@
+[
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\DEM\\DEM5m_Shimanto_clip_buffer100m.tif",
+    "bytes": 87889813,
+    "sha256": "FDF449A849EB45DFC2B92FC4FB3014A23E1C9E0BF77262DD1AFFE1524A4A3E71"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\ROAD\\Shimanto_Rord_IV.cpg",
+    "bytes": 5,
+    "sha256": "3AD3031F5503A4404AF825262EE8232CC04D4EA6683D42C5DD0A2F2A27AC9824"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\ROAD\\Shimanto_Rord_IV.dbf",
+    "bytes": 76329477,
+    "sha256": "2ECAC50AD4DB141C8CA9D8FC1FB971F1F000DCFB39696387F33FCA20E1DE20CB"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\ROAD\\Shimanto_Rord_IV.prj",
+    "bytes": 398,
+    "sha256": "E3E368005603417CF77D3F9CC76DE0EA7ED0A5C0DDBA007651DC3676462413C3"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\ROAD\\Shimanto_Rord_IV.shp",
+    "bytes": 13814140,
+    "sha256": "A8F3A06371CD11879B84F06E040A538443A53F1DD99201AD6384C9C6028B90FD"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\ROAD\\Shimanto_Rord_IV.shx",
+    "bytes": 184972,
+    "sha256": "C1E5FCBDC166C6F4E5054BC96B65346AC7120EBC3DAEF0B52A4F2FBC8EEA32FC"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SAGYO-SYSTEM_CSV\\sagyou220113.csv",
+    "bytes": 416,
+    "sha256": "918283C3C5CA001119D1EF1BEC208A20A9C03BBE45274D4B787584D3EC32AC2F"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SAGYO-SYSTEM_CSV\\集材作業効率の設定220113.xlsx",
+    "bytes": 22751,
+    "sha256": "F928324EAE595830A85ECDA8A492C2C21CA45D5F4F089417BF6FFE7BF6129D25"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\NPP\\NPP04.tfw",
+    "bytes": 92,
+    "sha256": "9C84AEFC634BA608AD2BF736B81B7DA18CE620DDB0F41599D903BDB8F5AD763F"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\NPP\\NPP04.tif",
+    "bytes": 25272491,
+    "sha256": "0A90D5BEAA58A3DA46E05ED8AF1490253F13127D0A3AED0AD61D764FC0811967"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\NPP\\NPP04.tif.aux.xml",
+    "bytes": 55976,
+    "sha256": "373B485E343B9A7F9A3A3D824D1CB70659175A9CD9D4EF699547060F171A0246"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\SRAD\\SRAD04.tfw",
+    "bytes": 92,
+    "sha256": "9C84AEFC634BA608AD2BF736B81B7DA18CE620DDB0F41599D903BDB8F5AD763F"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\SRAD\\SRAD04.tif",
+    "bytes": 97989425,
+    "sha256": "D5F4C0E538E6712E02C286F5E3B0BB190D7648BF3748F0BCDE91016EB6A8418B"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\SRAD\\SRAD04.tif.aux.xml",
+    "bytes": 55951,
+    "sha256": "0994613363EBFFD5228CE02D20495B030F27D2D8A9949F89D3A5D5FF262B49FF"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\VTEX\\VTEX04.tfw",
+    "bytes": 92,
+    "sha256": "9C84AEFC634BA608AD2BF736B81B7DA18CE620DDB0F41599D903BDB8F5AD763F"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\VTEX\\VTEX04.tif",
+    "bytes": 50760357,
+    "sha256": "2ED63BD6AC5F2F95DBAAA47CB329DFF0E39F91579664E026A614212ECD2F2FA9"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\SiteIndex\\VTEX\\VTEX04.tif.aux.xml",
+    "bytes": 55950,
+    "sha256": "001116F465261E513B98BD4860C257A5821BC0DD87D9B7BFA0A2973D108F8AB5"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\TATEMONO\\Shimanto_Build_IV.cpg",
+    "bytes": 5,
+    "sha256": "3AD3031F5503A4404AF825262EE8232CC04D4EA6683D42C5DD0A2F2A27AC9824"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\TATEMONO\\Shimanto_Build_IV.dbf",
+    "bytes": 105715346,
+    "sha256": "840B1ADA181542928AA09151E6BF282E04577519D43E08B96D43B52305197EF7"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\TATEMONO\\Shimanto_Build_IV.prj",
+    "bytes": 398,
+    "sha256": "E3E368005603417CF77D3F9CC76DE0EA7ED0A5C0DDBA007651DC3676462413C3"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\TATEMONO\\Shimanto_Build_IV.shp",
+    "bytes": 5929988,
+    "sha256": "B9011BA4D866242BF6ACC3A822E33573A8980D8B3D59C81FEE5F17E55235B3A5"
+  },
+  {
+    "path": "C:\\Users\\Yoichi_Wada\\Documents\\Github\\MORIZON-Reloaded\\.validation\\pr19-evidence\\ZoningKit\\DATA\\TATEMONO\\Shimanto_Build_IV.shx",
+    "bytes": 277476,
+    "sha256": "563B464B4184A67F5E06F0AF6B1B1DDC574F3480C0956FC71A3E1BD8FB9BBA47"
+  }
+]
