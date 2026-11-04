@@ -205,18 +205,47 @@ def get_tiff_info(tiff_filepath: str) -> dict:
     Returns:
         dict: {"crs", "resolution", "extent", "nodata_value", "size"}
     """
-    gdalinfo_html = processing.run(
-        "gdal:gdalinfo",
-        {
-            "EXTRA": "-json",
-            "INPUT": tiff_filepath,
-            "OUTPUT": "TEMPORARY_OUTPUT",
-        },
-    )["OUTPUT"]
+    try:
+        gdalinfo_html = processing.run(
+            "gdal:gdalinfo",
+            {
+                "EXTRA": "-json",
+                "INPUT": tiff_filepath,
+                "OUTPUT": "TEMPORARY_OUTPUT",
+            },
+        )["OUTPUT"]
+    except Exception as exc:
+        raise RuntimeError(
+            "DEM情報の取得に失敗しました（gdal:gdalinfoの実行エラー）: "
+            f"dem={tiff_filepath}, {exc}"
+        ) from exc
 
     with open(gdalinfo_html) as f:
-        gdalinfo_json = "".join(f.readlines())[5:-6]
+        raw_output = "".join(f.readlines())
+
+    # QGISのgdal:gdalinfoは、コマンドの標準出力（環境によっては警告等が
+    # 混在することがある）を<pre>...</pre>で囲んでHTMLとして保存する。
+    # 固定幅での先頭・末尾切り出し（旧実装）では、空出力や警告行の混入時に
+    # json.loads()が「Expecting value: line 1 column 1 (char 0)」等の
+    # 原因不明なエラーになっていたため、実際のJSON本体
+    # （最初の"{"から最後の"}"まで）を探して切り出す。
+    json_start = raw_output.find("{")
+    json_end = raw_output.rfind("}")
+    if json_start == -1 or json_end == -1 or json_end < json_start:
+        raise RuntimeError(
+            "DEM情報の取得に失敗しました（gdalinfoの出力にJSONが見つかりません。"
+            "DEMファイルを読み込めなかった可能性があります）: "
+            f"dem={tiff_filepath}, gdalinfo出力={raw_output[:300]!r}"
+        )
+
+    gdalinfo_json = raw_output[json_start : json_end + 1]
+    try:
         gdalinfo = json.loads(gdalinfo_json)
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(
+            "DEM情報の取得に失敗しました（gdalinfoの出力がJSONとして解析できません）: "
+            f"dem={tiff_filepath}, {exc}, gdalinfo出力={raw_output[:300]!r}"
+        ) from exc
 
     crs = QgsCoordinateReferenceSystem.fromWkt(
         gdalinfo["coordinateSystem"]["wkt"]
