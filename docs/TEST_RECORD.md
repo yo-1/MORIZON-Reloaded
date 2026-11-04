@@ -560,3 +560,23 @@ Linux/Python 3.12.14でscripts/test_costcsv_parser.pyの6試験合格。CP932、
 - **クラウド環境での代替試験は行っていない**（依頼の明示的な禁止事項どおり。`scripts/test_get_tiff_info.py`によるpure-Python回帰テストは、PR #19作成時点で既に実施・記録済みのコード単体テストであり、本実機検証の代替ではない）。
 - 判定: 環境上実施不能（Windows実機でのQGIS Dev Probe接続自体が確立できなかったため）。
 - 未完了作業: Windows側でClaude Code（またはQGIS Dev Probeに接続できる環境）を使って、依頼ZIPの`TEST_MATRIX.md`（P00〜P08）・`EVIDENCE_TEMPLATE.md`に従った実機検証を実施する必要がある。
+
+## PR #19 QGIS Dev Probe実機検証（2回目、2026-11-04夜）
+
+- 対象: PR #19（`fix/gdalinfo-json-robustness`）。依頼書記載のhead `fb9500133ee63d624b33793f62b22f29ff285058`。**確定**: 検証時点のブランチ先端は`2751106`で、`fb95001`はその祖先。`fb95001..2751106`の差分は`docs/OPEN_ISSUES.md`と`docs/TEST_RECORD.md`のみ（コード差分なし）。PR #19はdraft・open・未マージ。
+- 環境（実測、Dev Probe `get_info`）: Windows-11-10.0.22631、QGIS 3.44.13-Solothurn、Python 3.12.13、Qt 5.15.13 / PyQt 5.15.11。接続: クラウドのClaude Codeセッションから、ユーザーPC（Windows）にリンクされたデスクトップアプリ経由でQGIS Dev Probe 0.1.2（mode=interactive）へ接続。
+- プロファイル: 実測`CSMap131Validation`（依頼の`SetupCheck`と**不一致**）。プロジェクトに別検証（CS Map Sheets v0.13.1）のレイヤー2件が読込済み。導入済みプラグイン: csmap_sheets 0.13.1、qgis_dev_probe 0.1.2ほか標準。**MORIZONは未導入**。通常利用プロファイルは変更していない。
+- 判定（P00〜P08）:
+
+| ID | 判定 | 根拠 |
+|---|---|---|
+| P00 | 部分成功 | 疎通（ping/get_info/list_plugins）は成功。プロファイルが`SetupCheck`でなく、MORIZON未導入のため合格条件は未達 |
+| P01 | 環境上実施不能 | 期待パスのDEMがこのPC上で見つからない（P02のエラーで確認）。SHA256・サイズは取得できていない |
+| P02 | 失敗（入力欠落） | `gdal:gdalinfo`が「INPUTのソースレイヤを読み込めませんでした: <DEMパス>が見つかりません」でQgsProcessingException。GDAL出力の検証以前の段階 |
+| P03〜P08 | 未実施 | 入力DEM不在、プロファイル不一致、`execute_code`未許可（配置・検査に必要）のため着手していない |
+
+- 証跡: QGIS画面スクリーンショット（Windows側`<USERPROFILE>\.qgis_dev_probe\out\20261104-234811_pr19_p00_qgis_state.png`、このリポジトリには未保存）。QGISログ最新エントリ（id 142、critical）に上記エラー本文。
+- **代替試験は行っていない**。Linux上のpure-Python回帰テスト（`scripts/test_get_tiff_info.py`）はPR #19作成時点の単体テストであり、実機合格に数えない。
+- 根本原因: **未確認**（元のJSONDecodeErrorの原因は、実機のgdalinfo出力を確認できていないため確定していない）。PR #19のマージ判断: **保留**（C・D未達）。
+- 次に必要な作業: (1) DEMの所在確認（別PC・別パスなら、そのPCまたは正しいパスでの実施）、(2) プロファイル`SetupCheck`でQGISを起動（または検証専用プロファイルの使用可否を判断）、(3) 配布ZIP（`scripts/build_plugin_zip.py`）の配置と、その配置・検査に使う`execute_code`のセッション許可、(4) P01以降の実施。
+
