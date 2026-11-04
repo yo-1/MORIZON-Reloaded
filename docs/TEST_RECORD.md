@@ -551,3 +551,12 @@ CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted ref
 ### CSV回帰試験（2026-10-14）
 
 Linux/Python 3.12.14でscripts/test_costcsv_parser.pyの6試験合格。CP932、UTF-8 BOM正常CSVは60個のスコア条件・11名称。両encodingのExpressionと名称一致。行不足、セミコロン区切り、上表列不足、下表名称不足をRuntimeErrorで拒否。追加前後の正常CSVのExpressionと名称も一致確認済み。静的検査48ファイル・ZIP再生成成功。Windows CIにも試験を接続。QGIS画面上での拒否案内と公開2.3.2に対する検証は未実施。
+
+## PR #19 QGIS Dev Probe実機検証（試行、2026-11-04）
+
+- 対象: PR #19（`fix/gdalinfo-json-robustness`、head `fb9500133ee63d624b33793f62b22f29ff285058`）。依頼: Windows実機のQGIS Dev Probe MCP経由で、四万十町5m DEM（`C:\GIS_data\morizon\zoningkit_04_Shimanto_town\DATA\DEM\DEM5m_Shimanto_clip_buffer100m.tif`）での要素計算検証（P00〜P08、検証マトリクスは依頼側提供のGoogle Drive ZIP`MANIFEST.json`/`TEST_MATRIX.md`を参照）。
+- 環境: 本セッションはクラウドのLinuxサンドボックスであり、ユーザーのWindows PCへのRemote Control接続（`list_computer_folders`）は0件、「QGIS Dev Probe」という名前のMCPツールもセッション内に存在しない（`ToolSearch`で確認）。
+- 実施結果: **P00〜P08はすべて「環境上実施不能」**。接続先が存在しないため、ping/get_info等の疎通確認（P00）すら行えなかった。依頼側のZIP内`README.md`自身に「Claudeのクラウド開発環境にQGIS Dev ProbeのローカルMCP接続がない場合、実機操作はできません。…接続不能と報告してください」と明記されており、その指示に従った。
+- **クラウド環境での代替試験は行っていない**（依頼の明示的な禁止事項どおり。`scripts/test_get_tiff_info.py`によるpure-Python回帰テストは、PR #19作成時点で既に実施・記録済みのコード単体テストであり、本実機検証の代替ではない）。
+- 判定: 環境上実施不能（Windows実機でのQGIS Dev Probe接続自体が確立できなかったため）。
+- 未完了作業: Windows側でClaude Code（またはQGIS Dev Probeに接続できる環境）を使って、依頼ZIPの`TEST_MATRIX.md`（P00〜P08）・`EVIDENCE_TEMPLATE.md`に従った実機検証を実施する必要がある。
