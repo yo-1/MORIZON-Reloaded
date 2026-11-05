@@ -1,0 +1,2 @@
+OK: MORIZON Reloaded 2.3.3
+OK: 48 plugin Python files compiled

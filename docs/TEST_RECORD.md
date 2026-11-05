@@ -551,3 +551,66 @@ CLAUDE.md「Definition of done for final v2.3.0」が要求する「accepted ref
 ### CSV回帰試験（2026-10-14）
 
 Linux/Python 3.12.14でscripts/test_costcsv_parser.pyの6試験合格。CP932、UTF-8 BOM正常CSVは60個のスコア条件・11名称。両encodingのExpressionと名称一致。行不足、セミコロン区切り、上表列不足、下表名称不足をRuntimeErrorで拒否。追加前後の正常CSVのExpressionと名称も一致確認済み。静的検査48ファイル・ZIP再生成成功。Windows CIにも試験を接続。QGIS画面上での拒否案内と公開2.3.2に対する検証は未実施。
+
+## PR #19 QGIS Dev Probe実機検証（試行、2026-11-04）
+
+- 対象: PR #19（`fix/gdalinfo-json-robustness`、head `fb9500133ee63d624b33793f62b22f29ff285058`）。依頼: Windows実機のQGIS Dev Probe MCP経由で、四万十町5m DEM（`C:\GIS_data\morizon\zoningkit_04_Shimanto_town\DATA\DEM\DEM5m_Shimanto_clip_buffer100m.tif`）での要素計算検証（P00〜P08、検証マトリクスは依頼側提供のGoogle Drive ZIP`MANIFEST.json`/`TEST_MATRIX.md`を参照）。
+- 環境: 本セッションはクラウドのLinuxサンドボックスであり、ユーザーのWindows PCへのRemote Control接続（`list_computer_folders`）は0件、「QGIS Dev Probe」という名前のMCPツールもセッション内に存在しない（`ToolSearch`で確認）。
+- 実施結果: **P00〜P08はすべて「環境上実施不能」**。接続先が存在しないため、ping/get_info等の疎通確認（P00）すら行えなかった。依頼側のZIP内`README.md`自身に「Claudeのクラウド開発環境にQGIS Dev ProbeのローカルMCP接続がない場合、実機操作はできません。…接続不能と報告してください」と明記されており、その指示に従った。
+- **クラウド環境での代替試験は行っていない**（依頼の明示的な禁止事項どおり。`scripts/test_get_tiff_info.py`によるpure-Python回帰テストは、PR #19作成時点で既に実施・記録済みのコード単体テストであり、本実機検証の代替ではない）。
+- 判定: 環境上実施不能（Windows実機でのQGIS Dev Probe接続自体が確立できなかったため）。
+- 未完了作業: Windows側でClaude Code（またはQGIS Dev Probeに接続できる環境）を使って、依頼ZIPの`TEST_MATRIX.md`（P00〜P08）・`EVIDENCE_TEMPLATE.md`に従った実機検証を実施する必要がある。
+
+## PR #19 QGIS Dev Probe実機検証（2回目、2026-11-04夜）
+
+- 対象: PR #19（`fix/gdalinfo-json-robustness`）。依頼書記載のhead `fb9500133ee63d624b33793f62b22f29ff285058`。**確定**: 検証時点のブランチ先端は`2751106`で、`fb95001`はその祖先。`fb95001..2751106`の差分は`docs/OPEN_ISSUES.md`と`docs/TEST_RECORD.md`のみ（コード差分なし）。PR #19はdraft・open・未マージ。
+- 環境（実測、Dev Probe `get_info`）: Windows-11-10.0.22631、QGIS 3.44.13-Solothurn、Python 3.12.13、Qt 5.15.13 / PyQt 5.15.11。接続: クラウドのClaude Codeセッションから、ユーザーPC（Windows）にリンクされたデスクトップアプリ経由でQGIS Dev Probe 0.1.2（mode=interactive）へ接続。
+- プロファイル: 実測`CSMap131Validation`（依頼の`SetupCheck`と**不一致**）。プロジェクトに別検証（CS Map Sheets v0.13.1）のレイヤー2件が読込済み。導入済みプラグイン: csmap_sheets 0.13.1、qgis_dev_probe 0.1.2ほか標準。**MORIZONは未導入**。通常利用プロファイルは変更していない。
+- 判定（P00〜P08）:
+
+| ID | 判定 | 根拠 |
+|---|---|---|
+| P00 | 部分成功 | 疎通（ping/get_info/list_plugins）は成功。プロファイルが`SetupCheck`でなく、MORIZON未導入のため合格条件は未達 |
+| P01 | 環境上実施不能 | 期待パスのDEMがこのPC上で見つからない（P02のエラーで確認）。SHA256・サイズは取得できていない |
+| P02 | 失敗（入力欠落） | `gdal:gdalinfo`が「INPUTのソースレイヤを読み込めませんでした: <DEMパス>が見つかりません」でQgsProcessingException。GDAL出力の検証以前の段階 |
+| P03〜P08 | 未実施 | 入力DEM不在、プロファイル不一致、`execute_code`未許可（配置・検査に必要）のため着手していない |
+
+- 証跡: QGIS画面スクリーンショット（Windows側`<USERPROFILE>\.qgis_dev_probe\out\20261104-234811_pr19_p00_qgis_state.png`、このリポジトリには未保存）。QGISログ最新エントリ（id 142、critical）に上記エラー本文。
+- **代替試験は行っていない**。Linux上のpure-Python回帰テスト（`scripts/test_get_tiff_info.py`）はPR #19作成時点の単体テストであり、実機合格に数えない。
+- 根本原因: **未確認**（元のJSONDecodeErrorの原因は、実機のgdalinfo出力を確認できていないため確定していない）。PR #19のマージ判断: **保留**（C・D未達）。
+- 次に必要な作業: (1) DEMの所在確認（別PC・別パスなら、そのPCまたは正しいパスでの実施）、(2) プロファイル`SetupCheck`でQGISを起動（または検証専用プロファイルの使用可否を判断）、(3) 配布ZIP（`scripts/build_plugin_zip.py`）の配置と、その配置・検査に使う`execute_code`のセッション許可、(4) P01以降の実施。
+
+
+
+## PR #19 Windows実機検証（Codex、2026-11-05 JST）
+
+- **判定：PR #19のJSON解析修正は成功。6要素計算は完走。出力の構造的有効性は確認、科学的妥当性は未確認。**
+- 対象HEAD: `caf74c3b7cb5166e7b389873a2d6c548abee7f0e`（依頼の`2751106`からの差分は文書2ファイルのみ）。PR #19はdraft/open、base main。実行前にリモートHEADを再照合した。
+- 実測環境: Windows 11 build 22631、QGIS 3.44.13-Solothurn、Python 3.12.13、Qt 5.15.13/PyQt 5.15.11、GDAL 3.13.2。GRASSインストールのVERSIONNUMBERは8.5.0 exported。QGIS Dev Probe 0.1.2、interactive、execute_code許可、SetupCheckプロファイル。クラウド疑似試験ではなく、同PCの起動中QGIS GUIをMCP経由で実行した。
+- 準備: 既存SetupCheckの`python/plugins`と`QGIS`設定フォルダをローカルへコピーしてからPRソースのZIPを配置。ZIP内66ファイルすべてのSHA256が配置先と一致。ZIP SHA256=`64fe4e53b12b04b4b142b4d56facde9f556f8b6c430de8424f8cc995df90831f`。版番号は2.3.3のままの検証候補であり、公開済み2.3.3と区別する。
+- 入力: 元の指定DATA/DEMパスにはTIFF本体がなく、利用者が使用を承認した`C:/GIS_data/morizon/作業用/DEM5m_Shimanto_clip_buffer100m.tif`を検証用ASCIIパスへコピー。元とコピーのSHA256=`fdf449a849eb45dfc2b92fc4fb3014a23e1c9e0bf77262dd1affe1524a4a3e71`、87,889,813 bytes。EPSG:6672、5m、8815×5333、NoData=-9999。補助入力は既存四万十町ZoningKitのROAD/CSV/NPP/SRAD/VTEX/TATEMONOをコピーし、ハッシュ一覧を保存。
+- 単独実行: Dev Probe `run_algorithm`で`gdal:gdalinfo`（EXTRA=-json）を実行、0.453秒。生HTMLのJSONより前に`TIFFReadDirectoryCheckOrder:Invalid TIFF directory; tags are not sorted in ascending order`警告2件が混入した。
+- 比較: 実機で生成した生HTMLに旧処理と同じ`json.loads(raw[5:-6])`を適用すると`Expecting value: line 1 column 1 (char 0)`を再現。配置済みPRの`MORIZON.utils.get_tiff_info()`は同じDEMで正常にCRS/解像度/範囲/NoData/サイズを返した。旧プラグイン全体の再導入試験ではなく、実出力に対する旧解析式との比較である。
+- **確定**: 今回のDEM・環境ではTIFF警告混入が旧JSON解析を破壊することと、修正版が処理できること。**推定**: 11月3日の報告も同原因の可能性が高い。**未確認**: 当日の生出力が残っていないため、11月3日の全事象の原因を断定しない。
+- 6要素実行: 実プラグインのメイン画面へ検証ZoningKitを設定し、全6チェックを有効にして既存`run_elements()`を呼び出した。NPP/SRAD/VTEXがEPSG:2446・50m、DEMがEPSG:6672・5mという既存警告を保存し、既存の自動整合処理で続行した。計算式や入力ファイル内容の修正はしていない。
+- 2026-11-05 00:48:10〜00:50:57 JST、処理ログで166.4秒。DEM情報取得0.3秒、10mリサンプリング1.9秒、地位9.8秒、集材88.8秒、地利4.0秒、SHC30.6秒、傾斜0.6秒、保全30.4秒。`全要素の計算が完了`と終了ダイアログを確認。JSONDecodeError再発なし。GRASS r.neighbors/r.watershed実行を確認。
+- 8出力すべてQGIS/GDAL読込成功、Float32、EPSG:6672、4408×2667、10m、同一geotransform、NoData=-9999。有効画素にNaN/Infなし。16表示レイヤーも有効。NoData画素数は要素ごとに異なり、下表のとおり保存した。NoDataの方法論的な正しさを保証する試験ではない。
+
+| 出力 | 最小 | 最大 | 有効画素 | NoData画素 |
+|---|---:|---:|---:|---:|
+| Y_01_chii_hinoki.tif | 20.5800743 | 24.0435237885 | 6568567 | 5187569 |
+| Y_01_chii_karamatsu.tif | 19.8067436 | 26.0464134216 | 6568567 | 5187569 |
+| Y_01_chii_sugi.tif | 15.9162092 | 32.0934638977 | 6568567 | 5187569 |
+| Y_02_shuzai.tif | 0 | 10 | 6609368 | 5146768 |
+| Y_03_chiri.tif | 0 | 2054.09350586 | 6609368 | 5146768 |
+| Y_11_chikei.tif | 0.0032489507 | 11540021248 | 6609368 | 5146768 |
+| Y_12_keisha.tif | 0 | 72.5923995972 | 6618538 | 5137598 |
+| Y_13_hozen.tif | 0 | 1 | 6215956 | 5540180 |
+
+- **要判断**: SHC最大値11,540,021,248は極端に大きく、数値・入力DEMの品質を別件で確認する必要がある。今回のJSON修正だけをもって科学的妥当性や下流の評価結果まで合格にしない。修正・丸め・しきい値変更は行っていない。
+- UI応答停止警告（3.1秒、6.3秒、10.2秒等）を含むログは保持。処理完走とは別の既知監視項目として扱い、警告なしとは報告しない。
+- 証跡: [実機環境](evidence/pr19-20261105/environment.json)、[gdalinfo生出力](evidence/pr19-20261105/gdalinfo.html)、[旧式/修正版比較](evidence/pr19-20261105/parser-comparison.json)、[全ログ](evidence/pr19-20261105/qgis-log-complete.json)、[出力検査](evidence/pr19-20261105/output-validation.json)、[完了画面](evidence/pr19-20261105/20261105-005132_pr19_six_elements_completed.png)、[結果画面](evidence/pr19-20261105/20261105-005201_pr19_result_map.png)。
+- ローカル全証跡・入力コピー・出力・QGISプロジェクト: `C:/Users/Yoichi_Wada/Documents/Github/MORIZON-Reloaded/.validation/pr19-evidence/`。バックアップ: 同配下`backup-SetupCheck/`（プラグイン・QGIS設定、復元未実施。認証DBを含む全プロファイルのバックアップではない）。地理データ・バックアップ・プロジェクトはGitHubへ追加しない。
+- 静的確認: 当初PATH上のPython 3.10.8で構文エラーになったが、対象環境のQGIS同梱Python 3.12.13で48ファイルのstatic_checkが成功。これは上記実機実行とは別の補助確認である。
+- 限界: 別途案内された検証セットの原本TEST_MATRIX/ZIPは今回未取得。既存文書のP00〜P08全項目合格は主張せず、本依頼の単独gdalinfo・6要素・出力確認を実施した。繰返し計算、旧版全計算との画素比較、スコアリング以降は未実施。
+- mainへのmerge、Release、QGIS公式公開は行っていない。
