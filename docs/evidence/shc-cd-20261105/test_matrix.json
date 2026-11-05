@@ -1,0 +1,160 @@
+{
+  "main_sha": "2a79f59e12c62d18fc1556d958a70fa3393eb975",
+  "frozen_before_classification": true,
+  "candidate_source": "existing planA results.json dynamic_sigma CUR/A p50/p95",
+  "candidate_source_sha256": "ac64b9f0aff94f174ff952306204c4b1cc737fcf9fb4306bbd927e712c4fe7d5",
+  "candidates": [
+    0.011976445093750954,
+    0.015009556896984577,
+    0.01785637065768242,
+    0.044134240597486496
+  ],
+  "cases": [
+    {
+      "id": "baseline",
+      "thresholds": [
+        0.003,
+        0.003
+      ]
+    },
+    {
+      "id": "sensitivity_1",
+      "thresholds": [
+        0.011976445093750954,
+        0.015009556896984577
+      ]
+    },
+    {
+      "id": "sensitivity_2",
+      "thresholds": [
+        0.011976445093750954,
+        0.01785637065768242
+      ]
+    },
+    {
+      "id": "sensitivity_3",
+      "thresholds": [
+        0.011976445093750954,
+        0.044134240597486496
+      ]
+    },
+    {
+      "id": "sensitivity_4",
+      "thresholds": [
+        0.015009556896984577,
+        0.01785637065768242
+      ]
+    },
+    {
+      "id": "sensitivity_5",
+      "thresholds": [
+        0.015009556896984577,
+        0.044134240597486496
+      ]
+    },
+    {
+      "id": "sensitivity_6",
+      "thresholds": [
+        0.01785637065768242,
+        0.044134240597486496
+      ]
+    }
+  ],
+  "species": [
+    "sugi",
+    "hinoki",
+    "karamatsu"
+  ],
+  "quadrant_thresholds": [
+    [
+      6,
+      6
+    ],
+    [
+      5,
+      6
+    ]
+  ],
+  "settings": {
+    "species": "sugi",
+    "params": {
+      "siteidx": [
+        20.448,
+        23.274
+      ],
+      "cost": [
+        6.0,
+        7.0
+      ],
+      "distance": [
+        60.0,
+        170.88
+      ],
+      "slope": [
+        35.0,
+        45.0
+      ],
+      "shc": [
+        0.003,
+        0.003
+      ]
+    },
+    "params_sha256": "b405ea0647bc118c73718560b0613f4f3465160c25204d1de94ef04c846ef954",
+    "scores": {
+      "scores_siteidx": [
+        "1",
+        "2",
+        "3"
+      ],
+      "scores_cost": [
+        "1",
+        "2",
+        "3"
+      ],
+      "scores_distance": [
+        "3",
+        "2",
+        "1"
+      ],
+      "scores_shc": [
+        "1",
+        "2",
+        "3"
+      ],
+      "scores_slope": [
+        "1",
+        "2",
+        "3"
+      ],
+      "scores_savearea": [
+        "1",
+        "2"
+      ]
+    },
+    "quadrant_thresholds": [
+      [
+        6,
+        6
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "basis": "User-authorized fixed experiment; not asserted current operational settings",
+    "source_commit": "0b0d8a191ac18ee790d746eac8d7eeabe0d7d7f8"
+  },
+  "intervals": [
+    "x<=t1",
+    "t1<x<=t2",
+    "t2<x"
+  ],
+  "zoning_intervals": "high iff value > threshold; equality is low",
+  "regions": {
+    "status": "not_performed",
+    "reason": "No authenticated formal polygon provenance available; no invented regions"
+  },
+  "scope": "All species use historical params as controlled conditions, not operational or species-calibrated thresholds",
+  "sigma": "Existing dynamic-sigma SHC rasters; far changes are not attributed solely to local boundary effects",
+  "case_count": 42
+}

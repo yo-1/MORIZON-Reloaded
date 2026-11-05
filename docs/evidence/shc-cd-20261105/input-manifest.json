@@ -1,0 +1,164 @@
+{
+  "current": {
+    "sha256": "c1162cacd98dad3ffec0c6a9cbbd349c8666cd3d3f849f99bf640554d03dc53f",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6609368
+  },
+  "A": {
+    "sha256": "6638965843c740e22b54d7421ee8fb0f7ae44de2df5d52f8c9af9e98548fa83e",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6609368
+  },
+  "cost": {
+    "sha256": "c5a55420ccaa30d34ae26ccf1051e28397294ba1d51707fdc2601e24e80b78be",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6609368
+  },
+  "distance": {
+    "sha256": "b3a0ff7fe8519278d4def8361c95dbe9cc3379ec394cfa09907b3b7e3a1300c1",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6609368
+  },
+  "slope": {
+    "sha256": "11690b0e50eefec276b81b044cf51b3b61aff965583b04404e6d279324609223",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6618538
+  },
+  "savearea": {
+    "sha256": "1512847d8f4dda60f5c9556798b0c628c862d328c8926a032212608bdd13390a",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6215956
+  },
+  "sugi": {
+    "sha256": "9574ef0149725890477edd45944f77b8717855713edc8df4373825c7a0594db0",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6568567
+  },
+  "hinoki": {
+    "sha256": "3eb98b3de8b889985283b7289e1f2a5ab5661ebfb964da746fde48ed1c6416a8",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6568567
+  },
+  "karamatsu": {
+    "sha256": "52f1a92af881f4ba0fe17136df38222bc7d6601ba797da13c12982fef1725bf0",
+    "nodata": -9999.0,
+    "grid": [
+      4408,
+      2667,
+      [
+        -66540.0,
+        10.0,
+        0.0,
+        39715.0,
+        0.0,
+        -10.0
+      ],
+      "PROJCS[\"JGD2011 / Japan Plane Rectangular CS IV\",GEOGCS[\"JGD2011\",DATUM[\"Japanese_Geodetic_Datum_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1128\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6668\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",33],PARAMETER[\"central_meridian\",133.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Northing\",NORTH],AXIS[\"Easting\",EAST],AUTHORITY[\"EPSG\",\"6672\"]]"
+    ],
+    "valid_count": 6568567
+  }
+}

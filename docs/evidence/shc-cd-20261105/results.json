@@ -1,0 +1,4630 @@
+{
+  "test_matrix_sha256": "f2ddafcecfa99b045611c3428b65d8c27fc5bc734f052772161ced5073d6125e",
+  "distribution": {
+    "current": {
+      "n": 6609368,
+      "min": 0.0032489506993442774,
+      "max": 11540021248.0,
+      "p50": 0.017856369726359844,
+      "p95": 0.04413423985242837,
+      "p99_9": 0.2204287901073695
+    },
+    "A": {
+      "n": 6609368,
+      "min": 0.001582075492478907,
+      "max": 0.021452683955430984,
+      "p50": 0.011976445093750954,
+      "p95": 0.015009556571021675,
+      "p99_9": 0.01771207350119951
+    }
+  },
+  "populations": {
+    "sugi": 6210043,
+    "hinoki": 6210043,
+    "karamatsu": 6210043
+  },
+  "risk_population": 6215956,
+  "shc_population": 6609368,
+  "area_per_cell": 100.0,
+  "cases": [
+    {
+      "id": "baseline",
+      "thresholds": [
+        0.003,
+        0.003
+      ],
+      "score_matrix": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          617,
+          0,
+          6608751
+        ]
+      ],
+      "score_counts": {
+        "current": {
+          "3.0": 6609368
+        },
+        "A": {
+          "1.0": 617,
+          "3.0": 6608751
+        }
+      },
+      "score_change": {
+        "population": 6609368,
+        "changed": 617,
+        "percent": 0.009335234473250695,
+        "area_m2": 61700.0,
+        "area_ha": 6.17,
+        "within_25_24": 617,
+        "beyond_25_24": 0,
+        "distance_min": 1.0,
+        "distance_max": 15.0
+      },
+      "score_changes_outside_risk": 617,
+      "risk_change": {
+        "population": 6215956,
+        "changed": 0,
+        "percent": 0.0,
+        "area_m2": 0.0,
+        "area_ha": 0.0,
+        "within_25_24": 0,
+        "beyond_25_24": 0,
+        "distance_min": null,
+        "distance_max": null
+      },
+      "risk_delta": {
+        "0.0": 6215956
+      },
+      "quadrants": [
+        {
+          "species": "sugi",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              75083,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1805385,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3627186,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              702389
+            ]
+          ],
+          "current_counts": {
+            "1.0": 75083,
+            "2.0": 1805385,
+            "3.0": 3627186,
+            "4.0": 702389
+          },
+          "A_counts": {
+            "1.0": 75083,
+            "2.0": 1805385,
+            "3.0": 3627186,
+            "4.0": 702389
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 0,
+            "percent": 0.0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "within_25_24": 0,
+            "beyond_25_24": 0,
+            "distance_min": null,
+            "distance_max": null
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 617,
+          "paths": []
+        },
+        {
+          "species": "sugi",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              233008,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2895870,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2536701,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              544464
+            ]
+          ],
+          "current_counts": {
+            "1.0": 233008,
+            "2.0": 2895870,
+            "3.0": 2536701,
+            "4.0": 544464
+          },
+          "A_counts": {
+            "1.0": 233008,
+            "2.0": 2895870,
+            "3.0": 2536701,
+            "4.0": 544464
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 0,
+            "percent": 0.0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "within_25_24": 0,
+            "beyond_25_24": 0,
+            "distance_min": null,
+            "distance_max": null
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 617,
+          "paths": []
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              11874,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1754550,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3678021,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              765598
+            ]
+          ],
+          "current_counts": {
+            "1.0": 11874,
+            "2.0": 1754550,
+            "3.0": 3678021,
+            "4.0": 765598
+          },
+          "A_counts": {
+            "1.0": 11874,
+            "2.0": 1754550,
+            "3.0": 3678021,
+            "4.0": 765598
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 0,
+            "percent": 0.0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "within_25_24": 0,
+            "beyond_25_24": 0,
+            "distance_min": null,
+            "distance_max": null
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 617,
+          "paths": []
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              237801,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              2975016,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2457555,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              539671
+            ]
+          ],
+          "current_counts": {
+            "1.0": 237801,
+            "2.0": 2975016,
+            "3.0": 2457555,
+            "4.0": 539671
+          },
+          "A_counts": {
+            "1.0": 237801,
+            "2.0": 2975016,
+            "3.0": 2457555,
+            "4.0": 539671
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 0,
+            "percent": 0.0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "within_25_24": 0,
+            "beyond_25_24": 0,
+            "distance_min": null,
+            "distance_max": null
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 617,
+          "paths": []
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              54937,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              1962711,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3469860,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              722535
+            ]
+          ],
+          "current_counts": {
+            "1.0": 54937,
+            "2.0": 1962711,
+            "3.0": 3469860,
+            "4.0": 722535
+          },
+          "A_counts": {
+            "1.0": 54937,
+            "2.0": 1962711,
+            "3.0": 3469860,
+            "4.0": 722535
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 0,
+            "percent": 0.0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "within_25_24": 0,
+            "beyond_25_24": 0,
+            "distance_min": null,
+            "distance_max": null
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 617,
+          "paths": []
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              281770,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              3219186,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2213385,
+              0
+            ],
+            [
+              0,
+              0,
+              0,
+              495702
+            ]
+          ],
+          "current_counts": {
+            "1.0": 281770,
+            "2.0": 3219186,
+            "3.0": 2213385,
+            "4.0": 495702
+          },
+          "A_counts": {
+            "1.0": 281770,
+            "2.0": 3219186,
+            "3.0": 2213385,
+            "4.0": 495702
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 0,
+            "percent": 0.0,
+            "area_m2": 0.0,
+            "area_ha": 0.0,
+            "within_25_24": 0,
+            "beyond_25_24": 0,
+            "distance_min": null,
+            "distance_max": null
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 617,
+          "paths": []
+        }
+      ]
+    },
+    {
+      "id": "sensitivity_1",
+      "thresholds": [
+        0.011976445093750954,
+        0.015009556896984577
+      ],
+      "score_matrix": [
+        [
+          1015879,
+          152,
+          0
+        ],
+        [
+          602550,
+          614973,
+          0
+        ],
+        [
+          1686259,
+          2359087,
+          330468
+        ]
+      ],
+      "score_counts": {
+        "current": {
+          "1.0": 1016031,
+          "2.0": 1217523,
+          "3.0": 4375814
+        },
+        "A": {
+          "1.0": 3304688,
+          "2.0": 2974212,
+          "3.0": 330468
+        }
+      },
+      "score_change": {
+        "population": 6609368,
+        "changed": 4648048,
+        "percent": 70.32515060441483,
+        "area_m2": 464804800.0,
+        "area_ha": 46480.48,
+        "within_25_24": 734379,
+        "beyond_25_24": 3913669,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "score_changes_outside_risk": 349270,
+      "risk_change": {
+        "population": 6215956,
+        "changed": 4298778,
+        "percent": 69.15714976103435,
+        "area_m2": 429877800.0,
+        "area_ha": 42987.78,
+        "within_25_24": 397735,
+        "beyond_25_24": 3901043,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "risk_delta": {
+        "-2.0": 1508172,
+        "-1.0": 2790490,
+        "0.0": 1917178,
+        "1.0": 116
+      },
+      "quadrants": [
+        {
+          "species": "sugi",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              4901,
+              57822,
+              0,
+              0
+            ],
+            [
+              0,
+              1817745,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3872064,
+              0
+            ],
+            [
+              0,
+              0,
+              411540,
+              45971
+            ]
+          ],
+          "current_counts": {
+            "1.0": 62723,
+            "2.0": 1817745,
+            "3.0": 3872064,
+            "4.0": 457511
+          },
+          "A_counts": {
+            "1.0": 4901,
+            "2.0": 1875567,
+            "3.0": 4283604,
+            "4.0": 45971
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 469362,
+            "percent": 7.558111916455329,
+            "area_m2": 46936200.0,
+            "area_ha": 4693.62,
+            "within_25_24": 35888,
+            "beyond_25_24": 433474,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 354310,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 136
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 2115
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 30189
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 182094
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 27497
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 227331
+            }
+          ]
+        },
+        {
+          "species": "sugi",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              16186,
+              172802,
+              0,
+              0
+            ],
+            [
+              0,
+              2939890,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2749919,
+              0
+            ],
+            [
+              0,
+              0,
+              296560,
+              34686
+            ]
+          ],
+          "current_counts": {
+            "1.0": 188988,
+            "2.0": 2939890,
+            "3.0": 2749919,
+            "4.0": 331246
+          },
+          "A_counts": {
+            "1.0": 16186,
+            "2.0": 3112692,
+            "3.0": 3046479,
+            "4.0": 34686
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 469362,
+            "percent": 7.558111916455329,
+            "area_m2": 46936200.0,
+            "area_ha": 4693.62,
+            "within_25_24": 35888,
+            "beyond_25_24": 433474,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 354310,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 472
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 1779
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 84999
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 127284
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 87331
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 167497
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              1135,
+              9653,
+              0,
+              0
+            ],
+            [
+              0,
+              1755636,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3934173,
+              0
+            ],
+            [
+              0,
+              0,
+              459709,
+              49737
+            ]
+          ],
+          "current_counts": {
+            "1.0": 10788,
+            "2.0": 1755636,
+            "3.0": 3934173,
+            "4.0": 509446
+          },
+          "A_counts": {
+            "1.0": 1135,
+            "2.0": 1765289,
+            "3.0": 4393882,
+            "4.0": 49737
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 469362,
+            "percent": 7.558111916455329,
+            "area_m2": 46936200.0,
+            "area_ha": 4693.62,
+            "within_25_24": 35888,
+            "beyond_25_24": 433474,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 354310,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 7
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 2244
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 4723
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 207560
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 4923
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 249905
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              17684,
+              174127,
+              0,
+              0
+            ],
+            [
+              0,
+              3021006,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2668803,
+              0
+            ],
+            [
+              0,
+              0,
+              295235,
+              33188
+            ]
+          ],
+          "current_counts": {
+            "1.0": 191811,
+            "2.0": 3021006,
+            "3.0": 2668803,
+            "4.0": 328423
+          },
+          "A_counts": {
+            "1.0": 17684,
+            "2.0": 3195133,
+            "3.0": 2964038,
+            "4.0": 33188
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 469362,
+            "percent": 7.558111916455329,
+            "area_m2": 46936200.0,
+            "area_ha": 4693.62,
+            "within_25_24": 35888,
+            "beyond_25_24": 433474,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 354310,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 562
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 1689
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 84802
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 127481
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 88763
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 166065
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              3723,
+              42715,
+              0,
+              0
+            ],
+            [
+              0,
+              1971210,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3718599,
+              0
+            ],
+            [
+              0,
+              0,
+              426647,
+              47149
+            ]
+          ],
+          "current_counts": {
+            "1.0": 46438,
+            "2.0": 1971210,
+            "3.0": 3718599,
+            "4.0": 473796
+          },
+          "A_counts": {
+            "1.0": 3723,
+            "2.0": 2013925,
+            "3.0": 4145246,
+            "4.0": 47149
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 469362,
+            "percent": 7.558111916455329,
+            "area_m2": 46936200.0,
+            "area_ha": 4693.62,
+            "within_25_24": 35888,
+            "beyond_25_24": 433474,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 354310,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 78
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 2173
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 22264
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 190019
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 20373
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 234455
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              20112,
+              203826,
+              0,
+              0
+            ],
+            [
+              0,
+              3277018,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2412791,
+              0
+            ],
+            [
+              0,
+              0,
+              265536,
+              30760
+            ]
+          ],
+          "current_counts": {
+            "1.0": 223938,
+            "2.0": 3277018,
+            "3.0": 2412791,
+            "4.0": 296296
+          },
+          "A_counts": {
+            "1.0": 20112,
+            "2.0": 3480844,
+            "3.0": 2678327,
+            "4.0": 30760
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 469362,
+            "percent": 7.558111916455329,
+            "area_m2": 46936200.0,
+            "area_ha": 4693.62,
+            "within_25_24": 35888,
+            "beyond_25_24": 433474,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 354310,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 647
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 1604
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 100779
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 111504
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 102400
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 152428
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sensitivity_2",
+      "thresholds": [
+        0.011976445093750954,
+        0.01785637065768242
+      ],
+      "score_matrix": [
+        [
+          1015879,
+          152,
+          0
+        ],
+        [
+          995784,
+          1292871,
+          0
+        ],
+        [
+          1293025,
+          2006594,
+          5063
+        ]
+      ],
+      "score_counts": {
+        "current": {
+          "1.0": 1016031,
+          "2.0": 2288655,
+          "3.0": 3304682
+        },
+        "A": {
+          "1.0": 3304688,
+          "2.0": 3299617,
+          "3.0": 5063
+        }
+      },
+      "score_change": {
+        "population": 6609368,
+        "changed": 4295555,
+        "percent": 64.991917532811,
+        "area_m2": 429555500.0,
+        "area_ha": 42955.55,
+        "within_25_24": 726849,
+        "beyond_25_24": 3568706,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "score_changes_outside_risk": 356357,
+      "risk_change": {
+        "population": 6215956,
+        "changed": 3939198,
+        "percent": 63.37235977860847,
+        "area_m2": 393919800.0,
+        "area_ha": 39391.98,
+        "within_25_24": 382385,
+        "beyond_25_24": 3556813,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "risk_delta": {
+        "-2.0": 1132688,
+        "-1.0": 2806394,
+        "0.0": 2276758,
+        "1.0": 116
+      },
+      "quadrants": [
+        {
+          "species": "sugi",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              1870,
+              51878,
+              0,
+              0
+            ],
+            [
+              0,
+              1826720,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3977034,
+              0
+            ],
+            [
+              0,
+              0,
+              337248,
+              15293
+            ]
+          ],
+          "current_counts": {
+            "1.0": 53748,
+            "2.0": 1826720,
+            "3.0": 3977034,
+            "4.0": 352541
+          },
+          "A_counts": {
+            "1.0": 1870,
+            "2.0": 1878598,
+            "3.0": 4314282,
+            "4.0": 15293
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 389126,
+            "percent": 6.266075774354541,
+            "area_m2": 38912600.0,
+            "area_ha": 3891.26,
+            "within_25_24": 30386,
+            "beyond_25_24": 358740,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 361039,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 331
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 3476
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 26241
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 140187
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 25306
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 193585
+            }
+          ]
+        },
+        {
+          "species": "sugi",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              5919,
+              153014,
+              0,
+              0
+            ],
+            [
+              0,
+              2969945,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2833809,
+              0
+            ],
+            [
+              0,
+              0,
+              236112,
+              11244
+            ]
+          ],
+          "current_counts": {
+            "1.0": 158933,
+            "2.0": 2969945,
+            "3.0": 2833809,
+            "4.0": 247356
+          },
+          "A_counts": {
+            "1.0": 5919,
+            "2.0": 3122959,
+            "3.0": 3069921,
+            "4.0": 11244
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 389126,
+            "percent": 6.266075774354541,
+            "area_m2": 38912600.0,
+            "area_ha": 3891.26,
+            "within_25_24": 30386,
+            "beyond_25_24": 358740,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 361039,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 940
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 2867
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 71924
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 94504
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 80150
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 138741
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              265,
+              9217,
+              0,
+              0
+            ],
+            [
+              0,
+              1756942,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4046812,
+              0
+            ],
+            [
+              0,
+              0,
+              379909,
+              16898
+            ]
+          ],
+          "current_counts": {
+            "1.0": 9482,
+            "2.0": 1756942,
+            "3.0": 4046812,
+            "4.0": 396807
+          },
+          "A_counts": {
+            "1.0": 265,
+            "2.0": 1766159,
+            "3.0": 4426721,
+            "4.0": 16898
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 389126,
+            "percent": 6.266075774354541,
+            "area_m2": 38912600.0,
+            "area_ha": 3891.26,
+            "within_25_24": 30386,
+            "beyond_25_24": 358740,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 361039,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 17
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 3790
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 4272
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 162156
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 4928
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 213963
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              6785,
+              156623,
+              0,
+              0
+            ],
+            [
+              0,
+              3049409,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2754345,
+              0
+            ],
+            [
+              0,
+              0,
+              232503,
+              10378
+            ]
+          ],
+          "current_counts": {
+            "1.0": 163408,
+            "2.0": 3049409,
+            "3.0": 2754345,
+            "4.0": 242881
+          },
+          "A_counts": {
+            "1.0": 6785,
+            "2.0": 3206032,
+            "3.0": 2986848,
+            "4.0": 10378
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 389126,
+            "percent": 6.266075774354541,
+            "area_m2": 38912600.0,
+            "area_ha": 3891.26,
+            "within_25_24": 30386,
+            "beyond_25_24": 358740,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 361039,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1086
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 2721
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 72486
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 93942
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 83051
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 135840
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              1248,
+              39152,
+              0,
+              0
+            ],
+            [
+              0,
+              1977248,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3826506,
+              0
+            ],
+            [
+              0,
+              0,
+              349974,
+              15915
+            ]
+          ],
+          "current_counts": {
+            "1.0": 40400,
+            "2.0": 1977248,
+            "3.0": 3826506,
+            "4.0": 365889
+          },
+          "A_counts": {
+            "1.0": 1248,
+            "2.0": 2016400,
+            "3.0": 4176480,
+            "4.0": 15915
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 389126,
+            "percent": 6.266075774354541,
+            "area_m2": 38912600.0,
+            "area_ha": 3891.26,
+            "within_25_24": 30386,
+            "beyond_25_24": 358740,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 361039,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 168
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 3639
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 19767
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 146661
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 19217
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 199674
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              7432,
+              181077,
+              0,
+              0
+            ],
+            [
+              0,
+              3312447,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2491307,
+              0
+            ],
+            [
+              0,
+              0,
+              208049,
+              9731
+            ]
+          ],
+          "current_counts": {
+            "1.0": 188509,
+            "2.0": 3312447,
+            "3.0": 2491307,
+            "4.0": 217780
+          },
+          "A_counts": {
+            "1.0": 7432,
+            "2.0": 3493524,
+            "3.0": 2699356,
+            "4.0": 9731
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 389126,
+            "percent": 6.266075774354541,
+            "area_m2": 38912600.0,
+            "area_ha": 3891.26,
+            "within_25_24": 30386,
+            "beyond_25_24": 358740,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 361039,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1228
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 2579
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 84992
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 81436
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 94857
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 124034
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sensitivity_3",
+      "thresholds": [
+        0.011976445093750954,
+        0.044134240597486496
+      ],
+      "score_matrix": [
+        [
+          1015879,
+          152,
+          0
+        ],
+        [
+          2102914,
+          3159954,
+          0
+        ],
+        [
+          185895,
+          144574,
+          0
+        ]
+      ],
+      "score_counts": {
+        "current": {
+          "1.0": 1016031,
+          "2.0": 5262868,
+          "3.0": 330469
+        },
+        "A": {
+          "1.0": 3304688,
+          "2.0": 3304680
+        }
+      },
+      "score_change": {
+        "population": 6609368,
+        "changed": 2433535,
+        "percent": 36.819481075951586,
+        "area_m2": 243353500.0,
+        "area_ha": 24335.35,
+        "within_25_24": 451976,
+        "beyond_25_24": 1981559,
+        "distance_min": 1.0,
+        "distance_max": 665.0811980502832
+      },
+      "score_changes_outside_risk": 211436,
+      "risk_change": {
+        "population": 6215956,
+        "changed": 2222099,
+        "percent": 35.7483064551937,
+        "area_m2": 222209900.0,
+        "area_ha": 22220.99,
+        "within_25_24": 249318,
+        "beyond_25_24": 1972781,
+        "distance_min": 1.0,
+        "distance_max": 665.0811980502832
+      },
+      "risk_delta": {
+        "-2.0": 155453,
+        "-1.0": 2066530,
+        "0.0": 3993857,
+        "1.0": 116
+      },
+      "quadrants": [
+        {
+          "species": "sugi",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              1860,
+              7903,
+              0,
+              0
+            ],
+            [
+              0,
+              1870705,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4273866,
+              0
+            ],
+            [
+              0,
+              0,
+              40669,
+              15040
+            ]
+          ],
+          "current_counts": {
+            "1.0": 9763,
+            "2.0": 1870705,
+            "3.0": 4273866,
+            "4.0": 55709
+          },
+          "A_counts": {
+            "1.0": 1860,
+            "2.0": 1878608,
+            "3.0": 4314535,
+            "4.0": 15040
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 48572,
+            "percent": 0.7821523941138572,
+            "area_m2": 4857200.0,
+            "area_ha": 485.72,
+            "within_25_24": 7094,
+            "beyond_25_24": 41478,
+            "distance_min": 2.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 213861,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1920
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 10236
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 4371
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 18362
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1612
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 12071
+            }
+          ]
+        },
+        {
+          "species": "sugi",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              5888,
+              21123,
+              0,
+              0
+            ],
+            [
+              0,
+              3101867,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3042704,
+              0
+            ],
+            [
+              0,
+              0,
+              27449,
+              11012
+            ]
+          ],
+          "current_counts": {
+            "1.0": 27011,
+            "2.0": 3101867,
+            "3.0": 3042704,
+            "4.0": 38461
+          },
+          "A_counts": {
+            "1.0": 5888,
+            "2.0": 3122990,
+            "3.0": 3070153,
+            "4.0": 11012
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 48572,
+            "percent": 0.7821523941138572,
+            "area_m2": 4857200.0,
+            "area_ha": 485.72,
+            "within_25_24": 7094,
+            "beyond_25_24": 41478,
+            "distance_min": 2.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 213861,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 4837
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 7319
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 10758
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 11975
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 5528
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 8155
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              262,
+              846,
+              0,
+              0
+            ],
+            [
+              0,
+              1765316,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4379255,
+              0
+            ],
+            [
+              0,
+              0,
+              47726,
+              16638
+            ]
+          ],
+          "current_counts": {
+            "1.0": 1108,
+            "2.0": 1765316,
+            "3.0": 4379255,
+            "4.0": 64364
+          },
+          "A_counts": {
+            "1.0": 262,
+            "2.0": 1766162,
+            "3.0": 4426981,
+            "4.0": 16638
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 48572,
+            "percent": 0.7821523941138572,
+            "area_m2": 4857200.0,
+            "area_ha": 485.72,
+            "within_25_24": 7094,
+            "beyond_25_24": 41478,
+            "distance_min": 2.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 213861,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 279
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 11877
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 391
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 22342
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 176
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 13507
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              6756,
+              23170,
+              0,
+              0
+            ],
+            [
+              0,
+              3182891,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2961680,
+              0
+            ],
+            [
+              0,
+              0,
+              25402,
+              10144
+            ]
+          ],
+          "current_counts": {
+            "1.0": 29926,
+            "2.0": 3182891,
+            "3.0": 2961680,
+            "4.0": 35546
+          },
+          "A_counts": {
+            "1.0": 6756,
+            "2.0": 3206061,
+            "3.0": 2987082,
+            "4.0": 10144
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 48572,
+            "percent": 0.7821523941138572,
+            "area_m2": 4857200.0,
+            "area_ha": 485.72,
+            "within_25_24": 7094,
+            "beyond_25_24": 41478,
+            "distance_min": 2.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 213861,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 5395
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 6761
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 11942
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 10791
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 5833
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 7850
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              1238,
+              5332,
+              0,
+              0
+            ],
+            [
+              0,
+              2011078,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4133493,
+              0
+            ],
+            [
+              0,
+              0,
+              43240,
+              15662
+            ]
+          ],
+          "current_counts": {
+            "1.0": 6570,
+            "2.0": 2011078,
+            "3.0": 4133493,
+            "4.0": 58902
+          },
+          "A_counts": {
+            "1.0": 1238,
+            "2.0": 2016410,
+            "3.0": 4176733,
+            "4.0": 15662
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 48572,
+            "percent": 0.7821523941138572,
+            "area_m2": 4857200.0,
+            "area_ha": 485.72,
+            "within_25_24": 7094,
+            "beyond_25_24": 41478,
+            "distance_min": 2.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 213861,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1305
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 10851
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 2912
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 19821
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1115
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 12568
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              7398,
+              26247,
+              0,
+              0
+            ],
+            [
+              0,
+              3467311,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2677260,
+              0
+            ],
+            [
+              0,
+              0,
+              22325,
+              9502
+            ]
+          ],
+          "current_counts": {
+            "1.0": 33645,
+            "2.0": 3467311,
+            "3.0": 2677260,
+            "4.0": 31827
+          },
+          "A_counts": {
+            "1.0": 7398,
+            "2.0": 3493558,
+            "3.0": 2699585,
+            "4.0": 9502
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 48572,
+            "percent": 0.7821523941138572,
+            "area_m2": 4857200.0,
+            "area_ha": 485.72,
+            "within_25_24": 7094,
+            "beyond_25_24": 41478,
+            "distance_min": 2.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 213861,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 5916
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 6240
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 13687
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 9046
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 6644
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 7039
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sensitivity_4",
+      "thresholds": [
+        0.015009556896984577,
+        0.01785637065768242
+      ],
+      "score_matrix": [
+        [
+          2233554,
+          0,
+          0
+        ],
+        [
+          1032403,
+          38729,
+          0
+        ],
+        [
+          3012943,
+          286676,
+          5063
+        ]
+      ],
+      "score_counts": {
+        "current": {
+          "1.0": 2233554,
+          "2.0": 1071132,
+          "3.0": 3304682
+        },
+        "A": {
+          "1.0": 6278900,
+          "2.0": 325405,
+          "3.0": 5063
+        }
+      },
+      "score_change": {
+        "population": 6609368,
+        "changed": 4332022,
+        "percent": 65.54366468927135,
+        "area_m2": 433202200.0,
+        "area_ha": 43320.22,
+        "within_25_24": 732852,
+        "beyond_25_24": 3599170,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "score_changes_outside_risk": 350932,
+      "risk_change": {
+        "population": 6215956,
+        "changed": 3981090,
+        "percent": 64.04630277305695,
+        "area_m2": 398109000.0,
+        "area_ha": 39810.9,
+        "within_25_24": 390968,
+        "beyond_25_24": 3590122,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "risk_delta": {
+        "-2.0": 2706476,
+        "-1.0": 1274614,
+        "0.0": 2234866
+      },
+      "quadrants": [
+        {
+          "species": "sugi",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              129,
+              53422,
+              0,
+              0
+            ],
+            [
+              0,
+              1826917,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3981576,
+              0
+            ],
+            [
+              0,
+              0,
+              346504,
+              1495
+            ]
+          ],
+          "current_counts": {
+            "1.0": 53551,
+            "2.0": 1826917,
+            "3.0": 3981576,
+            "4.0": 347999
+          },
+          "A_counts": {
+            "1.0": 129,
+            "2.0": 1880339,
+            "3.0": 4328080,
+            "4.0": 1495
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 399926,
+            "percent": 6.439987613612337,
+            "area_m2": 39992600.0,
+            "area_ha": 3999.26,
+            "within_25_24": 30946,
+            "beyond_25_24": 368980,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 355467,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 378
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 3820
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 50272
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 316060
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 2772
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 26624
+            }
+          ]
+        },
+        {
+          "species": "sugi",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              505,
+              157689,
+              0,
+              0
+            ],
+            [
+              0,
+              2970684,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2837809,
+              0
+            ],
+            [
+              0,
+              0,
+              242237,
+              1119
+            ]
+          ],
+          "current_counts": {
+            "1.0": 158194,
+            "2.0": 2970684,
+            "3.0": 2837809,
+            "4.0": 243356
+          },
+          "A_counts": {
+            "1.0": 505,
+            "2.0": 3128373,
+            "3.0": 3080046,
+            "4.0": 1119
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 399926,
+            "percent": 6.439987613612337,
+            "area_m2": 39992600.0,
+            "area_ha": 3999.26,
+            "within_25_24": 30946,
+            "beyond_25_24": 368980,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 355467,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1050
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 3148
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 147295
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 219037
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 9344
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 20052
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              31,
+              9436,
+              0,
+              0
+            ],
+            [
+              0,
+              1756957,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4051536,
+              0
+            ],
+            [
+              0,
+              0,
+              390490,
+              1593
+            ]
+          ],
+          "current_counts": {
+            "1.0": 9467,
+            "2.0": 1756957,
+            "3.0": 4051536,
+            "4.0": 392083
+          },
+          "A_counts": {
+            "1.0": 31,
+            "2.0": 1766393,
+            "3.0": 4442026,
+            "4.0": 1593
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 399926,
+            "percent": 6.439987613612337,
+            "area_m2": 39992600.0,
+            "area_ha": 3999.26,
+            "within_25_24": 30946,
+            "beyond_25_24": 368980,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 355467,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 42
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 4156
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 8572
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 357760
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 822
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 28574
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              548,
+              161949,
+              0,
+              0
+            ],
+            [
+              0,
+              3050320,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2758173,
+              0
+            ],
+            [
+              0,
+              0,
+              237977,
+              1076
+            ]
+          ],
+          "current_counts": {
+            "1.0": 162497,
+            "2.0": 3050320,
+            "3.0": 2758173,
+            "4.0": 239053
+          },
+          "A_counts": {
+            "1.0": 548,
+            "2.0": 3212269,
+            "3.0": 2996150,
+            "4.0": 1076
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 399926,
+            "percent": 6.439987613612337,
+            "area_m2": 39992600.0,
+            "area_ha": 3999.26,
+            "within_25_24": 30946,
+            "beyond_25_24": 368980,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 355467,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1080
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 3118
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 150770
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 215562
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 10099
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 19297
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              90,
+              40202,
+              0,
+              0
+            ],
+            [
+              0,
+              1977356,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3831137,
+              0
+            ],
+            [
+              0,
+              0,
+              359724,
+              1534
+            ]
+          ],
+          "current_counts": {
+            "1.0": 40292,
+            "2.0": 1977356,
+            "3.0": 3831137,
+            "4.0": 361258
+          },
+          "A_counts": {
+            "1.0": 90,
+            "2.0": 2017558,
+            "3.0": 4190861,
+            "4.0": 1534
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 399926,
+            "percent": 6.439987613612337,
+            "area_m2": 39992600.0,
+            "area_ha": 3999.26,
+            "within_25_24": 30946,
+            "beyond_25_24": 368980,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 355467,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 182
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 4016
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 37722
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 328610
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 2298
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 27098
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              609,
+              186862,
+              0,
+              0
+            ],
+            [
+              0,
+              3313485,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2495008,
+              0
+            ],
+            [
+              0,
+              0,
+              213064,
+              1015
+            ]
+          ],
+          "current_counts": {
+            "1.0": 187471,
+            "2.0": 3313485,
+            "3.0": 2495008,
+            "4.0": 214079
+          },
+          "A_counts": {
+            "1.0": 609,
+            "2.0": 3500347,
+            "3.0": 2708072,
+            "4.0": 1015
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 399926,
+            "percent": 6.439987613612337,
+            "area_m2": 39992600.0,
+            "area_ha": 3999.26,
+            "within_25_24": 30946,
+            "beyond_25_24": 368980,
+            "distance_min": 1.0,
+            "distance_max": 671.7514421272201
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 355467,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 1240
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 2958
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 174011
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 192321
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 11611
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 17785
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sensitivity_5",
+      "thresholds": [
+        0.015009556896984577,
+        0.044134240597486496
+      ],
+      "score_matrix": [
+        [
+          2233554,
+          0,
+          0
+        ],
+        [
+          3731944,
+          313401,
+          0
+        ],
+        [
+          313402,
+          17067,
+          0
+        ]
+      ],
+      "score_counts": {
+        "current": {
+          "1.0": 2233554,
+          "2.0": 4045345,
+          "3.0": 330469
+        },
+        "A": {
+          "1.0": 6278900,
+          "2.0": 330468
+        }
+      },
+      "score_change": {
+        "population": 6609368,
+        "changed": 4062413,
+        "percent": 61.46446982525409,
+        "area_m2": 406241300.0,
+        "area_ha": 40624.13,
+        "within_25_24": 702962,
+        "beyond_25_24": 3359451,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "score_changes_outside_risk": 336285,
+      "risk_change": {
+        "population": 6215956,
+        "changed": 3726128,
+        "percent": 59.94456846219632,
+        "area_m2": 372612800.0,
+        "area_ha": 37261.28,
+        "within_25_24": 375340,
+        "beyond_25_24": 3350788,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "risk_delta": {
+        "-2.0": 267104,
+        "-1.0": 3459024,
+        "0.0": 2489828
+      },
+      "quadrants": [
+        {
+          "species": "sugi",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              119,
+              9447,
+              0,
+              0
+            ],
+            [
+              0,
+              1870902,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4278408,
+              0
+            ],
+            [
+              0,
+              0,
+              49925,
+              1242
+            ]
+          ],
+          "current_counts": {
+            "1.0": 9566,
+            "2.0": 1870902,
+            "3.0": 4278408,
+            "4.0": 51167
+          },
+          "A_counts": {
+            "1.0": 119,
+            "2.0": 1880349,
+            "3.0": 4328333,
+            "4.0": 1242
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 59372,
+            "percent": 0.956064233371653,
+            "area_m2": 5937200.0,
+            "area_ha": 593.72,
+            "within_25_24": 7654,
+            "beyond_25_24": 51718,
+            "distance_min": 1.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 340548,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 3359
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 18821
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 5972
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 30123
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 116
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 981
+            }
+          ]
+        },
+        {
+          "species": "sugi",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              474,
+              25798,
+              0,
+              0
+            ],
+            [
+              0,
+              3102606,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3046704,
+              0
+            ],
+            [
+              0,
+              0,
+              33574,
+              887
+            ]
+          ],
+          "current_counts": {
+            "1.0": 26272,
+            "2.0": 3102606,
+            "3.0": 3046704,
+            "4.0": 34461
+          },
+          "A_counts": {
+            "1.0": 474,
+            "2.0": 3128404,
+            "3.0": 3080278,
+            "4.0": 887
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 59372,
+            "percent": 0.956064233371653,
+            "area_m2": 5937200.0,
+            "area_ha": 593.72,
+            "within_25_24": 7654,
+            "beyond_25_24": 51718,
+            "distance_min": 1.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 340548,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 9138
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 13042
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 16262
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 19833
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 398
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 699
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              28,
+              1065,
+              0,
+              0
+            ],
+            [
+              0,
+              1765331,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4383979,
+              0
+            ],
+            [
+              0,
+              0,
+              58307,
+              1333
+            ]
+          ],
+          "current_counts": {
+            "1.0": 1093,
+            "2.0": 1765331,
+            "3.0": 4383979,
+            "4.0": 59640
+          },
+          "A_counts": {
+            "1.0": 28,
+            "2.0": 1766396,
+            "3.0": 4442286,
+            "4.0": 1333
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 59372,
+            "percent": 0.956064233371653,
+            "area_m2": 5937200.0,
+            "area_ha": 593.72,
+            "within_25_24": 7654,
+            "beyond_25_24": 51718,
+            "distance_min": 1.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 340548,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 493
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 21687
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 549
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 35546
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 23
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 1074
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              519,
+              28496,
+              0,
+              0
+            ],
+            [
+              0,
+              3183802,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2965508,
+              0
+            ],
+            [
+              0,
+              0,
+              30876,
+              842
+            ]
+          ],
+          "current_counts": {
+            "1.0": 29015,
+            "2.0": 3183802,
+            "3.0": 2965508,
+            "4.0": 31718
+          },
+          "A_counts": {
+            "1.0": 519,
+            "2.0": 3212298,
+            "3.0": 2996384,
+            "4.0": 842
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 59372,
+            "percent": 0.956064233371653,
+            "area_m2": 5937200.0,
+            "area_ha": 593.72,
+            "within_25_24": 7654,
+            "beyond_25_24": 51718,
+            "distance_min": 1.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 340548,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 10248
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 11932
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 17733
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 18362
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 515
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 582
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              80,
+              6382,
+              0,
+              0
+            ],
+            [
+              0,
+              2011186,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4138124,
+              0
+            ],
+            [
+              0,
+              0,
+              52990,
+              1281
+            ]
+          ],
+          "current_counts": {
+            "1.0": 6462,
+            "2.0": 2011186,
+            "3.0": 4138124,
+            "4.0": 54271
+          },
+          "A_counts": {
+            "1.0": 80,
+            "2.0": 2017568,
+            "3.0": 4191114,
+            "4.0": 1281
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 59372,
+            "percent": 0.956064233371653,
+            "area_m2": 5937200.0,
+            "area_ha": 593.72,
+            "within_25_24": 7654,
+            "beyond_25_24": 51718,
+            "distance_min": 1.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 340548,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 2292
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 19888
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 3999
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 32096
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 91
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 1006
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              575,
+              32032,
+              0,
+              0
+            ],
+            [
+              0,
+              3468349,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2680961,
+              0
+            ],
+            [
+              0,
+              0,
+              27340,
+              786
+            ]
+          ],
+          "current_counts": {
+            "1.0": 32607,
+            "2.0": 3468349,
+            "3.0": 2680961,
+            "4.0": 28126
+          },
+          "A_counts": {
+            "1.0": 575,
+            "2.0": 3500381,
+            "3.0": 2708301,
+            "4.0": 786
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 59372,
+            "percent": 0.956064233371653,
+            "area_m2": 5937200.0,
+            "area_ha": 593.72,
+            "within_25_24": 7654,
+            "beyond_25_24": 51718,
+            "distance_min": 1.0,
+            "distance_max": 638.6305661335041
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 340548,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 11176
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 11004
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 20320
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 15775
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 536
+            },
+            {
+              "score_from": 3,
+              "score_to": 2,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 561
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sensitivity_6",
+      "thresholds": [
+        0.01785637065768242,
+        0.044134240597486496
+      ],
+      "score_matrix": [
+        [
+          3304686,
+          0,
+          0
+        ],
+        [
+          2969351,
+          4862,
+          0
+        ],
+        [
+          330268,
+          201,
+          0
+        ]
+      ],
+      "score_counts": {
+        "current": {
+          "1.0": 3304686,
+          "2.0": 2974213,
+          "3.0": 330469
+        },
+        "A": {
+          "1.0": 6604305,
+          "2.0": 5063
+        }
+      },
+      "score_change": {
+        "population": 6609368,
+        "changed": 3299820,
+        "percent": 49.926407487069866,
+        "area_m2": 329982000.0,
+        "area_ha": 32998.2,
+        "within_25_24": 646651,
+        "beyond_25_24": 2653169,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "score_changes_outside_risk": 323385,
+      "risk_change": {
+        "population": 6215956,
+        "changed": 2976435,
+        "percent": 47.88378489165625,
+        "area_m2": 297643500.0,
+        "area_ha": 29764.35,
+        "within_25_24": 329496,
+        "beyond_25_24": 2646939,
+        "distance_min": 1.0,
+        "distance_max": 672.9294168038725
+      },
+      "risk_delta": {
+        "-2.0": 281733,
+        "-1.0": 2694702,
+        "0.0": 3239521
+      },
+      "quadrants": [
+        {
+          "species": "sugi",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              0,
+              9179,
+              0,
+              0
+            ],
+            [
+              0,
+              1871289,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4282504,
+              0
+            ],
+            [
+              0,
+              0,
+              47070,
+              1
+            ]
+          ],
+          "current_counts": {
+            "1.0": 9179,
+            "2.0": 1871289,
+            "3.0": 4282504,
+            "4.0": 47071
+          },
+          "A_counts": {
+            "2.0": 1880468,
+            "3.0": 4329574,
+            "4.0": 1
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 56249,
+            "percent": 0.905774726519607,
+            "area_m2": 5624900.0,
+            "area_ha": 562.49,
+            "within_25_24": 7410,
+            "beyond_25_24": 48839,
+            "distance_min": 2.0,
+            "distance_max": 636.7676185234296
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 326718,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 3087
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 15898
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 6092
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 31172
+            }
+          ]
+        },
+        {
+          "species": "sugi",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              1,
+              25160,
+              0,
+              0
+            ],
+            [
+              0,
+              3103717,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              3050076,
+              0
+            ],
+            [
+              0,
+              0,
+              31089,
+              0
+            ]
+          ],
+          "current_counts": {
+            "1.0": 25161,
+            "2.0": 3103717,
+            "3.0": 3050076,
+            "4.0": 31089
+          },
+          "A_counts": {
+            "1.0": 1,
+            "2.0": 3128877,
+            "3.0": 3081165
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 56249,
+            "percent": 0.905774726519607,
+            "area_m2": 5624900.0,
+            "area_ha": 562.49,
+            "within_25_24": 7410,
+            "beyond_25_24": 48839,
+            "distance_min": 2.0,
+            "distance_max": 636.7676185234296
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 326718,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 8485
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 10500
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 16675
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 20589
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              0,
+              1047,
+              0,
+              0
+            ],
+            [
+              0,
+              1765377,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4388416,
+              0
+            ],
+            [
+              0,
+              0,
+              55202,
+              1
+            ]
+          ],
+          "current_counts": {
+            "1.0": 1047,
+            "2.0": 1765377,
+            "3.0": 4388416,
+            "4.0": 55203
+          },
+          "A_counts": {
+            "2.0": 1766424,
+            "3.0": 4443618,
+            "4.0": 1
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 56249,
+            "percent": 0.905774726519607,
+            "area_m2": 5624900.0,
+            "area_ha": 562.49,
+            "within_25_24": 7410,
+            "beyond_25_24": 48839,
+            "distance_min": 2.0,
+            "distance_max": 636.7676185234296
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 326718,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 475
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 18510
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 572
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 36692
+            }
+          ]
+        },
+        {
+          "species": "hinoki",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              1,
+              27906,
+              0,
+              0
+            ],
+            [
+              0,
+              3184910,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2968883,
+              0
+            ],
+            [
+              0,
+              0,
+              28343,
+              0
+            ]
+          ],
+          "current_counts": {
+            "1.0": 27907,
+            "2.0": 3184910,
+            "3.0": 2968883,
+            "4.0": 28343
+          },
+          "A_counts": {
+            "1.0": 1,
+            "2.0": 3212816,
+            "3.0": 2997226
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 56249,
+            "percent": 0.905774726519607,
+            "area_m2": 5624900.0,
+            "area_ha": 562.49,
+            "within_25_24": 7410,
+            "beyond_25_24": 48839,
+            "distance_min": 2.0,
+            "distance_max": 636.7676185234296
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 326718,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 9630
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 9355
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 18276
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 18988
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 6,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              0,
+              6273,
+              0,
+              0
+            ],
+            [
+              0,
+              2011375,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              4142418,
+              0
+            ],
+            [
+              0,
+              0,
+              49976,
+              1
+            ]
+          ],
+          "current_counts": {
+            "1.0": 6273,
+            "2.0": 2011375,
+            "3.0": 4142418,
+            "4.0": 49977
+          },
+          "A_counts": {
+            "2.0": 2017648,
+            "3.0": 4192394,
+            "4.0": 1
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 56249,
+            "percent": 0.905774726519607,
+            "area_m2": 5624900.0,
+            "area_ha": 562.49,
+            "within_25_24": 7410,
+            "beyond_25_24": 48839,
+            "distance_min": 2.0,
+            "distance_max": 636.7676185234296
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 326718,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 2182
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 16803
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 4091
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 33173
+            }
+          ]
+        },
+        {
+          "species": "karamatsu",
+          "profit_threshold": 5,
+          "risk_threshold": 6,
+          "matrix": [
+            [
+              1,
+              31313,
+              0,
+              0
+            ],
+            [
+              0,
+              3469642,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              2684151,
+              0
+            ],
+            [
+              0,
+              0,
+              24936,
+              0
+            ]
+          ],
+          "current_counts": {
+            "1.0": 31314,
+            "2.0": 3469642,
+            "3.0": 2684151,
+            "4.0": 24936
+          },
+          "A_counts": {
+            "1.0": 1,
+            "2.0": 3500955,
+            "3.0": 2709087
+          },
+          "change": {
+            "population": 6210043,
+            "changed": 56249,
+            "percent": 0.905774726519607,
+            "area_m2": 5624900.0,
+            "area_ha": 562.49,
+            "within_25_24": 7410,
+            "beyond_25_24": 48839,
+            "distance_min": 2.0,
+            "distance_max": 636.7676185234296
+          },
+          "nodata_current": 5546093,
+          "nodata_A": 5546093,
+          "nodata_difference": 0,
+          "score_change_outside_common": 326718,
+          "paths": [
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -1,
+              "pixels": 10429
+            },
+            {
+              "score_from": 2,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -1,
+              "pixels": 8556
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 1,
+              "zone_to": 2,
+              "risk_delta": -2,
+              "pixels": 20884
+            },
+            {
+              "score_from": 3,
+              "score_to": 1,
+              "zone_from": 4,
+              "zone_to": 3,
+              "risk_delta": -2,
+              "pixels": 16380
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "elapsed_seconds": 252.1720000000205,
+  "inputs_unchanged": true
+}
