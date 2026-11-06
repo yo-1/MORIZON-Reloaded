@@ -15,8 +15,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install flake8==7.4.1
+      - run: python -m pip install flake8==7.4.1 numpy==2.3.5
       - run: python scripts/static_check.py
+      - name: SHC NoData numerical regression
+        run: python scripts/test_shc_nodata.py
       - run: >-
           python -m flake8 . --max-line-length=160 --extend-ignore=E203
           --per-file-ignores=processes/raster_styler/distance.py:E501,processes/raster_styler/slope.py:E501,processes/raster_styler/utils.py:E501
