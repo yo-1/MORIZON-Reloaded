@@ -8,6 +8,16 @@ entry are the internal diagnostic-build history that led up to the
 none of those builds were released independently; `2.3.0` supersedes all
 of them.
 
+## Unreleased — SHC Plan A records and tests (2026-11-06)
+
+- PR #22 (SHC Plan A) was merged to main on 2026-11-06 after the
+  Windows real-machine confirmation. This follow-up records the full
+  verification chain in `docs/TEST_RECORD.md`, adopts the numerical
+  regression tests from PR #21 (`scripts/test_shc_nodata.py`, wired
+  into CI), and incorporates the decision record
+  `docs/SHC_PLAN_A_20261106.md`. PR #21 is closed as superseded by
+  PR #22. No analysis change in this entry.
+
 ## Unreleased — SHC Plan A implementation (2026-11-06)
 
 - SHC: the Gaussian smoothing step no longer generates values inside the
