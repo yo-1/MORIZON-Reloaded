@@ -1,0 +1,102 @@
+{
+  "pass": true,
+  "outputs": [
+    {
+      "name": "Y_01_chii_hinoki.tif",
+      "original_sha256": "3eb98b3de8b889985283b7289e1f2a5ab5661ebfb964da746fde48ed1c6416a8",
+      "fixed_v2_sha256": "3eb98b3de8b889985283b7289e1f2a5ab5661ebfb964da746fde48ed1c6416a8",
+      "pixel_count": 11756136,
+      "bit_mismatches": 0,
+      "mask_mismatches": 0,
+      "max_absolute_difference": 0,
+      "first_mismatch_row_col": null,
+      "grid_equal": true,
+      "nodata_equal": true
+    },
+    {
+      "name": "Y_01_chii_karamatsu.tif",
+      "original_sha256": "52f1a92af881f4ba0fe17136df38222bc7d6601ba797da13c12982fef1725bf0",
+      "fixed_v2_sha256": "52f1a92af881f4ba0fe17136df38222bc7d6601ba797da13c12982fef1725bf0",
+      "pixel_count": 11756136,
+      "bit_mismatches": 0,
+      "mask_mismatches": 0,
+      "max_absolute_difference": 0,
+      "first_mismatch_row_col": null,
+      "grid_equal": true,
+      "nodata_equal": true
+    },
+    {
+      "name": "Y_01_chii_sugi.tif",
+      "original_sha256": "9574ef0149725890477edd45944f77b8717855713edc8df4373825c7a0594db0",
+      "fixed_v2_sha256": "9574ef0149725890477edd45944f77b8717855713edc8df4373825c7a0594db0",
+      "pixel_count": 11756136,
+      "bit_mismatches": 0,
+      "mask_mismatches": 0,
+      "max_absolute_difference": 0,
+      "first_mismatch_row_col": null,
+      "grid_equal": true,
+      "nodata_equal": true
+    },
+    {
+      "name": "Y_02_shuzai.tif",
+      "original_sha256": "c5a55420ccaa30d34ae26ccf1051e28397294ba1d51707fdc2601e24e80b78be",
+      "fixed_v2_sha256": "c5a55420ccaa30d34ae26ccf1051e28397294ba1d51707fdc2601e24e80b78be",
+      "pixel_count": 11756136,
+      "bit_mismatches": 0,
+      "mask_mismatches": 0,
+      "max_absolute_difference": 0,
+      "first_mismatch_row_col": null,
+      "grid_equal": true,
+      "nodata_equal": true
+    },
+    {
+      "name": "Y_03_chiri.tif",
+      "original_sha256": "b3a0ff7fe8519278d4def8361c95dbe9cc3379ec394cfa09907b3b7e3a1300c1",
+      "fixed_v2_sha256": "b3a0ff7fe8519278d4def8361c95dbe9cc3379ec394cfa09907b3b7e3a1300c1",
+      "pixel_count": 11756136,
+      "bit_mismatches": 0,
+      "mask_mismatches": 0,
+      "max_absolute_difference": 0,
+      "first_mismatch_row_col": null,
+      "grid_equal": true,
+      "nodata_equal": true
+    },
+    {
+      "name": "Y_11_chikei.tif",
+      "original_sha256": "c1162cacd98dad3ffec0c6a9cbbd349c8666cd3d3f849f99bf640554d03dc53f",
+      "fixed_v2_sha256": "c1162cacd98dad3ffec0c6a9cbbd349c8666cd3d3f849f99bf640554d03dc53f",
+      "pixel_count": 11756136,
+      "bit_mismatches": 0,
+      "mask_mismatches": 0,
+      "max_absolute_difference": 0,
+      "first_mismatch_row_col": null,
+      "grid_equal": true,
+      "nodata_equal": true
+    },
+    {
+      "name": "Y_12_keisha.tif",
+      "original_sha256": "11690b0e50eefec276b81b044cf51b3b61aff965583b04404e6d279324609223",
+      "fixed_v2_sha256": "11690b0e50eefec276b81b044cf51b3b61aff965583b04404e6d279324609223",
+      "pixel_count": 11756136,
+      "bit_mismatches": 0,
+      "mask_mismatches": 0,
+      "max_absolute_difference": 0,
+      "first_mismatch_row_col": null,
+      "grid_equal": true,
+      "nodata_equal": true
+    },
+    {
+      "name": "Y_13_hozen.tif",
+      "original_sha256": "1512847d8f4dda60f5c9556798b0c628c862d328c8926a032212608bdd13390a",
+      "fixed_v2_sha256": "1512847d8f4dda60f5c9556798b0c628c862d328c8926a032212608bdd13390a",
+      "pixel_count": 11756136,
+      "bit_mismatches": 0,
+      "mask_mismatches": 0,
+      "max_absolute_difference": 0,
+      "first_mismatch_row_col": null,
+      "grid_equal": true,
+      "nodata_equal": true
+    }
+  ],
+  "baseline": "Dedicated profile original run 172.0 sec; identical processing sources to current main; no original rerun"
+}

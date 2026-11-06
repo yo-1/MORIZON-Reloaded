@@ -8,6 +8,13 @@ entry are the internal diagnostic-build history that led up to the
 none of those builds were released independently; `2.3.0` supersedes all
 of them.
 
+## Unreleased — validation record (2026-11-05)
+
+- Record merged PR #19 and Windows QGIS 3.44.13 six-element completion. The original November 3 raw output remains unavailable, so identity of its cause is unconfirmed.
+- Document SHC Plan A sensitivity tests, not production adoption: the 0.003/0.003 baseline has no quadrant changes, while six alternative threshold pairs change 0.782–7.558% of the common valid population. Global sigma and scores can change with NoData; low-gradient singularities remain a separate issue. Regional validation is not performed.
+- Record independent DEM `_fixed_v2` regression: all eight output arrays and masks match the original-input baseline bit for bit. This does not approve SHC Plan A. Drive archival and direct reconciliation with external reports await authentication.
+- No analysis formula, threshold, version number, or release change.
+
 ## 2.3.3 — 2026-10-22
 
 Merges the `2.3.2` validation-candidate line with changes made on `main`

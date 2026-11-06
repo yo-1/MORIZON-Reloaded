@@ -1,0 +1,44 @@
+{
+  "D-01": {
+    "status": "PASS",
+    "evidence": "dem-input-comparison.json",
+    "result": "47,010,395 Float32 pixels bit-identical; NoData -9999; valid 26,032,247; NoData 20,978,148; nonfinite 0"
+  },
+  "D-02": {
+    "status": "PASS",
+    "evidence": "dem-input-comparison.json",
+    "result": "Tag 270 count 1, strictly increasing tags; stored min/max/mean/std match full-array statistics within rtol=atol=1e-10"
+  },
+  "D-03": {
+    "status": "PASS",
+    "evidence": "dem-input-comparison.json",
+    "result": "EPSG:6672, 8815x5333, 5m; identical transform/masks"
+  },
+  "D-04": {
+    "status": "PASS",
+    "evidence": [
+      "D04-gdalinfo.json",
+      "D04-parser.json"
+    ],
+    "result": "No tag-order warning for fixed_v2; get_tiff_info succeeds for both with identical values"
+  },
+  "D-05": {
+    "status": "PASS",
+    "evidence": "D05-output-comparison.json",
+    "result": "8 outputs arrays and masks bit-identical; main processing code verified against installed plugin; original baseline reused"
+  },
+  "D-06": {
+    "status": "PASS",
+    "evidence": [
+      "D06-dependency-hashes.json",
+      "code-and-dependency-verification.json"
+    ],
+    "result": "48 code files verified, 22 previous input-manifest files unchanged; all output SHA recorded"
+  },
+  "limitations": [
+    "Muse and Claude Drive reports unavailable due expired Drive authentication; D IDs mapped to explicit user instruction rather than unseen external documents",
+    "T04 not repeated",
+    "Strip/tile performance comparison not performed; two different runs do not establish format performance",
+    "Original baseline callback failed after successful calculation; recovered by completion logs, stopped worker and eight raster validation"
+  ]
+}
