@@ -100,7 +100,7 @@ def _gaussian_smooth(arr, valid, sigma=3.0, radius=12):
             denominator += row_den
 
     smoothed = np.full(arr.shape, np.nan, dtype=np.float64)
-    good = denominator > 1.0e-12
+    good = (denominator > 1.0e-12) & valid
     smoothed[good] = numerator[good] / denominator[good]
     return smoothed, good
 
