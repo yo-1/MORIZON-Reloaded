@@ -100,7 +100,11 @@ def _gaussian_smooth(arr, valid, sigma=3.0, radius=12):
             denominator += row_den
 
     smoothed = np.full(arr.shape, np.nan, dtype=np.float64)
-    good = denominator > 1.0e-12
+    # 案A（2026-11-06 採用）: 元DEMのNoData内には平滑化値を生成しない。
+    # NoData画素の近傍だけで正規化した値を欠損内部に書き戻すと、勾配が
+    # ほぼ0の面ができて平面曲率が異常値になり、全域の標準偏差まで
+    # 汚染される（検証記録は docs/TEST_RECORD.md・OPEN_ISSUES 参照）。
+    good = (denominator > 1.0e-12) & valid
     smoothed[good] = numerator[good] / denominator[good]
     return smoothed, good
 

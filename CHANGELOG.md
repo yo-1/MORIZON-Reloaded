@@ -8,6 +8,21 @@ entry are the internal diagnostic-build history that led up to the
 none of those builds were released independently; `2.3.0` supersedes all
 of them.
 
+## Unreleased — SHC Plan A implementation (2026-11-06)
+
+- SHC: the Gaussian smoothing step no longer generates values inside the
+  source DEM's NoData area (Plan A; adopted as the implementation
+  candidate on 2026-11-06 after independent recalculation and threshold
+  sensitivity analysis). On DEMs that contain NoData, SHC output values
+  change, because the previous output was contaminated through the
+  global standard deviation; under the fixed baseline thresholds
+  (0.003/0.003) the four-quadrant result on the verified DEM is
+  unchanged. Thresholds are not changed by this fix, and 0.003/0.003 is
+  not a universal recommendation for other regions. Low-gradient
+  singularities remain a separate open issue.
+- This is an implementation record on a dedicated branch. Merging to
+  main and any release remain a separate decision.
+
 ## Unreleased — validation record (2026-11-05)
 
 - Record merged PR #19 and Windows QGIS 3.44.13 six-element completion. The original November 3 raw output remains unavailable, so identity of its cause is unconfirmed.
