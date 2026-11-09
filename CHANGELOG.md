@@ -8,6 +8,17 @@ entry are the internal diagnostic-build history that led up to the
 none of those builds were released independently; `2.3.0` supersedes all
 of them.
 
+## 2.3.5 (2026-11-09)
+
+- Packaging/security-scan fix only; no analysis change. Version 2.3.4
+  was blocked by the QGIS plugin repository's security scan over a
+  single Bandit finding (B110, try/except/pass in
+  `processes/raster_writer/savearea.py`, where a failed CRS-override
+  WKT parse was silently ignored before the `isValid()` check). The
+  failure is now logged as a warning via the `MORIZON` logger; the
+  behaviour is unchanged, because the `isValid()` check still raises
+  the regular error. All other content is identical to 2.3.4.
+
 ## 2.3.4 (2026-11-09)
 
 - SHC: the Gaussian smoothing step no longer generates values inside the
