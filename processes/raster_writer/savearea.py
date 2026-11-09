@@ -484,8 +484,14 @@ def _preflight_building_check(
             override_crs = QgsCoordinateReferenceSystem()
             try:
                 override_crs.createFromWkt(str(building_crs_override_authid))
-            except Exception:
-                pass
+            except Exception as exc:
+                # 解釈に失敗しても直後の isValid() 判定で正規のエラーに
+                # なるため処理は継続するが、無言で握りつぶさず記録する。
+                logging.getLogger("MORIZON").warning(
+                    "savearea: CRS override のWKT解釈に失敗しました: %s",
+                    exc,
+                    exc_info=True,
+                )
         if not override_crs.isValid():
             raise QgsProcessingException(
                 f"指定された保全対象データの座標参照系を読み込めませんでした: {building_crs_override_authid}"

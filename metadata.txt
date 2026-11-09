@@ -15,7 +15,7 @@ about=MORIZON Reloaded — Forest Zoning.
 
     External dependencies: this plugin relies on QGIS's bundled GDAL and NumPy, and on matplotlib (bundled with QGIS 3.44's Python environment on Windows). Two processing steps (集材作業効率/cost's ruggedness terrain analysis and 保全対象を含む流域/savearea's watershed delineation) additionally require the GRASS Processing Provider to be enabled in QGIS; the plugin does not install or bundle GRASS itself. No binaries are bundled with this plugin.
 description=林業の収益性と山地災害リスクの両面から森林管理の方向性を検討する、QGIS 3.44対応の森林ゾーニング支援プラグインです。
-version=2.3.4
+version=2.3.5
 icon=imgs/icon.png
 author=Yoichi Wada (MORIZON Reloaded, based on the original MORIZON project)
 email=yo-1@geographic-information.net
@@ -26,7 +26,16 @@ tags=forest,forestry,zoning,DEM,terrain,reloaded,revival,Japan,林業,森林ゾ�
 category=Raster
 experimental=False
 deprecated=False
-changelog=Version 2.3.4 (QGIS 3.44; verified on Windows 11 / QGIS 3.44, Python 3.12)
+changelog=Version 2.3.5 (QGIS 3.44; verified on Windows 11 / QGIS 3.44, Python 3.12)
+    Packaging/security-scan fix only, no analysis change. Version 2.3.4
+    was blocked by the plugin repository's security scan over a single
+    Bandit finding (B110 try/except/pass in savearea.py, where a failed
+    CRS-override WKT parse was silently ignored before the isValid()
+    check). The failure is now logged as a warning; the behaviour is
+    unchanged, because the isValid() check still raises the regular
+    error. All other content is identical to 2.3.4.
+
+    Version 2.3.4 (QGIS 3.44; verified on Windows 11 / QGIS 3.44, Python 3.12)
     SHC (terrain complexity): the Gaussian smoothing step no longer
     generates values inside the source DEM's NoData area (Plan A).
     On DEMs that contain NoData, SHC output values can change, because
