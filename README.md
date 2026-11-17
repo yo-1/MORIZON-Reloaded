@@ -2,9 +2,9 @@
 
 MORIZON Reloadedは、林業の収益性と山地災害リスクの両面から森林管理の方向性を検討するQGIS用森林ゾーニング支援プラグインです。
 
-**GitHub最新Release: [v2.3.3](https://github.com/yo-1/MORIZON-Reloaded/releases/tag/v2.3.3) ／ QGIS公式公開版: v2.3.2 ／ QGIS申請版: v2.3.3（審査中）**
+**GitHub最新Release: [v2.3.5](https://github.com/yo-1/MORIZON-Reloaded/releases/tag/v2.3.5) ／ QGIS公式公開版: v2.3.5**
 
-2026-10-22確認。v2.3.3はGitHubで公開済みです。QGIS公式ではv2.3.2が承認済みで、v2.3.3は同日のユーザー報告・提示画面に基づき審査中として管理します。GitHubでの公開とQGISの承認は別工程です。mainのプラグイン版表示は2.3.3です。提出物としてユーザーが提供したv2.3.3 ZIPとGitHub Release添付ZIPは、SHA-256およびバイト列の一致を確認済みです（[配布物・整理記録](docs/RELEASE_MAINTENANCE_20261022.md)）。QGISサーバー上の原本の再取得・審査承認確認は別工程です。
+2026-11-17確認。v2.3.5はGitHubで公開済みで、QGIS公式でも承認・公開済み（Latest stable version）です。GitHubでの公開とQGISの承認は別工程です。mainのプラグイン版表示は2.3.5です。v2.3.5の配布ZIPはGitHub Release添付ZIPとSHA-256の一致を確認済みです。なおv2.3.4はQGISのSecurity Scanでブロックされたためポータルから削除し、v2.3.5に差し替えました。
 
 林野庁の委託事業を通じて開発・公開された森林ゾーニング支援ツール「もりぞん（MORIZON）」を基礎として、現行QGISで利用できるよう互換性対応を行っています。原版の分析ロジック、計算体系および判定条件を原則として維持し、利用できなくなった処理基盤やAPIを再実装しています。
 
