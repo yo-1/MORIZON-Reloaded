@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Import every module from the built plugin ZIP in an initialized QGIS."""
+"""Standalone QGIS Python smoke runner (not for QGIS Desktop/Dev Probe).
+
+main() creates and exits its own QgsApplication. Run in a separate QGIS Python
+process; do not call main() inside an existing QGIS Desktop process.
+"""
 
 import argparse
 import importlib
