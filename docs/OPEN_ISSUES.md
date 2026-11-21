@@ -1,5 +1,32 @@
 # 未解決事項・意思決定台帳
 
+## 現況整理 v1.3（2026-11-21 JST）
+
+この節が現在地。後続の過去記録にある「未マージ・実機未実施・旧版公開待ち」は、当時の状態として保持する。
+
+- 公開版：GitHub Release v2.3.5。配布ソースタグ c322f834183c43bf5b4a7ae22509b43907f839d3。ZIP SHA-256 dd57ec88ed733d5746cbbf3732c262e048784af71cfcaddabecc4cf7748721d5（Release登録値、今回のバイナリ再計算ではない）。QGIS公式2.3.5は11/17のMuse確認記録あり。ポータルZIP独立再照合は未実施。
+- 作業起点main：373bd3e5c6fb64907e2987d767838e45c3b95e7d。PR #30をレビュー・CI4件成功確認後に統合：681d87b99b51613384aa2909c92838a06d1009ae。変更はimport試験の別プロセス専用説明のみ。版2.3.5・解析挙動は不変。
+- PR #5/#19/#20/#22と関連整理は完了。案Aおよび#21の回帰テスト資産はmainに統合済み。旧状態へ戻さない。
+- 実機：QGIS3.44.13でJSON解析修正と案Aの6要素完走。da70ee5固定ベースライン再生成では非SHC7枚が画素・マスク・ファイルSHA一致、SHCは5,783,625画素差・マスク差0。11/5出力との8枚一致は再現性の根拠であり、11/5実行時コミット未記録の履歴は保持。
+- 数値検証：固定基準の象限変化0はその条件のみ。感度条件では0.782〜7.558%変化。科学的妥当性の全面保証ではない。
+
+### 残作業と担当
+
+| 管理ID | 担当 | 状態・完了条件 |
+|---|---|---|
+| H2 証跡原本 | 原本保有Codex/Claude＋Muse | C/D完全ZIP・Claude独立再計算ZIPのDrive原本保全完了は未確認。URL、SHA-256、対象SHA、内容一覧、読取確認を揃える。再計算不要 |
+| H3 公開照合 | Muse | QGIS公式版詳細・ポータルZIPの独立照合。取得日時・SHA・Releaseとの対応を記録 |
+| H4 配布ZIP回帰 | Windows側Claude | v2.3.5固定ZIPでスコアリング・ゾーニング・集計・印刷・必要な再実行。既存証拠を先に照合し未確認分のみ実施 |
+| H5 方法論 | 統括＋Claude.ai | 低勾配特異点、旧版最終混同行列、正式区域別を別課題として設計。閾値/r,t/境界を無根拠に変更しない |
+| QGIS試験安全性 | Codex | PR #30の説明は統合済み。起動済みQGIS内でQgsApplicationの生成/終了を伴うstandalone試験を実行しない。全テスト棚卸しは別途 |
+
+O-19間欠QML、O-31〜33、GRASS無効時、処理中のみWarning等は既存記録に限定した未確認を保持。起動7.0秒/77.6秒の追加原因調査を終了する合意を維持する。研修資料は制作停止・版管理を別扱いする。
+
+根拠：[11/21報告](https://drive.google.com/file/d/18K9xs2d_VY2QTOJMuxYgc16-z6BrciXs/view)、[ベースライン再比較](https://drive.google.com/file/d/1QJCXB-c88s6e-KY-7ENSebxy2LMUCGbN/view)、[公開報告](https://drive.google.com/file/d/1PNl9wev_4RVlmRf78yKgqa5dgG-nBjoT/view)。
+
+---
+
+
 | ID | 状態 | 優先度 | 内容 | 完了条件 |
 |---|---|---:|---|---|
 | O-38 | 実機で修正効果確認（2026-11-05、6要素完走。SHC数値妥当性は別途未確認） | 高 | 2026-11-03 07:27/07:29/07:31、Windows実機（DEM: `C:\GIS_data\morizon\zoningkit_04_Shimanto_town\DATA\DEM\DEM5m_Shimanto_clip_buffer100m.tif`、対象: siteidx/cost/distance/shc/slope/savearea）で、要素計算開始直後（約0.2秒後）に`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`で3回連続失敗したとの報告（`processes/elements.py:121`→`utils/__init__.py`のgdalinfo JSON解析部）。**確定（コード調査）**: `utils.get_tiff_info()`は、QGISの`gdal:gdalinfo`が書き出す`<pre>...</pre>`形式のHTML出力を、固定幅（先頭5文字・末尾6文字）で切り出してから`json.loads()`していた。出力が空文字列の場合、この切り出しは空文字列のままで、`json.loads("")`は報告と全く同じ`"Expecting value: line 1 column 1 (char 0)"`を発生させる（再現確認済み、`scripts/test_get_tiff_info.py`）。**推定（根拠あり、未確定）**: QGISのGDALプロバイダは、過去バージョンでGDALサブプロセスのstderrをstdoutへ統合する実装になっており（Web検索で確認、現行3.40.6/3.44のソースはこのセッションのネットワーク制限により直接確認できず）、GDAL側の警告（PROJ関連等）が`<pre>`内でJSON本体の前に混入すると、同じ固定幅切り出しがJSON本体以外の文字列を含んでしまい`json.loads()`が同種のエラーになり得る。どちらが実際の原因か、あるいは別要因（ファイルがまだ書き込み中・ロック中、ネットワークドライブの遅延、入力パスの問題等）かは、**実機のgdalinfo一時出力ファイルの内容を直接確認していないため未確定**。**対応（コード）**: `fix/gdalinfo-json-robustness`ブランチで、固定幅切り出しをやめ、実際のJSON本体（最初の`{`から最後の`}`まで）を探す方式に変更し、失敗時はDEMパスと生出力の冒頭を含む診断可能な`RuntimeError`を投げるようにした（戻り値の構造・計算式・しきい値・NoData処理は変更なし）。pure-Python回帰テスト5件（正常系、警告混入、空出力、不正JSON、gdalinfo実行失敗自体）が成功。**未実施**: QGIS実機での再現試験・回帰確認（このセッションにQGIS環境がないため）。**2026-11-04追記（QGIS Dev Probe接続試行・環境上実施不能）**: Windows実機でのQGIS Dev Probe MCP経由の検証（P00〜P08、依頼側提供の検証マトリクス）を試みたが、本セッション（クラウドのLinuxサンドボックス）にはユーザーのWindows PCへのRemote Control接続が0件、「QGIS Dev Probe」という名前のMCPツールも存在せず、疎通確認（P00）すら行えなかった。依頼ZIP自身の`README.md`に明記された指示どおり、クラウド環境での代替試験は行わず、接続不能として報告した。詳細は`docs/TEST_RECORD.md`「PR #19 QGIS Dev Probe実機検証（試行、2026-11-04）」参照。**2026-11-04 夜追記（2回目・接続は成立、入力DEM欠落で検証未完）**: Windows実機（QGIS 3.44.13 / Python 3.12.13 / Qt 5.15.13、QGIS Dev Probe 0.1.2、interactive）へのDev Probe接続は成立し、P00の疎通部分（ping/get_info/list_plugins）を確認した。ただし(a)起動中のプロファイルは依頼の`SetupCheck`ではなく`CSMap131Validation`（別検証のプロジェクトを読込済み）で、MORIZONは未導入、(b)期待パスのDEM（`C:\GIS_data\morizon\...\DEM5m_Shimanto_clip_buffer100m.tif`）は**このPC上で見つからず**、`gdal:gdalinfo`単独実行（P02）が「INPUTのソースレイヤを読み込めませんでした…見つかりません」で失敗した。入力が揃わないため、依頼書の指示どおりテストは捏造せず、P01以降は未実施。**未確認**: DEMが別PC・別ドライブ・別パスにあるか。詳細は`docs/TEST_RECORD.md`「PR #19 QGIS Dev Probe実機検証（2回目、2026-11-04夜）」参照。 | Windows実機で、(1)QGIS Dev Probeに接続可能な環境（Windows側Claude Code等）から本来のDEMファイルで要素計算が成功すること、(2)可能なら元の失敗時のgdalinfo一時出力ファイルの内容を保存し根本原因を確定すること、を確認し`docs/TEST_RECORD.md`に記録する。 |
